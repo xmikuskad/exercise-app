@@ -1,0 +1,513 @@
+<!doctype html>
+<html lang="sk">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="@@CSP@@">
+<meta name="referrer" content="no-referrer">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#102b2c">
+<title>FitCamp · zásobník cvikov a denník</title>
+<style>
+:root{color-scheme:light;--ink:#152e31;--muted:#475e61;--paper:#f1f5f3;--line:#cfded9;--teal:#006c57;--dark:#102b2c;--white:#fff}
+*{box-sizing:border-box}
+html{scroll-padding-top:5rem}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.55 system-ui,sans-serif;overflow-wrap:break-word}
+a{color:var(--teal);text-underline-offset:.2em}
+a:focus-visible,summary:focus-visible{outline:3px solid #187dde;outline-offset:3px}
+header{background:var(--dark);color:#effaf5;padding:clamp(2.2rem,6vw,4.5rem) 1rem 2.2rem}
+header div,main,.nav-inner{max-width:56rem;margin:auto}
+header p{max-width:39rem;margin-bottom:0;color:#d0e7e1}
+.place{display:inline-block;color:#a8e8d4;font-size:.83rem;font-weight:750;letter-spacing:.08em;text-transform:uppercase}
+h1,h2,h3,p{margin-top:0}
+h1{max-width:42rem;margin:.32rem 0 .7rem;font-size:clamp(2.2rem,7.7vw,4rem);line-height:1.02;letter-spacing:-.055em}
+h2{font-size:clamp(1.56rem,4.5vw,2.15rem);line-height:1.13;letter-spacing:-.035em;margin-bottom:.7rem}
+h3{font-size:1.12rem;line-height:1.25;margin-bottom:.45rem}
+nav{position:sticky;top:0;z-index:1;background:var(--white);border-bottom:1px solid var(--line)}
+.nav-inner{display:flex;overflow-x:auto;padding:0 .5rem}
+nav a{flex:0 0 auto;padding:.72rem .6rem;min-height:44px;color:var(--ink);font-size:.83rem;font-weight:750;text-decoration:none}
+nav a:hover{background:#e4f3ed}
+main{padding:1.25rem 1rem 3rem}
+section{margin-bottom:1.65rem}
+.box,.session,details.card{background:var(--white);border:1px solid var(--line);border-radius:1rem}
+.box,.session{padding:clamp(.9rem,3vw,1.4rem)}
+.box p:last-child,.session p:last-child{margin-bottom:0}
+.grid{display:grid;gap:.8rem}
+.week{max-width:41rem}
+.week p{margin-bottom:.45rem}
+.subtle{color:var(--muted);font-size:.92rem}
+.note{padding:.85rem 1rem;background:#e0f0e9;border-radius:.75rem;margin:.75rem 0}
+.progress-box{margin-top:.8rem}
+.warning{background:#fff4e5}
+.session{border-top:4px solid #81b9a8}
+.session h3{font-size:1.25rem}
+.moves{list-style:none;margin:.65rem 0;padding:0}
+.moves li{display:flex;align-items:center;justify-content:space-between;gap:.5rem;border-top:1px solid var(--line)}
+.moves a{display:block;min-height:44px;padding:.6rem 0;font-weight:680;line-height:1.24}
+.reps{white-space:nowrap;font-size:.83rem;font-variant-numeric:tabular-nums;color:var(--muted)}
+.labels{display:grid;grid-template-columns:1fr 1fr;text-align:center;gap:.45rem;color:var(--muted);font-size:.83rem;font-weight:650;padding:.35rem 0 0}
+details.card{margin:.55rem 0;scroll-margin-top:.3rem}
+details.card:target{border-color:var(--teal);box-shadow:0 0 0 2px #83c7b3}
+summary{min-height:54px;padding:.75rem 2.15rem .75rem .95rem;font-weight:750;cursor:pointer;list-style:none;position:relative}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";position:absolute;right:.95rem;top:.75rem;color:var(--teal);font-size:1.3rem;line-height:1}
+details[open]>summary::after{content:"−"}
+summary span{display:block;font-weight:500;color:var(--muted);font-size:.84rem;margin-top:.1rem}
+.inside{padding:0 .95rem .95rem}
+figure{max-width:34rem;margin:0 0 .8rem}
+figure img{display:block;width:100%;height:auto;border-radius:.65rem}
+.exercise-demo{max-width:34rem}
+.demo-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-items:stretch;gap:.55rem;margin:.65rem 0}
+.demo-actions .demo-toggle,.demo-actions .demo-source{display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;min-height:52px;border:1px solid #afcfc5;border-radius:.65rem;color:var(--teal);background:#f0f9f5;padding:.5rem .35rem;font-size:.88rem;font-weight:750;line-height:1.2;text-decoration:none}
+.demo-source small{font-size:.72rem;font-weight:550;color:var(--muted);margin-top:.18rem}
+.demo-motion video{display:block;width:100%;height:auto;aspect-ratio:18 / 11;border-radius:.65rem;background:#ecf4f2}
+.demo-caption{font-size:.88rem;color:var(--muted);margin-top:.4rem}
+.warmup-steps{margin:.8rem 0;padding:0;list-style:none}
+.warmup-steps li{padding:.7rem .75rem;border:1px solid var(--line);border-radius:.7rem;margin:.45rem 0}
+.warmup-steps h3,.warmup-steps p{margin:0 0 .36rem}
+.warmup-steps p:last-child{margin-bottom:0}
+.step-dose{font-size:.83rem;font-weight:700;color:var(--teal)}
+dl{margin:0}
+dt{color:var(--ink);font-weight:750;margin-top:.65rem}
+dd{margin:0;color:var(--muted)}
+ol,ul{padding-left:1.3rem}
+li+li{margin-top:.2rem}
+.moves li+li{margin:0}
+.sample{display:block;padding:.75rem;background:#e9f0ed;border-radius:.65rem;margin:.65rem 0;font-size:.88rem}
+.sources{font-size:.93rem}
+.back{display:inline-block;margin:.65rem 0 0;min-height:44px;padding:.5rem 0}
+.group-menu{display:flex;flex-wrap:wrap;gap:.4rem;margin:.75rem 0 1rem}
+.group-menu a,.chip{background:#e5f2ec;border:1px solid #bfdacf;border-radius:.6rem;padding:.44rem .65rem;text-decoration:none;font-size:.88rem}
+.group-menu a{min-height:44px;display:flex;align-items:center}
+.category{margin:1.2rem 0}
+.category h3{margin-bottom:.35rem}
+summary .last{color:var(--teal);font-size:.82rem}
+.tools{display:flex;flex-wrap:wrap;gap:.5rem;align-items:end}
+button,input,select{font:inherit;min-height:44px;border:1px solid #a8c6bc;border-radius:.55rem}
+button,.upload{background:#e7f3ee;color:var(--ink);padding:.44rem .65rem;font-size:.88rem;font-weight:700;cursor:pointer}
+input,select{width:100%;min-width:0;background:#fff;color:var(--ink);padding:.36rem .55rem}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #187dde;outline-offset:2px}
+.field{display:block;font-weight:680;font-size:.88rem}
+.field input{display:block;margin-top:.2rem;font-weight:400}
+.day{min-width:min(11rem,100%)}
+.track{border-top:1px solid var(--line);margin-top:.95rem;padding-top:.75rem}
+.track>summary{padding:.45rem 2rem .45rem 0;font-size:.9rem}
+.manual-entry{padding:.45rem 0}
+.track .tools,.track .edit-date{margin-top:.4rem}
+.save{background:var(--teal);color:#fff;border-color:var(--teal)}
+.log-output{margin:.45rem 0}
+.recent{list-style:none;margin:.5rem 0;padding:0}
+.recent li{display:flex;align-items:baseline;justify-content:space-between;gap:.6rem;border-top:1px solid var(--line)}
+.recent a{display:block;padding:.48rem 0;min-height:44px}
+.recent time{white-space:nowrap;font-size:.83rem;color:var(--muted)}
+.live-control{margin:-.15rem 0 .7rem}
+.exercise-commands{display:grid;gap:.45rem}
+.exercise-commands>.start-exercise,.exercise-commands>.log-set-link{display:flex;align-items:center;justify-content:center;min-height:48px;border-radius:.65rem;padding:.5rem .75rem;font-size:.94rem;font-weight:750;text-decoration:none}
+.exercise-utilities{display:flex;flex-wrap:wrap;align-items:center;gap:.42rem}
+.exercise-utilities:not(:has(> :not([hidden]))){display:none}
+.exercise-utilities:has(> :not([hidden])){margin-top:.05rem}
+.exercise-utilities button{min-height:44px;padding:.45rem .6rem}
+.exercise-utilities output{margin-left:auto}
+.muscle-names,.exercise-feedback{margin:.4rem 0 .7rem;font-size:.9rem}
+.muscle-map{margin:.8rem 0;border:1px solid var(--line);border-radius:.75rem;background:#f7faf9}
+.muscle-map>summary{padding:.65rem 2rem .65rem .8rem}
+.muscle-map figure,.muscle-map>p{margin:.35rem .75rem .65rem}
+.map-key{display:inline-block;padding:.1rem .38rem;margin-right:.2rem;border-radius:.35rem;font-size:.82rem}
+.main-key{color:#fff;background:#007597}
+.support-key{color:#153f50;background:#9dd6e6}
+.map-note{font-size:.82rem}
+.english-name{font-size:.9em;font-weight:650;color:var(--muted)}
+.priority{display:inline-block;vertical-align:baseline;border-radius:99px;padding:.12rem .48rem;font-size:.76rem;font-weight:750;margin:.1rem .2rem .12rem 0}
+.priority.base{color:#075d47;background:#d9f0e5}
+.priority.alternative{color:#214675;background:#e2eaf7}
+.priority.accessory{color:#634822;background:#f4eadb}
+.checkpoints{margin:.95rem 0;padding:.8rem;background:#e8f2ee;border-radius:.75rem}
+.checkpoints p{margin:0 0 .4rem}
+.checkpoints ul{list-style:none;margin:0;padding:0}
+.checkpoints li{padding:.4rem 0}
+.checkpoints li+li{margin:0;border-top:1px solid #c9ddd4}
+.checkpoints li strong{display:block}
+.workout-panel{border-top:4px solid #4f9f89}
+.workout-clock,.exercise-clock{font-weight:750;font-variant-numeric:tabular-nums;align-self:center}
+.workout-controls,.archive-field{margin:.65rem 0}
+.archive-field select{margin-top:.2rem}
+.muscle-line{padding:.34rem 0;border-top:1px solid var(--line)}
+.muscle-line strong{display:block}
+.muscle-line span,.work-time{color:var(--muted);font-size:.85rem}
+.work-items{margin:.6rem 0}
+.workout-picker{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:end;gap:.55rem}
+.workout-picker select option{color:var(--ink)}
+.workout-running{padding:.8rem;background:#e8f4ee;border:1px solid #bbdacf;border-radius:.8rem;margin:.7rem 0}
+.workout-running>p{display:flex;align-items:baseline;justify-content:space-between;gap:.6rem;margin:0 0 .65rem}
+.workout-running .tools{margin-top:.5rem}
+.set-sheet{display:grid;grid-template-columns:2.6rem minmax(0,1fr) minmax(0,1fr) 2.75rem;gap:.45rem;align-items:center}
+.set-sheet-head{font-size:.85rem;font-weight:730;margin:.45rem 0 .25rem}
+.set-sheet-group{margin:.35rem 0}
+.set-side-select{grid-column:2 / 4}
+.remove-set-row{background:transparent;border-color:transparent;color:var(--muted);font-size:1.2rem;padding:0}
+.set-log-actions{display:flex;gap:.4rem;flex-wrap:wrap}
+.set-log-actions .text-button{background:#edf7f2;border:1px solid #c4ded2;text-decoration:none;padding:.4rem .6rem}
+.workout-running #finish-running{width:100%;min-height:48px}
+.set-hint{display:block;margin:.35rem 0;color:var(--muted);font-size:.82rem}
+.work-items>li{padding:.4rem 0}
+.saved-set-summary{margin:.2rem 0;color:var(--ink);font-size:.9rem}
+.text-button{background:transparent;border-color:transparent;color:var(--teal);text-decoration:underline;padding-inline:.35rem}
+.log-set-link{font-size:.9rem}
+.set-log-slot{scroll-margin-top:.6rem}
+.set-log-result{padding:.7rem .85rem;background:#e8f4ee;border-radius:.7rem;margin:.55rem 0}
+.set-log-result p{margin:0 0 .35rem}
+dialog{width:min(31rem,calc(100% - 2rem));max-height:85dvh;border:1px solid #cdb999;border-radius:1rem;padding:1.15rem;color:var(--ink);background:#fff9ed}
+dialog::backdrop{background:#12252799}
+dialog p:last-of-type{margin-bottom:.85rem}
+.coverage-surface figure{margin:.4rem auto .6rem}
+.coverage-surface canvas{display:block;width:100%;height:auto;border-radius:.7rem;background:#eef3f1}
+.coverage-legend{display:flex;flex-wrap:wrap;gap:.3rem .65rem;margin:.4rem 0 .6rem;font-size:.83rem}
+.coverage-legend span{display:inline-flex;align-items:center;gap:.26rem}
+.coverage-legend i{width:.82rem;height:.82rem;border-radius:.23rem;background:#c9d6d4}
+.coverage-legend .cover-main{background:#007597}
+.coverage-legend .cover-support{background:#9dd6e6}
+.coverage-legend .cover-pending{background:transparent;border:2px solid #ad5f10}
+.coverage-parts{display:flex;flex-wrap:wrap;gap:.28rem;margin:.4rem 0 .6rem}
+.coverage-parts a{display:inline-flex;align-items:center;min-height:38px;font-size:.82rem;padding:.25rem .46rem;text-decoration:none;background:#edf1f0;border-radius:.36rem;color:var(--ink)}
+.coverage-parts a[data-state=main]{background:#007597;color:white}
+.coverage-parts a[data-state=secondary]{background:#b1dfeb}
+.coverage-missing summary{padding:.55rem 2rem .55rem 0;min-height:44px;font-size:.88rem}
+.coverage-missing p{margin:.3rem 0 .45rem;font-size:.84rem;color:var(--muted)}
+#coverage-dialog{background:#f7faf9;border-color:#bad3cc;padding:.8rem;overscroll-behavior:contain}
+.coverage-dialog-head{display:flex;align-items:center;justify-content:space-between;gap:.6rem;margin-bottom:.65rem}
+.coverage-dialog-head h2{font-size:1.24rem;margin:0}
+.coverage-dialog-head form{margin:0}
+html{scroll-padding-bottom:5.25rem}
+main{padding-bottom:5.6rem}
+.live-map-dock{position:fixed;right:max(.55rem,env(safe-area-inset-right));bottom:max(.55rem,env(safe-area-inset-bottom));z-index:4;display:flex;gap:.46rem;align-items:center;text-align:left;padding:.28rem .55rem .28rem .28rem;background:#fff;box-shadow:0 3px 16px #102b2c26;border:1px solid #a9cbc0;border-radius:.75rem}
+.live-map-dock canvas{width:56px;height:auto;display:block;border-radius:.4rem}
+.live-map-dock strong,.live-map-dock small{display:block;line-height:1.25}
+.live-map-dock small{color:var(--muted);font-weight:600;margin-top:.1rem}
+.plan-library{display:grid;gap:.55rem}
+.plan-library .field select,.plan-filter select{display:block;margin-top:.2rem}
+.plan-library .tools,.plan-editor .tools{margin-top:.5rem}
+.plan-editor{margin-top:.75rem}
+.plan-filter{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:.5rem}
+.plan-picks,.plan-items,.plan-queue{list-style:none;padding:0;margin:.55rem 0}
+.plan-picks li,.plan-queue li{display:flex;justify-content:space-between;align-items:center;gap:.52rem;border-top:1px solid var(--line);padding:.35rem 0}
+.plan-picks small,.plan-queue small{display:block;color:var(--muted);font-size:.82rem}
+.plan-picks button{flex:0 0 auto}
+.plan-items li{padding:.45rem .55rem;margin:.4rem 0;background:#eef6f2;border-radius:.55rem}
+.plan-item-tools{display:flex;gap:.32rem;align-items:center;flex-wrap:wrap;margin-top:.32rem}
+.plan-item-tools .field{flex:0 0 4.2rem}
+.plan-item-tools .plan-item-reps{flex:1 1 6.5rem}
+.plan-item-tools button{align-self:flex-end;min-width:40px}
+.plan-item-buttons{display:flex;gap:.32rem}
+.plan-validation{border-top:1px solid var(--line);margin-top:.8rem;padding-top:.65rem}
+.plan-validation figure{max-width:21rem}
+.plan-validation ul{margin:.45rem 0}
+.plan-workout{padding:.8rem;background:#e8f4ee;border-radius:.7rem;margin:.65rem 0}
+.plan-workout h3{margin-bottom:.4rem}
+.plan-workout .plan-queue li{border-color:#bdd7ce}
+.planned-dose{margin:.35rem 0 .6rem}
+[hidden]{display:none!important}
+@media(max-width:520px){.workout-picker{grid-template-columns:minmax(0,1fr)}.workout-picker button{min-height:48px}.set-log-actions .text-button{flex:1}}
+@media(max-width:520px){.plan-item-tools{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.65fr)}.plan-item-buttons{grid-column:1/-1}}
+@media(max-width:440px){.nav-inner{padding-inline:.15rem}.nav-inner a{flex-grow:1;text-align:center;padding-inline:.28rem;font-size:.75rem}}
+@media(min-width:720px){.two{grid-template-columns:1fr 1fr}.three{grid-template-columns:repeat(3,1fr)}.nav-inner a{padding-inline:1rem}.live-map-dock canvas{width:76px}}
+@media print{nav,.back,.live-map-dock{display:none}header{color:var(--ink);background:#fff;padding:0 1rem}header p,.place{color:var(--ink)}details{break-inside:avoid}details>.inside{display:block;content-visibility:visible}}
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <span class="place">Form Factory FitCamp · Bratislava</span>
+    <h1>Tréning vo FitCampe</h1>
+    <p>46 cvikov pre silu a svaly. Zapisuj série, sleduj zapojené svaly a porovnaj si tréningy.</p>
+  </div>
+</header>
+<nav aria-label="Sekcie príručky"><div class="nav-inner">
+  <a href="#teraz">Tréning</a><a href="#planovac">Plánovač</a><a href="#rozc">Rozcvička</a><a href="#cviky">Cviky</a><a href="#dennik">Denník</a>
+</div></nav>
+<main>
+<section id="teraz">
+  <h2>Aktuálny tréning</h2>
+  <div class="box workout-panel">
+    <p>Otvor kartu cviku. Po poslednej sérii zapíš všetky série naraz priamo v nej.</p>
+    <div id="workout-picker" class="workout-picker">
+      <label class="field" for="workout-pick">Cvik <select id="workout-pick"><option value="">Vyber cvik</option></select></label>
+      <button id="start-picked" class="save" type="button">Začať cvik</button>
+    </div>
+    <div class="tools workout-controls">
+      <button id="finish-workout" type="button" hidden>Ukončiť tréning</button>
+      <a href="#cviky">Technika cvikov</a>
+      <a href="#planovac">Naplánovať tréning</a>
+    </div>
+    <p id="workout-status" role="status" class="subtle" hidden></p>
+    <p id="workout-active" hidden>Prebieha · <a id="workout-active-link"></a> <output class="workout-clock" aria-live="off" aria-label="Trvanie cviku"></output></p>
+    <div id="plan-execution" class="plan-workout" hidden>
+      <h3 id="plan-execution-name"></h3>
+      <p id="plan-execution-status" class="subtle"></p>
+      <button id="start-next-plan" class="save" type="button">Začať ďalší cvik</button>
+      <ol id="plan-execution-list" class="plan-queue"></ol>
+    </div>
+    <div id="set-panel-parking" hidden>
+      <div id="inline-set-panel" class="workout-running">
+      <h3>Série v tomto tréningu</h3>
+      <p id="planned-set-dose" class="planned-dose subtle" hidden></p>
+      <form id="record-set" novalidate>
+        <div class="set-log-actions">
+          <button id="use-last-sets" type="button" hidden>Načítať minulé série</button>
+        </div>
+        <div class="set-sheet set-sheet-head" aria-hidden="true"><span>Séria</span><span id="set-amount-label">Opakovania</span><span>Váha (kg)</span></div>
+        <div id="set-sheet-rows" aria-label="Série tohto cviku"></div>
+        <small id="set-weight-hint" class="set-hint"></small>
+        <p class="set-hint">Riadky, ktoré necháš prázdne, sa preskočia.</p>
+        <div class="tools"><button id="finish-running" class="save" type="button">Uložiť série a ukončiť cvik</button></div>
+        <div class="set-log-actions">
+          <button id="add-set-row" class="text-button" type="button">Pridať riadok</button>
+          <button id="save-sets-draft" class="text-button" type="button">Priebežne uložiť</button>
+        </div>
+        <p id="set-status" role="status" class="set-hint"></p>
+      </form>
+      </div>
+    </div>
+    <div id="live-map-host" hidden>
+        <div id="live-map-view" class="coverage-surface">
+          <p id="coverage-status" class="subtle" role="status"></p>
+          <figure>
+            <canvas id="coverage-canvas" width="480" height="420" role="img"
+                    aria-label="Mapa zapojených svalov spredu a zozadu" aria-describedby="coverage-status"></canvas>
+            <figcaption class="labels" aria-hidden="true"><span>Spredu</span><span>Zozadu</span></figcaption>
+          </figure>
+          <div class="coverage-legend" aria-label="Vysvetlenie farieb">
+            <span><i class="cover-main" aria-hidden="true"></i>Hlavné</span>
+            <span><i class="cover-support" aria-hidden="true"></i>Len pomocné</span>
+            <span><i aria-hidden="true"></i>Bez záznamu</span>
+            <span id="coverage-preview-key" hidden><i class="cover-pending" aria-hidden="true"></i>Práve cvičíš</span>
+          </div>
+          <div id="coverage-parts" class="coverage-parts" aria-label="Prehľad svalových skupín"></div>
+          <details class="coverage-missing">
+            <summary>Zatiaľ bez zapojenia</summary>
+            <p id="coverage-missing-list"></p>
+          </details>
+          <p class="subtle map-note">Prehľad vychádza zo zapísaných cvikov. Sivá môže zostať, ak partiu cvičíš v iný deň.</p>
+        </div>
+    </div>
+    <label class="field archive-field" id="workout-archive-field" hidden>Posledné ukončené tréningy <select id="workout-archive"></select></label>
+    <div id="workout-overview" hidden>
+      <h3 id="workout-overview-title">Odcvičené cviky</h3>
+      <ol id="workout-exercises" class="work-items"></ol>
+      <details>
+        <summary>Prehľad svalov a prekrytia</summary>
+        <div id="workout-muscles"></div>
+      </details>
+    </div>
+    <p class="subtle">Upozornenie sa zobrazí pri treťom cviku na rovnaký hlavný sval v jednom tréningu.</p>
+  </div>
+</section>
+<section id="planovac">
+  <h2>Plánovač tréningu</h2>
+  <div class="grid two plan-library">
+    <div class="box">
+      <h3>Pripravené šablóny</h3>
+      <label class="field">Šablóna <select id="plan-preset"></select></label>
+      <p id="plan-preset-description" class="subtle"></p>
+      <p class="subtle">Pri novom cviku začni jednou ľahkou pracovnou sériou.</p>
+      <div class="tools"><button id="load-plan-preset" type="button">Načítať šablónu</button></div>
+    </div>
+    <div class="box">
+      <h3>Moje uložené plány</h3>
+      <label class="field">Uložený plán <select id="plan-saved"></select></label>
+      <div class="tools">
+        <button id="load-saved-plan" type="button">Otvoriť plán</button>
+        <button id="new-plan-draft" type="button">Nový plán</button>
+      </div>
+    </div>
+  </div>
+  <div class="box plan-editor">
+    <h3 id="plan-editor-title">Zostava tréningu</h3>
+    <label class="field">Názov tréningu <input id="plan-name" maxlength="70" placeholder="Napr. Celé telo v pondelok"></label>
+    <a id="plan-review-link" href="#plan-validation" hidden>Zobraziť svaly a upozornenia ↓</a>
+    <ol id="plan-items" class="plan-items"></ol>
+    <div class="plan-filter">
+      <label class="field">Pridať cvik <input id="plan-search" type="search" placeholder="Názov cviku"></label>
+      <label class="field">Partia <select id="plan-group"><option value="">Všetky partie</option></select></label>
+    </div>
+    <ul id="plan-picks" class="plan-picks"></ul>
+    <div class="tools">
+      <button id="save-plan" class="save" type="button">Uložiť plán</button>
+      <button id="start-plan" type="button">Spustiť tento plán</button>
+      <button id="duplicate-plan" type="button" hidden>Uložiť ako kópiu</button>
+    </div>
+    <p id="plan-status" class="subtle" role="status"></p>
+    <div id="plan-validation" class="plan-validation coverage-surface" hidden>
+      <h3>Svaly v pláne</h3>
+      <p id="plan-validation-summary" class="subtle"></p>
+      <figure>
+        <canvas id="plan-muscle-canvas" width="480" height="420" role="img" aria-label="Plánované zapojenie svalov spredu a zozadu"></canvas>
+        <figcaption class="labels" aria-hidden="true"><span>Spredu</span><span>Zozadu</span></figcaption>
+      </figure>
+      <div class="coverage-legend" aria-label="Vysvetlenie farieb">
+        <span><i class="cover-main" aria-hidden="true"></i>Plánované priamo</span>
+        <span><i class="cover-support" aria-hidden="true"></i>Len pomocne</span>
+        <span><i aria-hidden="true"></i>Mimo plánu</span>
+      </div>
+      <div id="plan-coverage-parts" class="coverage-parts" aria-label="Plánované pokrytie svalových skupín"></div>
+      <p id="plan-warnings-empty" class="subtle"></p>
+      <ul id="plan-warnings"></ul>
+      <details class="coverage-missing">
+        <summary>Priame série podľa svalov</summary>
+        <ul id="plan-direct-doses"></ul>
+      </details>
+      <p class="subtle">Upozornenia používajú orientačný prah troch cvikov alebo šiestich plánovaných priamych sérií na rovnaký hlavný sval v jednej návšteve. Pomocné svaly sa zobrazujú v mape. Porovnaj pokrytie aj medzi plánmi A a B.</p>
+    </div>
+  </div>
+</section>
+<section id="treningy">
+  <h2>Ako si vyskladať tréning</h2>
+  <div class="box">
+    <p><strong>Pri dvoch návštevách</strong> začni napríklad v pondelok a vo štvrtok. Po <a href="#rozc">rozcvičke</a> si vyber 4–6 cvikov podľa toho, ktoré partie sa zotavili. <a href="#progres">Série a záťaž</a> pridávaj postupne.</p>
+    <ol>
+      <li>Jeden hlavný cvik na <a href="#quads">predné stehná</a>, napríklad leg press, goblet drep alebo vstávanie z lavičky.</li>
+      <li>Jeden cvik na <a href="#posterior">zadok alebo zadné stehná</a>. Cez týždeň zaraď aspoň jeden variant zakopávania, ak ho máš k dispozícii.</li>
+      <li>Jeden tlak na <a href="#pushes">hrudník</a> a jeden ťah na <a href="#pulls">chrbát</a>. Cez týždeň môžeš použiť vodorovný príťah aj hornú kladku.</li>
+      <li>Podľa času a regenerácie jeden až dva doplnky na <a href="#shoulders">ramená</a>, <a href="#biceps-group">biceps</a>, <a href="#triceps-group">triceps</a>, <a href="#calves">lýtka</a> alebo <a href="#core">stred tela</a>.</li>
+    </ol>
+    <p>Keď ťa pri schodoch stále obmedzujú stehná, vyber napríklad tlak na hrudník, príťah a cvik na brucho. Pri unavenom hrudníku a tricepse môžeš dať nohy a chrbát. Pri výbere rátaj s presahom. Tlaky zaťažujú aj triceps a predné ramená, ťahy aj biceps.</p>
+  </div>
+  <div class="note"><strong>Variácie striedaj hlavne v doplnkoch.</strong> Na 3–4 týždne si nechaj aspoň dva hlavné cviky, ktoré vieš pravidelne zopakovať. Jednoduchšie zistíš, či si silnejší. Pri obsadenom stroji použi náhradu z rovnakej skupiny.</div>
+  <p><a href="#planovac">Otvoriť hotové šablóny v Plánovači</a></p>
+</section>
+<section id="dennik">
+  <h2>Čo si cvičil naposledy</h2>
+  <div class="box">
+    <p>Ukončené meranie sa automaticky zapíše k cviku. Pri spätnom zápise použi <strong>Označiť ako odcvičené</strong> a prípadne pridaj váhu, série alebo nastavenie stroja. Ručné zápisy spätne nemenia prehľad svalov. Pri každom cviku uvidíš posledný uložený záznam.</p>
+    <div class="tools">
+      <label class="field day">Dátum tréningu <input id="training-date" type="date"></label>
+      <button id="export-sets" class="save" type="button">Export sérií CSV</button>
+      <button id="export-log" type="button">Stiahnuť zálohu JSON</button>
+      <button id="import-log" type="button">Načítať zálohu</button>
+      <input id="backup-file" type="file" accept=".json,application/json" hidden>
+    </div>
+    <p id="journal-status" class="subtle log-output" role="status"></p>
+    <ul id="recent-items" class="recent" aria-label="Naposledy označené cviky"></ul>
+    <p class="subtle">CSV má jeden riadok na zapísanú sériu a dá sa poslať na vyhodnotenie progresu. Záloha JSON uchová uložené plány, denník aj ukončené tréningy. Záznamy sa ukladajú do tohto prehliadača. Pred prenesením si tréning ukonči.</p>
+  </div>
+</section>
+<section id="cviky">
+  <h2>Repertoár podľa svalov</h2>
+  <p class="subtle"><strong>Základ</strong> je prvá voľba v danej svalovej skupine. <strong>Alternatívu</strong> zvoľ podľa vybavenia a istoty v pohybe. <strong>Doplnok</strong> pridaj podľa toho, ktorú partiu chceš precvičiť viac. Cviky sú zoradené podľa priority.</p>
+  <label class="field">Nájdi cvik alebo partiu <input id="exercise-search" type="search" placeholder="Napr. kladka, hrudník, lýtka"></label>
+  <div class="group-menu" aria-label="Svalové partie">@@GROUP_LINKS@@</div>
+  <p id="empty-search" hidden>Taký cvik sa nenašiel. Skús kratší názov alebo partiu.</p>
+  @@CARDS@@
+</section>
+<section id="rozc">
+  <h2>6-minútová rozcvička bez kardia</h2>
+  <div class="box">
+    <p>Rozlož si podložku a sprav všetkých šesť krokov v poradí. Začni v stoji vedľa nej, potom prejdi na štyri a na chrbát. Pri pomalom tempe a krátkych pauzách to vyjde približne na 5–6 minút.</p>
+    <ol id="warmup-steps" class="warmup-steps">
+      <li><span class="step-dose">1. V stoji · 8 na každú nohu</span>
+        <h3>Prenášanie váhy v rozkroku <small class="english-name" lang="en">(Split-Stance Ankle Rocks)</small></h3>
+        <p>Urob malý krok vpred. Chodidlá nechaj od seba aj do strán, aby si mal rovnováhu. Plynulo prenes váhu dopredu a nechaj predné koleno ísť v smere špičky. Vráť sa a po ôsmich opakovaniach vymeň nohy.</p>
+        <p><strong>Sleduj pätu.</strong> Ak sa predná päta dvíha, prenes váhu o trochu menej dopredu.</p>
+        @@ANKLE_DEMO@@
+      </li>
+      <li><span class="step-dose">2. V stoji · 8 opakovaní</span>
+        <h3>Drep s vlastnou váhou <small class="english-name" lang="en">(Bodyweight Squat)</small></h3>
+        <p>Nohy daj približne na šírku ramien. Za dve sekundy pokrč kolená a bedrá, na chvíľu zastav v pohodlnej hĺbke a pomaly sa postav. Nechaj celé chodidlá na podlahe a kolená v smere špičiek.</p>
+        <p>Ak je pohyb plynulý, môžeš skúsiť pár opakovaní ako <a href="#goblet">drep s ľahkou jednoručkou pri hrudníku (Goblet Squat)</a>.</p>
+        @@SQUAT_DEMO@@
+      </li>
+      <li><span class="step-dose">3. V stoji · 8 kruhov v každom smere</span>
+        <h3>Krúženie ramenami <small class="english-name" lang="en">(Shoulder Rolls)</small></h3>
+        <p>Ruky nechaj voľne pri bokoch. Veď obe ramená nahor, dozadu, dole a dopredu v pomalom kruhu. Po ôsmich opakovaniach otoč smer. Hlava a rebrá zostávajú približne na mieste. Ak pohyb ťahá krk, sprav menšie kruhy.</p>
+        @@SHOULDER_DEMO@@
+      </li>
+      <li><span class="step-dose">4. Na štyroch · 8 opakovaní</span>
+        <h3>Klik lopatkami na štyroch <small class="english-name" lang="en">(Quadruped Scapular Push-up)</small></h3>
+        <p>Dlane daj pod ramená, kolená pod boky. S vystretými lakťami nechaj hrudník klesnúť o pár centimetrov medzi ramená. Potom sa dlaňami odtlač a nechaj lopatky vzdialiť sa od seba. Každý smer kontroluj asi dve sekundy.</p>
+        <p><strong>Sleduj lakte.</strong> Ich uhol sa takmer nemení. Pri návrate drž boky nad kolenami.</p>
+        @@SCAP_DEMO@@
+      </li>
+      <li><span class="step-dose">5. Na chrbte · 8 opakovaní</span>
+        <h3><a href="#bridge">@@NAME:bridge@@</a></h3>
+        <p>Opri celé chodidlá o podlahu a pokrč kolená. S výdychom zdvihni boky, na sekundu zastav a pomaly ich polož späť. Zdvih ukonči pri pocite práce v zadku, kým sa rebrá ešte nedvíhajú a kríže neprehýbajú.</p>
+        @@BRIDGE_DEMO@@
+      </li>
+      <li><span class="step-dose">6. Na chrbte · 6 na každú stranu</span>
+        <h3><a href="#deadbug">@@NAME:deadbug@@</a></h3>
+        <p>Ruky zdvihni nad ramená a kolená nad boky. S výdychom pomaly spúšťaj jednu nohu a opačnú ruku. Zastav predtým, ako sa kríže výrazne prehnú. Vráť sa a vymeň strany. Ak je pohyb náročný, skráť dosah alebo pohybuj len nohami.</p>
+        @@DEADBUG_DEMO@@
+      </li>
+    </ol>
+    <p class="subtle">Pred prvým zaťaženým cvikom si podľa potreby pridaj 4–6 ľahkých skúšobných opakovaní s jeho technikou. Ak kvôli svalovici niektorý pohyb meníš alebo ťa pri ňom ostro zabolí, preskoč ho.</p>
+  </div>
+</section>
+<section id="progres">
+  <h2>Záťaž a progres</h2>
+  <div class="note"><strong>Pri novom cviku urob najprv jednu pracovnú sériu</strong> s približne 4 opakovaniami v rezerve. Pri známych cvikoch pridávaj druhú sériu postupne podľa regenerácie. Keď dve série zvládaš dobre, väčšinu pracovných sérií môžeš končiť s rezervou 2–3 opakovaní. Výdrže ukonči skôr, než sa rozpadne technika.</div>
+  <div class="box progress-box">
+    <ol>
+      <li><strong>Vyber prvú váhu podľa pohybu.</strong> Začni na nízkom nastavení a urob najnižší počet opakovaní z uvedeného rozsahu. Ak by si potom s rovnakou technikou zvládol ešte približne 4, váha na úvod sedí. Pri neistom odhade si nechaj viac rezervy.</li>
+      <li><strong>Dýchaj a dávaj si pauzy.</strong> Odpor prekonávaj plynulo s výdychom a vracaj ho kontrolovane približne 2 sekundy. Po práci oddychuj 90–150 sekúnd, pri tlaku na nohy pokojne 2–3 minúty. Pri moste a dead bugu zvyčajne stačí 60–90 sekúnd.</li>
+      <li><strong>Najprv pridávaj opakovania.</strong> Ak všetky série dosiahnu hornú hranicu s predpísanou rezervou a technikou počas dvoch tréningov daného cviku, pridaj najmenší krok váhy. Vráť sa na spodok rozsahu. Ak je skok príliš veľký, zopakuj pôvodnú váhu. Pri cvikoch s vlastnou váhou zmeň iba jednu vec, napríklad výšku opory pri kliku.</li>
+      <li><strong>Sleduj reakciu po tréningu.</strong> Ak je svalovica ešte v deň tréningu výrazná, daj si voľno alebo precvič len ostatné partie. Pri opakovaných ťažkostiach sa vráť na predošlú dávku. V jednom týždni pridávaj buď série, jednu návštevu alebo záťaž.</li>
+    </ol>
+    <p><strong>Príklad záznamu</strong><span class="sample">A · Leg Press · sedadlo 4 · 25 kg · 8, 8 · rezerva 4 · schody na druhý deň v pohode</span><span class="subtle">25 kg je ukážka zápisu. Zaťažovacie stupnice sa medzi strojmi líšia.</span></p>
+  </div>
+</section>
+<section id="svalovica">
+  <h2>Keď príde svalovica</h2>
+  <div class="box">
+    <p>Mierna tupá citlivosť na ďalší deň sa môže objaviť najmä po novom cviku. Ak chôdza, schody aj rozcvička prebiehajú ako zvyčajne, môžeš skúsiť ľahký tréning podľa plánu.</p>
+    <p>Keď musíš meniť chôdzu alebo techniku, dopraj dotknutej partii ďalší deň alebo viac. Tréning posuň podľa toho, ako sa pohyb zlepšuje. Brucho môžeš odcvičiť samostatne, ak je pohyb pohodlný.</p>
+    <p>Pri ostrej bolesti počas cviku, bolesti priamo v kĺbe alebo pri silnej svalovici, ktorá sa opakuje aj po ľahkých tréningoch alebo sa po niekoľkých dňoch nezlepšuje, zváž konzultáciu s lekárom alebo fyzioterapeutom.</p>
+    <p class="note warning"><strong>Vyhľadaj lekársku pomoc bezodkladne</strong> pri moči farby čaju alebo koly, neobvykle silnej svalovej bolesti či výraznej slabosti po námahe. <a href="https://www.cdc.gov/niosh/rhabdo/signs-symptoms/index.html">CDC – príznaky</a></p>
+  </div>
+</section>
+<section id="fitcamp">
+  <h2>Vybavenie vo FitCampe</h2>
+  <div class="box">
+    @@CLUB@@
+    <p>Iné kluby pomáhajú zorientovať sa v názvoch. Nivy a Farského uvádzajú stroje Technogym. BBC5 výslovne uvádza tlak na nohy, tlak na hrudník, zakopávanie a kladky. Budatínska uvádza stroje Matrix. Táto výbava sa môže medzi pobočkami líšiť.</p>
+    <p>Podľa štítkov hľadaj najmä <strong>Leg Press, Chest Press, Low Row, Lat Pulldown / Lat Machine a Seated Leg Curl.</strong> Výrobca Technogym používa aj názov Vertical Traction. Karty uvádzajú rozpoznávacie znaky a náhradu.</p>
+    <ul class="sources">
+      <li><a href="https://www.formfactory.sk/klub/fitcamp/">FitCamp – stránka klubu a galéria</a></li>
+      <li><a href="https://www.formfactory.sk/klub/nivy/">Nivy</a> · <a href="https://www.formfactory.sk/klub/farskeho/">Farského</a> · <a href="https://www.formfactory.sk/cennik/pro-club/">BBC5 – zoznam vybavenia</a> · <a href="https://www.formfactory.sk/klub/budatinska/">Budatínska</a></li>
+      <li><a href="https://www.technogym.com/en-GB/category/selection-700/">Technogym – fotky a názvy príkladov strojov</a></li>
+      <li><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC12965823/">ACSM – silový tréning zdravých dospelých</a> · <a href="https://www.nasm.org/resource-center/exercise-library">NASM – knižnica techniky cvikov</a> · <a href="https://champ.usuhs.edu/sites/default/files/2020-11/hprc_whec_clinical_practice_guideline_for_managing_er.pdf">USU – svalovica a príznaky po záťaži</a></li>
+      <li><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC7558980/">Výskum skúšobných sérií pred silovým tréningom</a></li>
+      <li><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC7969179/">Porovnanie zakopávania v sede a v ľahu</a></li>
+      <li><a href="https://med.libretexts.org/Bookshelves/Nursing/Clinical_Nursing_Skills_%28OpenStax%29/25%3A_Assessment_of_the_Musculoskeletal_System/25.01%3A_Structure_and_Function">OpenStax – anatómia kostrových svalov spredu a zozadu</a></li>
+    </ul>
+  </div>
+</section>
+</main>
+<button id="live-map-dock" class="live-map-dock" type="button" aria-haspopup="dialog">
+  <canvas id="live-map-dock-canvas" width="144" height="126" aria-hidden="true"></canvas>
+  <span><strong>Živá mapa</strong><small id="live-map-dock-status">Bez tréningu</small></span>
+</button>
+<dialog id="overlap-warning" aria-labelledby="overlap-title" aria-describedby="overlap-list">
+  <form method="dialog">
+    <h2 id="overlap-title">Prekrytie hlavných svalov</h2>
+    <p id="overlap-exercise"></p>
+    <ul id="overlap-list"></ul>
+    <div class="tools">
+      <button type="submit" value="back" autofocus>Vybrať iný cvik</button>
+      <button type="submit" class="save" value="continue">Aj tak začať</button>
+    </div>
+  </form>
+</dialog>
+<dialog id="coverage-dialog" aria-labelledby="coverage-title">
+  <div class="coverage-dialog-head">
+    <h2 id="coverage-title">Mapa svalov v tréningu</h2>
+    <form method="dialog"><button type="submit" autofocus>Zavrieť</button></form>
+  </div>
+  <div id="coverage-dialog-host"></div>
+</dialog>
+<script id="coverage-data" type="application/json">@@COVERAGE_DATA@@</script>
+<script id="muscle-names" type="application/json">@@MUSCLES@@</script>
+<script>@@SCRIPT@@</script>
+<script>@@SETS@@</script>
+<script>@@COVERAGE@@</script>
+<script>@@PLANNER@@</script>
+<script>@@TRAINING@@</script>
+<script>@@DEMOS@@</script>
+</body>
+</html>

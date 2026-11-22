@@ -1,0 +1,48 @@
+NASM = 'https://www.nasm.org/resource-center/exercise-library/'
+MUSCLE_STRENGTH = 'https://www.muscleandstrength.com/exercises/'
+NASM_DEMOS = {
+    'press': 'leg-press', 'goblet': 'goblet-squat', 'curl': 'seated-leg-curl',
+    'pronecurl': 'lying-leg-curl', 'bridge': 'floor-bridge', 'chest': 'chest-press-machine',
+    'push': 'incline-push-up', 'row': 'seated-machine-row-close-grip', 'facepull': 'face-pull',
+    'deadbug': 'dead-bug', 'birddog': 'bird-dog',
+}
+STRENGTH_DEMOS = {
+    'extension': 'leg-extension.html', 'hipthrust': 'bodyweight-hip-thrust',
+    'abduction': 'hip-abduction-machine.html', 'calfseated': 'seated-calf-raise.html',
+    'dbpress': 'dumbbell-bench-press.html', 'incline': 'incline-dumbbell-bench-press.html',
+    'straightpull': 'straight-arm-lat-pull-down.html', 'shoulderpress': 'machine-shoulder-press',
+    'lateral': 'dumbbell-lateral-raise.html', 'biceps': 'standing-dumbbell-curl.html',
+    'hammer': 'standing-hammer-curl.html',
+}
+DEMOS = {
+    **{key: (NASM + slug, 'NASM') for key, slug in NASM_DEMOS.items()},
+    **{key: (MUSCLE_STRENGTH + slug, 'Muscle & Strength') for key, slug in STRENGTH_DEMOS.items()},
+    'sit': ('https://www.southtees.nhs.uk/resources/sit-to-stand-from-chair-combined/', 'NHS'),
+    'split': ('https://vimeo.com/339167889', 'Jon Clarke'),
+    'calfstanding': ('https://www.muscleandstrength.com/node/3779', 'Muscle & Strength'),
+    'lat': ('https://www.mayoclinic.org/healthy-lifestyle/fitness/multimedia/lat-pull-down/vid-20084683', 'Mayo Clinic'),
+    'dbrow': ('https://www.youtube.com/watch?v=zl5q8TpD55I', 'TrainFTW · obe chodidlá na podlahe'),
+    'supportedrow': ('https://www.muscleandstrength.com/node/48713', 'Muscle & Strength'),
+    'reversefly': ('https://cdn.muscleandstrength.com/exercises/machine-reverse-fly', 'Muscle & Strength'),
+    'pushdown': ('https://www.fittr.com/exercise-video/cable-pushdown-with-rope-attachment-2/', 'FITTR'),
+    'overhead': ('https://cdn.muscleandstrength.com/exercises/overhead-tricep-extension.html', 'Muscle & Strength'),
+    'plank': ('https://us.physitrack.com/home-exercise-video/plank-from-knees', 'Physitrack · verzia na kolenách'),
+    'sideplank': ('https://www.benjiphysio.co.uk/video-library/v/knee-side-plank', 'Benji Physio · kolená pokrčené'),
+    'pallof': ('https://hawkesphysiotherapy.co.uk/exercise/cable-exercise-band-pallof-press/', 'Hawkes Physiotherapy'),
+    'anklerock': ('https://vimeo.com/1143165853', 'Justin Brink'),
+    'squatwarm': ('https://shuttlescience.com/library/bw-squat', 'ShuttleScience'),
+    'shoulderwarm': ('https://uk.physitrack.com/home-exercise-video/standing-shoulder-circle', 'Physitrack'),
+    'scapwarm': ('https://elite-performance-institute.com/exercise-library/shoulder-exercises/quadruped-scapular-push-up/', 'Elite Performance Institute'),
+    'hack': (MUSCLE_STRENGTH + 'hack-squat.html', 'Muscle & Strength'),
+    'stepup': ('https://na.physitrack.com/home-exercise-video/step-up---bodyweight', 'Physitrack'),
+    'cablekick': ('https://www.fitmetrics.ch/en/exercise/655259538d548-cable-glute-kickback/videos', 'FitMetrics'),
+    'singlecalf': ('https://au.physitrack.com/home-exercise-video/standing-single-leg-heel-raise-%2528support%2529', 'Physitrack'),
+    'pecdeck': ('https://cdn.muscleandstrength.com/exercises/pec-dec.html', 'Muscle & Strength'),
+    'cablefly': (MUSCLE_STRENGTH + 'cable-crossovers-%28mid-chest%29.html', 'Muscle & Strength'),
+    'assistpull': ('https://www.qmsu.org/qmotion/guides/video/21286/Assisted-Pull-Up/', 'Qmotion'),
+    'dbshoulder': (MUSCLE_STRENGTH + 'seated-dumbbell-press.html', 'Muscle & Strength'),
+    'cablecurl': ('https://weighttraining.guide/exercises/cable-curl/', 'Weight Training Guide'),
+    'preacher': (MUSCLE_STRENGTH + 'one-arm-preacher-curl.html', 'Muscle & Strength'),
+    'singletricep': ('https://www.fittr.com/exercise-video/cable-one-arm-pushdown-57/', 'FITTR'),
+    'reversecrunch': ('https://workouts.fitbe.io/exercises/reverse-crunch', 'FitBe'),
+}

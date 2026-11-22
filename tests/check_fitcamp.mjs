@@ -1,0 +1,418 @@
+import assert from 'node:assert/strict';
+import {spawn} from 'node:child_process';
+import {mkdir, mkdtemp, readFile, readdir, writeFile} from 'node:fs/promises';
+import {resolve} from 'node:path';
+import {fileURLToPath, pathToFileURL} from 'node:url';
+import {setTimeout as delay} from 'node:timers/promises';
+
+const project = fileURLToPath(new URL('../', import.meta.url));
+const artifacts = resolve(project, '.test-artifacts');
+await mkdir(artifacts, {recursive:true});
+const profile = await mkdtemp(resolve(artifacts, 'chrome-'));
+const pageURL = process.env.FITCAMP_TEST_URL ?? pathToFileURL(resolve(project, 'docs', 'index.html')).href;
+const chrome = process.env.CHROME_BIN ?? (process.platform === 'win32'
+  ? 'C:/Program Files/Google/Chrome/Application/chrome.exe' : 'chromium');
+const browser = spawn(chrome, [
+  '--headless', '--disable-gpu', '--no-first-run', '--no-default-browser-check',
+  '--disable-crashpad-for-testing', '--disable-breakpad', '--noerrdialogs',
+  '--disable-background-networking', '--remote-debugging-port=0',
+  '--user-data-dir=' + profile, 'about:blank',
+], {windowsHide:true, stdio:['ignore', 'ignore', 'pipe']});
+let browserError = '';
+browser.stderr.on('data', data => { browserError += data; });
+let ws;
+try {
+  let config;
+  for (let i = 0; i < 80 && !config; i++) {
+    try { config = await readFile(resolve(profile, 'DevToolsActivePort'), 'utf8'); }
+    catch { await delay(100); }
+  }
+  assert.ok(config, 'Chrome did not expose DevTools. ' + browserError);
+  const targets = await fetch('http://127.0.0.1:' + config.split('\n')[0] + '/json/list').then(r => r.json());
+  ws = new WebSocket(targets.find(target => target.type === 'page').webSocketDebuggerUrl);
+  await new Promise((done, fail) => {
+    ws.addEventListener('open', done, {once:true});
+    ws.addEventListener('error', fail, {once:true});
+  });
+  let id = 0;
+  const pending = new Map();
+  ws.addEventListener('message', ({data}) => {
+    const message = JSON.parse(data);
+    const handler = pending.get(message.id);
+    if (!handler) return;
+    pending.delete(message.id);
+    if (message.error) handler.reject(message.error);
+    else handler.resolve(message.result);
+  });
+  const command = (method, params = {}) => new Promise((resolve, reject) => {
+    pending.set(++id, {resolve, reject});
+    ws.send(JSON.stringify({id, method, params}));
+  });
+  const inspect = async (expression) => {
+    const evaluated = await command('Runtime.evaluate', {expression, returnByValue:true, awaitPromise:true});
+    if (evaluated.exceptionDetails) throw new Error(evaluated.result.description || evaluated.exceptionDetails.text);
+    return evaluated.result.value;
+  };
+  const viewport = (width) => command('Emulation.setDeviceMetricsOverride',
+    {width, height:820, deviceScaleFactor:1, mobile:true});
+  const screenshot = async (file) => {
+    const image = await command('Page.captureScreenshot', {format:'png', fromSurface:true});
+    await writeFile(resolve(artifacts, file), Buffer.from(image.data, 'base64'));
+  };
+
+  await viewport(390);
+  await command('Page.enable');
+  await command('Network.enable');
+  if (pageURL.startsWith('file:')) {
+    await command('Network.emulateNetworkConditions',
+      {offline:true, latency:0, downloadThroughput:0, uploadThroughput:0});
+  }
+  await command('Page.navigate', {url:pageURL});
+  for (let i = 0; i < 60 && !await inspect('document.querySelectorAll("details.card").length === 46'); i++)
+    await delay(100);
+  const rendered = await inspect(`(async () => {
+    await Promise.all(Array.from(document.images, image => { image.loading = 'eager'; return image.decode(); }));
+    return {
+      images: document.images.length,
+      landscapeOverflow: document.documentElement.scrollWidth > innerWidth,
+      missingTargets: [...document.querySelectorAll('a[href^="#"]')].filter(a => !document.querySelector(a.hash)).length,
+      sources: performance.getEntriesByType('resource').filter(r => !r.name.startsWith('data:')).length
+    };
+  })()`);
+  assert.deepEqual(rendered, {images:92, landscapeOverflow:false, missingTargets:0, sources:0});
+  assert.equal(await inspect(`[...document.querySelectorAll('.card')].every(card =>
+    card.querySelector('.exercise-name .english-name[lang=en]').textContent.startsWith('(') &&
+    card.querySelector('.exercise-name .english-name[lang=en]').textContent.endsWith(')') &&
+    card.querySelectorAll('.checkpoints li').length === 3)`), true);
+  await screenshot('fitcamp-mobile.png');
+  await inspect('location.hash = "#press"');
+  await delay(250);
+  assert.equal(await inspect('location.hash === "#press" && document.querySelector("#press").open'), true);
+  assert.equal(await inspect(`(() => {
+    const card = document.querySelector('#press');
+    const action = card.querySelector('.start-exercise').getBoundingClientRect();
+    const formWidth = card.querySelector('.exercise-commands').getBoundingClientRect().width;
+    const demo = card.querySelector('.demo-toggle').getBoundingClientRect();
+    const source = card.querySelector('.demo-source').getBoundingClientRect();
+    return action.height >= 48 && Math.abs(action.width - formWidth) < 1 &&
+      demo.height >= 48 && Math.abs(demo.height - source.height) < 1 && Math.abs(demo.width - source.width) < 1;
+  })()`), true);
+  await screenshot('fitcamp-exercise.png');
+  await inspect(`document.querySelector('#press .checkpoints').scrollIntoView({block:'start'})`);
+  await screenshot('fitcamp-checkpoints.png');
+  assert.equal(await inspect(`[...document.querySelectorAll('video')].every(video =>
+    !video.hasAttribute('src') && video.dataset.src.startsWith('data:video/mp4;base64,'))`), true);
+  assert.equal(await inspect(`document.querySelectorAll('.demo-source[href^="https://"]').length`), 52);
+  assert.equal(await inspect(`document.querySelectorAll('.card .priority').length`), 46);
+  assert.equal(await inspect(`document.querySelectorAll('.card .muscle-map img').length`), 46);
+  assert.equal(await inspect(`document.querySelectorAll('.category').length`), 9);
+  assert.equal(await inspect(`[...document.querySelectorAll('.category')].every(group => group.querySelector('.base'))`), true);
+  assert.equal(await inspect(`document.querySelector('#biceps .priority').textContent`), 'Základ');
+  assert.equal(await inspect(`document.querySelector('#sideplank .demo-source').href.includes('knee-side-plank')`), true);
+  assert.equal(await inspect(`[...document.querySelectorAll('.category')].every(group => {
+    const rank = {base:0, alternative:1, accessory:2};
+    const priorities = [...group.querySelectorAll('.priority')].map(badge => rank[badge.classList[1]]);
+    return priorities.every((value, i) => i === 0 || value >= priorities[i-1]);
+  })`), true);
+  await inspect(`document.querySelector('#press .exercise-demo').scrollIntoView({block:'start'})`);
+  await inspect(`document.querySelector('#press .demo-toggle').click()`);
+  for (let i = 0; i < 60 && !await inspect(`document.querySelector('#press video').currentTime > 0.25`); i++) await delay(100);
+  assert.equal(await inspect(`document.querySelector('#press video').currentTime > 0.25`), true);
+  assert.equal(await inspect(`!document.getElementById('press-video').hidden &&
+    document.querySelector('#press .demo-stills').hidden`), true);
+  await screenshot('fitcamp-playing.png');
+  await inspect(`document.querySelector('#press .demo-toggle').click()`);
+  assert.equal(await inspect(`document.querySelector('#press video').paused &&
+    document.getElementById('press-video').hidden`), true);
+  const clipTest = await inspect(`(async () => {
+    const clips = Array.from(document.querySelectorAll('video'));
+    const results = [];
+    for (const clip of clips) {
+      const clipId = clip.closest('figure').id;
+      const player = document.createElement('video');
+      player.preload = 'metadata';
+      results.push(await new Promise(resolve => {
+        const timeout = setTimeout(() => resolve({ok:false, clip:clipId}), 2500);
+        const finish = ok => { clearTimeout(timeout); resolve({ok, clip:clipId}); };
+        player.onloadedmetadata = () => {
+          if (player.duration < 4 || player.duration > 5.1 ||
+              player.videoWidth !== 432 || player.videoHeight !== 264) {
+            finish(false);
+            return;
+          }
+          player.currentTime = 1.6;
+        };
+        player.onseeked = () => finish(player.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA);
+        player.onerror = () => finish(false);
+        player.src = clip.dataset.src;
+      }));
+      player.removeAttribute('src');
+      player.load();
+    }
+    return results;
+  })()`);
+  assert.equal(clipTest.length, 52);
+  assert.deepEqual(clipTest.filter(clip => !clip.ok), []);
+  await inspect(`document.querySelector("#press a[href='#sit']").click()`);
+  await delay(250);
+  assert.equal(await inspect('location.hash === "#sit" && document.querySelector("#sit").open'), true);
+  await inspect(`document.querySelector('#sit .exercise-note').value = '2 × 10';
+    document.querySelector('#sit .track .save').click();`);
+  assert.equal(await inspect(`document.querySelector('#sit .last').textContent.includes('2 × 10')`), true);
+  assert.equal(await inspect(`document.querySelector('#recent-items a').hash`), '#sit');
+
+  await command('Page.reload');
+  for (let i = 0; i < 60 && !await inspect(`document.querySelector('#sit .last')?.textContent.includes('2 × 10')`); i++)
+    await delay(100);
+  assert.equal(await inspect(`document.querySelector('#sit .last').textContent.includes('2 × 10')`), true);
+  const defaultDate = await inspect(`document.querySelector('#training-date').value`);
+  await inspect(`document.querySelector('#sit .edit').click();
+    document.querySelector('#sit .edit-date input').value = '2025-10-13';
+    document.querySelector('#sit .exercise-note').value = '3 × 8';
+    document.querySelector('#sit .track .save').click();`);
+  assert.equal(await inspect(`document.querySelector('#recent-items time').dateTime`), '2025-10-13');
+  assert.equal(await inspect(`document.querySelector('#training-date').value`), defaultDate);
+
+  await inspect(`const testSearch = document.querySelector('#exercise-search');
+    testSearch.value = 'lytka'; testSearch.dispatchEvent(new Event('input'));`);
+  assert.equal(await inspect(`document.querySelectorAll('.card:not([hidden])').length`), 3);
+  await inspect(`testSearch.value = 'low row'; testSearch.dispatchEvent(new Event('input'))`);
+  assert.equal(await inspect(`document.querySelectorAll('.card:not([hidden])').length`), 1);
+  assert.equal(await inspect(`document.querySelector('.card:not([hidden])').id`), 'row');
+  await inspect(`document.querySelector('#recent-items a').click()`);
+  assert.equal(await inspect(`document.querySelectorAll('.card:not([hidden])').length`), 46);
+
+  const pressButton = (id, button) =>
+    inspect(`document.querySelector('#${id} .${button}').click()`);
+  const alertOpen = () => inspect(`document.querySelector('#overlap-warning').open`);
+  const activeExercise = () => inspect(`document.querySelector('#workout-active')?.hidden === false
+    ? document.querySelector('#workout-active-link')?.hash.slice(1) : null`);
+  const countBlocks = () => inspect(`document.querySelectorAll('#workout-exercises li').length`);
+  const complete = async (id) => {
+    await pressButton(id, 'start-exercise');
+    assert.equal(await alertOpen(), false, id + ' warned too early');
+    assert.equal(await activeExercise(), id);
+    await inspect(`document.querySelector('#finish-running').click()`);
+    assert.equal(await activeExercise(), null);
+  };
+  const enterSet = (row, amount, weight = '', side = 'both') => inspect(`
+    (() => {
+      const set = document.querySelectorAll('.set-sheet-group')[${row}];
+      const repInput = set.querySelector('.set-row-amount');
+      repInput.value = ${JSON.stringify(amount)};
+      set.querySelector('.set-row-weight').value = ${JSON.stringify(weight)};
+      const sideInput = set.querySelector('.set-side-select');
+      if (sideInput) sideInput.value = ${JSON.stringify(side)};
+      repInput.dispatchEvent(new Event('input', {bubbles:true}));
+    })()
+  `);
+  await inspect(`document.querySelector('#workout-pick').value = 'chest'; document.querySelector('#start-picked').click()`);
+  await pressButton('row', 'start-exercise');
+  assert.equal(await activeExercise(), 'chest');
+  assert.equal(await inspect(`document.querySelector('#coverage-status').textContent.includes('0 priamo')`), true);
+  assert.equal(await inspect(`!document.querySelector('#coverage-preview-key').hidden`), true);
+  await inspect(`document.querySelector('#live-map-dock').click()`);
+  assert.equal(await inspect(`document.querySelector('#coverage-dialog').open &&
+    document.querySelector('#live-map-view').closest('#coverage-dialog') !== null`), true);
+  await screenshot('fitcamp-coverage-pending.png');
+  await inspect(`document.querySelector('#coverage-dialog button').click()`);
+  await delay(120);
+  assert.equal(await inspect(`document.querySelector('#live-map-view').parentElement.id`), 'live-map-host');
+  assert.equal(await inspect(`document.querySelector('#record-set').closest('.card').id`), 'chest');
+  await pressButton('chest', 'log-set-link');
+  await delay(150);
+  assert.equal(await inspect(`location.hash`), '#chest-log');
+  assert.equal(await inspect(`document.querySelectorAll('.set-sheet-group').length`), 3);
+  await enterSet(0, '10', '27,5');
+  await enterSet(1, '8', '30');
+  await inspect(`document.querySelector('#save-sets-draft').click()`);
+  await command('Page.reload');
+  for (let i = 0; i < 60 && await activeExercise() !== 'chest'; i++) await delay(100);
+  assert.equal(await activeExercise(), 'chest', 'exercise running before reload should remain active');
+  assert.equal(await inspect(`document.querySelector('.set-row-weight').value`), '27,5');
+  await enterSet(0, '11', '27,5');
+  await inspect(`document.querySelector('#inline-set-panel').scrollIntoView({block:'start'})`);
+  await screenshot('fitcamp-sets.png');
+  await inspect(`document.querySelector('#finish-running').click()`);
+  assert.equal(await inspect(`document.querySelector('#record-set').closest('#set-panel-parking')?.hidden`), true);
+  assert.equal(await inspect(`document.querySelector('#chest .set-log-result').hidden`), false);
+  assert.equal(await countBlocks(), 1);
+  assert.equal(await inspect(`document.querySelector('#coverage-status').textContent.includes('1 priamo · 2 len pomocne') &&
+    document.querySelector('#coverage-preview-key').hidden`), true);
+  assert.equal(await inspect(`document.querySelector('#coverage-parts a[href="#pushes"]').dataset.state === 'main' &&
+    document.querySelector('#coverage-parts a[href="#triceps-group"]').dataset.state === 'secondary' &&
+    document.querySelector('#coverage-parts a[href="#calves"]').dataset.state === 'none'`), true);
+  assert.equal(await inspect(`document.querySelector('#coverage-missing-list').textContent.includes('Široký sval chrbta')`), true);
+  await inspect(`document.querySelector('#live-map-dock').click()`);
+  await screenshot('fitcamp-coverage-trained.png');
+  await inspect(`document.querySelector('#coverage-dialog').close()`);
+  await delay(120);
+  await complete('push');
+  await inspect(`location.hash = '#dbpress'`);
+  await delay(100);
+  await pressButton('dbpress', 'start-exercise');
+  assert.equal(await alertOpen(), true);
+  assert.equal(await activeExercise(), null);
+  assert.equal(await inspect(`document.getElementById('overlap-list').textContent.includes('Veľký prsný sval')`), true);
+  await screenshot('fitcamp-warning.png');
+  await inspect(`document.querySelector('#overlap-warning button[value=back]').click()`);
+  await delay(80);
+  assert.equal(await activeExercise(), null);
+  assert.equal(await countBlocks(), 2);
+  await pressButton('dbpress', 'start-exercise');
+  await inspect(`document.querySelector('#overlap-warning button[value=continue]').click()`);
+  await delay(80);
+  assert.equal(await activeExercise(), 'dbpress');
+  await pressButton('dbpress', 'discard-exercise');
+  assert.equal(await countBlocks(), 2);
+  await complete('row');
+  await complete('lat');
+  await complete('biceps');
+  assert.equal(await countBlocks(), 5);
+  assert.equal(await inspect(`[...document.querySelectorAll('.muscle-line')].some(row =>
+    row.querySelector('strong').textContent === 'Biceps' &&
+    row.querySelector('span').textContent === '1× hlavné · 2× pomocné')`), true);
+  await inspect(`document.querySelector('#finish-workout').click()`);
+  assert.equal(await inspect(`document.querySelectorAll('#workout-archive option').length`), 1);
+  await pressButton('dbpress', 'start-exercise');
+  assert.equal(await alertOpen(), false);
+  await enterSet(0, '10', '7,5');
+  await inspect(`document.querySelector('#finish-running').click()`);
+  assert.equal(await countBlocks(), 1, 'new session should start at zero');
+  await pressButton('deadbug', 'start-exercise');
+  await enterSet(0, '6', '', 'left');
+  await enterSet(1, '6', '', 'right');
+  await inspect(`document.querySelector('#finish-running').click()`);
+  await pressButton('plank', 'start-exercise');
+  assert.equal(await inspect(`document.querySelector('#set-amount-label').textContent`), 'Výdrž (sekundy)');
+  await enterSet(0, '20');
+  await inspect(`document.querySelector('#finish-running').click()`);
+  await inspect(`document.querySelector('#finish-workout').click()`);
+
+  const downloadPath = resolve(profile, 'downloads');
+  await mkdir(downloadPath);
+  await command('Page.setDownloadBehavior', {behavior:'allow', downloadPath});
+  await inspect(`document.querySelector('#export-sets').click()`);
+  await inspect(`document.querySelector('#export-log').click()`);
+  let downloaded;
+  for (let i = 0; i < 60 && !downloaded; i++) {
+    downloaded = (await readdir(downloadPath)).find(name => name.endsWith('.json'));
+    if (!downloaded) await delay(100);
+  }
+  assert.ok(downloaded, 'Missing exported backup');
+  const exported = JSON.parse(await readFile(resolve(downloadPath, downloaded), 'utf8'));
+  assert.equal(exported.entries.sit.note, '3 × 8');
+  assert.equal(exported.workouts.length, 2);
+  assert.equal(exported.workouts.find(w => w.exercises.length === 5).exercises[0].exercise, 'chest');
+  assert.deepEqual(exported.workouts.find(w => w.exercises.length === 5).exercises[0].sets,
+    [{amount:11, weight:27.5, side:null}, {amount:8, weight:30, side:null}]);
+  let csvName;
+  for (let i = 0; i < 60 && !csvName; i++) {
+    csvName = (await readdir(downloadPath)).find(name => name.endsWith('.csv'));
+    if (!csvName) await delay(100);
+  }
+  assert.ok(csvName, 'Missing exported CSV');
+  const [csvHeader, ...csvRecords] = (await readFile(resolve(downloadPath, csvName), 'utf8')).trim().split('\r\n');
+  const columns = csvHeader.split(',');
+  const csvRows = csvRecords.map(line => Object.fromEntries(line.split(',').map((value, i) => [columns[i], value])));
+  assert.equal(csvRows.length, 6);
+  assert.ok(csvRows.some(row => row.exercise_id === 'dbpress' && row.weight_kg === '7.5' && row.weight_basis === 'per_dumbbell'));
+  assert.ok(csvRows.some(row => row.exercise_id === 'plank' && row.hold_seconds === '20' && row.reps === ''));
+  assert.ok(csvRows.some(row => row.exercise_id === 'deadbug' && row.reps === '6' && row.side === 'left'));
+  const importPath = resolve(profile, 'import.json');
+  await writeFile(importPath, JSON.stringify({version:1, entries:{
+    sit:{date:'2025-10-01', note:'Older', savedAt:2},
+    abduction:{date:'2025-10-16', note:'28 kg', savedAt:3},
+  }, workouts:[{id:'backup-session', startedAt:1750000000000, finishedAt:1750001000000,
+    exercises:[{exercise:'abduction', startedAt:1750000100000, finishedAt:1750000200000}]}],
+  plans:[{id:'import-plan',name:'Importovaný plán',updatedAt:1750001000000,
+    items:[{exercise:'bridge',sets:1,reps:'10–12'}]}]}));
+  const documentRoot = (await command('DOM.getDocument')).root.nodeId;
+  const inputId = (await command('DOM.querySelector', {nodeId:documentRoot, selector:'#backup-file'})).nodeId;
+  await command('DOM.setFileInputFiles', {files:[importPath], nodeId:inputId});
+  for (let i = 0; i < 60 && !await inspect(`document.querySelector('#abduction .last').textContent.includes('28 kg')`); i++)
+    await delay(100);
+  assert.equal(await inspect(`document.querySelector('#abduction .last').textContent.includes('28 kg')`), true);
+  assert.equal(await inspect(`document.querySelector('#sit .last').textContent.includes('3 × 8')`), true);
+  assert.equal(await inspect(`document.querySelectorAll('#workout-archive option').length`), 3);
+  assert.equal(await inspect(`document.querySelector('#plan-saved option[value=import-plan]').textContent`), 'Importovaný plán');
+  await pressButton('chest', 'start-exercise');
+  assert.equal(await inspect(`document.querySelector('#use-last-sets').hidden`), false);
+  await inspect(`document.querySelector('#use-last-sets').click()`);
+  assert.deepEqual(await inspect(`[...document.querySelectorAll('.set-row-amount')].map(input => input.value)`), ['11','8','']);
+  await inspect(`location.hash = '#sideplank'`);
+  await delay(150);
+  assert.equal(await inspect(`document.querySelector('#sideplank').open`), true);
+  await screenshot('fitcamp-side-plank.png');
+  await inspect(`location.hash = '#biceps'`);
+  await delay(150);
+  await inspect(`document.querySelector('#biceps .muscle-map summary').click();
+    document.querySelector('#biceps .muscle-map').scrollIntoView({block:'start'})`);
+  await screenshot('fitcamp-muscle-map.png');
+  await inspect(`location.hash = '#rozc'`);
+  await delay(150);
+  assert.equal(await inspect(`document.querySelectorAll('#warmup-steps>li video').length`), 6);
+  assert.equal(await inspect(`document.querySelector('#warmup-clock') === null &&
+    !document.querySelector('#rozc').textContent.toLowerCase().includes('stena')`), true);
+  await screenshot('fitcamp-warmup.png');
+  await inspect(`document.querySelector('[aria-controls=warmup-anklerock-video]').click()`);
+  assert.equal(await inspect(`!document.querySelector('#warmup-anklerock-video').hidden`), true);
+  await inspect(`location.hash = '#pallof'`);
+  await delay(150);
+  await screenshot('fitcamp-journal-card.png');
+  await inspect(`document.querySelector('#finish-running').click(); document.querySelector('#finish-workout').click()`);
+  assert.equal(await activeExercise(), null);
+
+  await inspect(`location.hash = '#planovac'; document.querySelector('#load-plan-preset').click()`);
+  assert.equal(await inspect(`document.querySelectorAll('#plan-preset option').length`), 4);
+  assert.equal(await inspect(`document.querySelectorAll('#plan-items li[data-exercise]').length`), 7);
+  assert.equal(await inspect(`document.querySelector('#plan-warnings').children.length`), 0);
+  await inspect(`
+    const planFilter = document.querySelector('#plan-search');
+    planFilter.value = 'incline dumbbell'; planFilter.dispatchEvent(new Event('input'));
+    document.querySelector('#plan-picks a[href="#incline"]').closest('li').querySelector('button').click();
+    planFilter.value = 'dumbbell bench press'; planFilter.dispatchEvent(new Event('input'));
+    document.querySelector('#plan-picks a[href="#dbpress"]').closest('li').querySelector('button').click();
+  `);
+  assert.equal(await inspect(`document.querySelector('#plan-warnings').textContent.includes('Veľký prsný sval · priame cviky 3, série 6')`), true);
+  await inspect(`
+    document.querySelector('#plan-items [data-exercise=incline] .plan-item-buttons button:last-child').click();
+    document.querySelector('#plan-items [data-exercise=dbpress] .plan-item-buttons button:last-child').click();
+    document.querySelector('#plan-items [data-exercise=chest] .plan-item-buttons button').click();
+    const name = document.querySelector('#plan-name');
+    name.value = 'FitCamp plán na skúšku'; name.dispatchEvent(new Event('input'));
+    document.querySelector('#save-plan').click();
+  `);
+  assert.equal(await inspect(`document.querySelector('#plan-items li').dataset.exercise`), 'chest');
+  assert.equal(await inspect(`document.querySelector('#plan-saved option:checked').textContent`), 'FitCamp plán na skúšku');
+  await inspect(`document.querySelector('#plan-validation').scrollIntoView({block:'start'})`);
+  await screenshot('fitcamp-plan-coverage.png');
+  await command('Page.reload');
+  for (let i = 0; i < 60 && !await inspect(`document.querySelector('#plan-items li')?.dataset.exercise === 'chest'`); i++)
+    await delay(100);
+  assert.equal(await inspect(`document.querySelector('#plan-name').value`), 'FitCamp plán na skúšku');
+  await inspect(`document.querySelector('#start-plan').click()`);
+  assert.equal(await inspect(`document.querySelector('#plan-execution-name').textContent`), 'FitCamp plán na skúšku');
+  assert.equal(await inspect(`document.querySelector('#plan-execution-status').textContent`), 'Hotovo 0 z 7');
+  await inspect(`document.querySelector('#start-next-plan').click()`);
+  assert.equal(await activeExercise(), 'chest');
+  assert.equal(await inspect(`document.querySelector('#planned-set-dose').textContent.includes('2 série')`), true);
+  await enterSet(0, '9', '27,5');
+  await inspect(`document.querySelector('#finish-running').click()`);
+  assert.equal(await inspect(`document.querySelector('#plan-execution-status').textContent`), 'Hotovo 1 z 7');
+  assert.equal(await inspect(`document.querySelector('#chest .next-planned-exercise').hidden`), false);
+  await inspect(`document.querySelector('#chest .next-planned-exercise').click()`);
+  assert.equal(await activeExercise(), 'press');
+  await command('Page.reload');
+  for (let i = 0; i < 60 && await activeExercise() !== 'press'; i++) await delay(100);
+  assert.equal(await activeExercise(), 'press');
+  assert.equal(await inspect(`document.querySelector('#plan-execution-status').textContent`), 'Hotovo 1 z 7');
+  assert.equal(await inspect(`getComputedStyle(document.getElementById('live-map-dock')).position`), 'fixed');
+  assert.equal(await inspect(`[...document.querySelectorAll('nav a')].every(a => !['#svalovica','#fitcamp'].includes(a.hash))`), true);
+  await viewport(320);
+  assert.equal(await inspect('document.documentElement.scrollWidth <= innerWidth'), true);
+  console.log('Chrome: four templates, custom plans, muscle and series warnings, plans resume with inline logging, fixed live map, CSV/JSON and prior exercises passed.');
+} finally {
+  ws?.close();
+  browser.kill();
+}
