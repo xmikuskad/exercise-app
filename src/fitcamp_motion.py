@@ -125,21 +125,27 @@ def sequence(key):
             yield blend(start, end, eased), label
 
 
+def shoulder_roll_pose(fraction):
+    angle = 2 * pi * fraction
+    dx = round(8 * sin(angle))
+    dy = round(7 * (cos(angle) - 1))
+    return ((108,35),(113+dx,62+dy),(108,102),(114+dx,86+dy),
+            (117+dx,110+dy),(108,131),(107,155),(126,155))
+
+
+KNEELING_PLANK_END = NEW_POSES['plank'][0]
+KNEELING_PLANK_START = ((158,108),(137,115),(93,142),*KNEELING_PLANK_END[3:])
+
+
 def video_frame(key, fraction, label, progress):
     if key in TOP_VIEW:
         body = render_catalog(key, [(None,fraction)])
     elif key == 'shoulderwarm':
-        angle = 2 * pi * fraction
-        dx = round(8 * sin(angle))
-        dy = round(7 * (cos(angle) - 1))
-        pose = ((108,35),(113+dx,62+dy),(108,102),(114+dx,86+dy),
-                (117+dx,110+dy),(108,131),(107,155),(126,155))
-        body = render_catalog(key, [(pose,fraction)])
+        body = render_catalog(key, [(shoulder_roll_pose(fraction),fraction)])
     else:
         start, end = (NEW_POSES | ORIGINAL_POSES)[key]
         if key == 'plank':
-            end = start
-            start = ((158,108),(137,115),(93,142),*end[3:])
+            start, end = KNEELING_PLANK_START, KNEELING_PLANK_END
         pose = articulate(key, start, end, fraction)
         body = render_original(key, [pose]) if key in ORIGINAL_POSES else render_catalog(key, [(pose,fraction)])
 

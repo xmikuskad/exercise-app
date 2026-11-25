@@ -6,7 +6,10 @@ const warmupGuide = document.getElementById('warmup-guide');
 const warmupDemo = warmupGuide.querySelector('.exercise-demo');
 const warmupVideo = warmupDemo.querySelector('video');
 const warmupSource = document.getElementById('warmup-source');
+const warmupFieldset = document.getElementById('warmup-fieldset');
+const warmupImage = document.getElementById('warmup-image');
 let openWarmupRow = null;
+let openWarmupAction = null;
 let warmupSelection = {};
 
 try {
@@ -25,6 +28,7 @@ function selectedWarmup(group) {
 function renderWarmupRow(row) {
   const variant = selectedWarmup(row.dataset.warmupGroup);
   row.querySelector('.warmup-selection').textContent = variant ? variant.name + ' · ' + variant.dose : 'Vynechané';
+  row.querySelector('.warmup-info').disabled = !variant;
 }
 
 function stopWarmupDemo() {
@@ -39,8 +43,21 @@ function renderWarmupGuide(variant) {
   stopWarmupDemo();
   warmupGuide.hidden = !variant;
   if (!variant) return;
+  const title = document.getElementById('warmup-guide-title');
+  const english = document.createElement('small');
+  english.lang = 'en';
+  english.textContent = ' (' + variant.english + ')';
+  title.replaceChildren(variant.name, english);
+  document.getElementById('warmup-guide-dose').textContent = variant.dose + ' · ' + variant.equipment;
+  document.getElementById('warmup-setup').textContent = variant.setup;
   document.getElementById('warmup-cue').textContent = variant.cue;
-  warmupVideo.dataset.src = warmup.media[variant.id] ?? cards.get(variant.id).querySelector('video').dataset.src;
+  document.getElementById('warmup-mistakes').textContent = variant.mistakes;
+  const media = warmup.media[variant.id];
+  const card = cards.get(variant.id);
+  warmupVideo.dataset.src = media?.video ?? card.querySelector('video').dataset.src;
+  warmupImage.src = media?.image ?? card.querySelector('.demo-stills img').src;
+  warmupImage.alt = variant.name + '. Vľavo: ' + variant.labels[0] + '. Vpravo: ' + variant.labels[1] + '.';
+  warmupDemo.querySelectorAll('.labels span').forEach((label, index) => { label.textContent = variant.labels[index]; });
   warmupVideo.setAttribute('aria-label', variant.name + ' · schematická ukážka');
   warmupSource.href = variant.url;
   warmupSource.querySelector('small').textContent = variant.source;
@@ -48,19 +65,20 @@ function renderWarmupGuide(variant) {
 
 function closeWarmupOptions() {
   if (!openWarmupRow) return;
-  openWarmupRow.querySelector('button').setAttribute('aria-expanded', 'false');
-  openWarmupRow.querySelector('.warmup-edit').textContent = 'Možnosti';
+  openWarmupAction.setAttribute('aria-expanded', 'false');
   openWarmupRow = null;
+  openWarmupAction = null;
   warmupOptions.hidden = true;
   stopWarmupDemo();
 }
 
-function openWarmupOptions(row) {
+function openWarmupOptions(row, action) {
   const group = row.dataset.warmupGroup;
   const chosen = selectedWarmup(group)?.id ?? '';
   openWarmupRow = row;
-  row.querySelector('button').setAttribute('aria-expanded', 'true');
-  row.querySelector('.warmup-edit').textContent = 'Zavrieť';
+  openWarmupAction = action;
+  action.setAttribute('aria-expanded', 'true');
+  warmupFieldset.hidden = action.classList.contains('warmup-info');
   document.getElementById('warmup-options-title').textContent = row.querySelector('strong').textContent;
   warmupChoices.replaceChildren();
   for (const variant of [...warmup.groups[group], {id:'', name:'Vynechať partiu'}]) {
@@ -90,13 +108,14 @@ function openWarmupOptions(row) {
 
 for (const row of document.querySelectorAll('[data-warmup-group]')) {
   renderWarmupRow(row);
-  const button = row.querySelector('button');
-  button.setAttribute('aria-controls', 'warmup-options');
-  button.addEventListener('click', () => {
-    const opening = openWarmupRow !== row;
-    closeWarmupOptions();
-    if (opening) openWarmupOptions(row);
-  });
+  for (const button of row.querySelectorAll('button')) {
+    button.setAttribute('aria-controls', 'warmup-options');
+    button.addEventListener('click', () => {
+      const opening = openWarmupAction !== button;
+      closeWarmupOptions();
+      if (opening) openWarmupOptions(row, button);
+    });
+  }
 }
 warmupChoices.addEventListener('change', event => {
   const group = openWarmupRow.dataset.warmupGroup;

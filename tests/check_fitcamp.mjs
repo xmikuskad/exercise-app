@@ -79,7 +79,7 @@ try {
       sources: performance.getEntriesByType('resource').filter(r => !r.name.startsWith('data:')).length
     };
   })()`);
-  assert.deepEqual(rendered, {images:104, landscapeOverflow:false, missingTargets:0, sources:0});
+  assert.deepEqual(rendered, {images:105, landscapeOverflow:false, missingTargets:0, sources:0});
   assert.equal(await inspect(`[...document.querySelectorAll('.card')].every(card =>
     card.querySelector('.exercise-name .english-name[lang=en]').textContent.startsWith('(') &&
     card.querySelector('.exercise-name .english-name[lang=en]').textContent.endsWith(')') &&
@@ -394,19 +394,29 @@ try {
   await delay(150);
   assert.equal(await inspect(`document.querySelectorAll('#warmup-steps>li').length`), 6);
   assert.equal(await inspect(`Object.values(warmup.groups).every(variants => variants.length === 3 &&
-    variants.every(variant => variant.url.startsWith('https://') &&
-      (warmup.media[variant.id] || cards.get(variant.id).querySelector('video').dataset.src).startsWith('data:video/mp4;base64,')))`), true);
+    variants.every(variant => {
+      renderWarmupGuide(variant);
+      return variant.setup && variant.cue && variant.mistakes && document.getElementById('warmup-image').alt.includes(variant.name) &&
+        document.getElementById('warmup-image').src.startsWith('data:image/png;base64,') &&
+        document.getElementById('warmup-source').href.startsWith('https://') &&
+        document.querySelector('#warmup-video video').dataset.src.startsWith('data:video/mp4;base64,');
+    }))`), true);
   assert.equal(await inspect(`document.querySelector('#warmup-clock') === null &&
     !document.querySelector('#rozc').textContent.toLowerCase().includes('stena')`), true);
   await screenshot('fitcamp-warmup.png');
-  await inspect(`document.querySelector('[data-warmup-group=ankles] button').click();
+  await inspect(`document.querySelector('[data-warmup-group=ankles] .warmup-info').click()`);
+  assert.equal(await inspect(`document.getElementById('warmup-fieldset').hidden &&
+    !document.getElementById('warmup-image').closest('figure').hidden &&
+    document.getElementById('warmup-setup').textContent.includes('krok vpred')`), true);
+  await screenshot('fitcamp-warmup-guide.png');
+  await inspect(`document.querySelector('[data-warmup-group=ankles] .warmup-edit').click();
     document.querySelector('#warmup-choices input[value=toeraise]').click();
     document.querySelector('#rozc .demo-toggle').click()`);
   assert.equal(await inspect(`!document.querySelector('#warmup-video').hidden &&
     document.querySelector('[data-warmup-group=ankles] .warmup-selection').textContent.includes('Zdvíhanie špičiek') &&
     document.querySelector('#warmup-source').href.includes('kingstonandrichmond')`), true);
-  await inspect(`document.querySelector('[data-warmup-group=shoulders] button').click()`);
-  assert.equal(await inspect(`document.querySelectorAll('#rozc .warmup-row[aria-expanded=true]').length === 1 &&
+  await inspect(`document.querySelector('[data-warmup-group=shoulders] .warmup-edit').click()`);
+  assert.equal(await inspect(`document.querySelectorAll('#rozc .warmup-row button[aria-expanded=true]').length === 1 &&
     document.querySelector('#warmup-video').hidden`), true);
   await screenshot('fitcamp-warmup-options.png');
   await inspect(`document.querySelector('#warmup-choices input[value=""]').click()`);

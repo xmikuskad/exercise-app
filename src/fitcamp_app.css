@@ -67,11 +67,14 @@ main h2{font-size:clamp(1.35rem,4.5vw,1.85rem)}
 .warmup-intro span{display:block;margin-top:.2rem}
 .warmup-steps{padding:0;margin:0;list-style:none;border-top:1px solid var(--line)}
 .warmup-steps>li{border-bottom:1px solid var(--line)}
-.warmup-row{display:flex;align-items:center;justify-content:space-between;gap:.7rem;width:100%;padding:.58rem 0;min-height:60px;text-align:left;background:transparent;border:0;border-radius:0;color:var(--ink)}
+.warmup-row{display:flex;align-items:center;justify-content:space-between;gap:.55rem;padding:.48rem 0;min-height:60px}
 .warmup-row strong,.warmup-row small{display:block}
 .warmup-row strong{font-size:1rem;line-height:1.25}
 .warmup-row small{margin-top:.12rem;color:var(--muted);font-size:.82rem;font-weight:500;line-height:1.32}
-.warmup-edit{flex:none;color:var(--teal);font-size:.83rem;font-weight:700;text-decoration:underline;text-underline-offset:.22em}
+.warmup-row-actions{display:flex;flex:none;align-items:center;gap:.15rem}
+.warmup-row-actions button{padding:.4rem .35rem;border:0;background:transparent;color:var(--teal);font-size:.8rem;font-weight:700}
+.warmup-row-actions .warmup-info{background:var(--wash)}
+.warmup-row-actions button[aria-expanded=true]{text-decoration:underline;text-underline-offset:.22em}
 .warmup-options{margin:0 0 .7rem;padding:.75rem;background:var(--wash);border-radius:.65rem}
 .warmup-options fieldset{min-width:0;border:0;padding:0;margin:0}
 .warmup-options legend{padding:0;margin-bottom:.32rem;font-weight:730}
@@ -79,7 +82,13 @@ main h2{font-size:clamp(1.35rem,4.5vw,1.85rem)}
 #warmup-choices label:last-child{border-bottom:0}
 #warmup-choices input{width:1.15rem;height:1.15rem;min-height:0;flex:none;accent-color:var(--teal)}
 #warmup-choices small{display:block;margin-top:.08rem;color:var(--muted)}
-#warmup-guide p{margin:.65rem 0 .4rem}
+#warmup-guide-title{font-size:1.15rem;margin:.35rem 0 .15rem}
+#warmup-guide-title small{display:block;color:var(--muted);font-weight:550;margin-top:.18rem}
+#warmup-guide-dose{color:var(--muted);font-size:.87rem;margin:0 0 .55rem}
+#warmup-fieldset:not([hidden]) + #warmup-guide{border-top:1px solid var(--line);margin-top:.45rem;padding-top:.55rem}
+.warmup-instructions{margin:.75rem 0 0}
+.warmup-instructions dt{font-weight:750;margin-top:.55rem}
+.warmup-instructions dd{margin:.12rem 0 0}
 .warmup-demo .demo-actions{margin:0}
 .warmup-demo .demo-actions a{background:transparent}
 .warmup-note{margin:1rem 0 .7rem;color:var(--muted);font-size:.87rem}

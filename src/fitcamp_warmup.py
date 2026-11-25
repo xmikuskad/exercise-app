@@ -37,3 +37,22 @@ WARMUP_ONLY_NAMES = {
     'shoulderwarm': ('Krúženie ramenami', 'Shoulder Rolls'),
     'scapwarm': ('Klik lopatkami na štyroch', 'Quadruped Scapular Push-up'),
 }
+
+# Start, common error, and the two depicted positions for drills outside the catalog.
+WARMUP_ONLY_GUIDES = {
+    'anklerock': (
+        'Urob krátky krok vpred a nechaj chodidlá mierne od seba aj do strán.',
+        'Ak sa predná päta dvíha alebo koleno padá dovnútra, skráť pohyb.',
+        ('Krátky krok vpred', 'Koleno sa posunie dopredu'),
+    ),
+    'shoulderwarm': (
+        'Postav sa vzpriamene s uvoľnenými rukami a pozeraj priamo pred seba.',
+        'Hlavu a hrudník nechaj pokojné. Ak napínaš krk, rob menšie kruhy.',
+        ('Uvoľnené ramená', 'Ramená vysoko počas kruhu'),
+    ),
+    'scapwarm': (
+        'Kľakni si na štyri. Kolená daj pod bedrá a dlane pod ramená.',
+        'Lakte neohýbaj a bedrá neposúvaj dozadu. Pohyb je malý a vychádza z lopatiek.',
+        ('Hrudník odtlačený od podložky', 'Hrudník mierne klesne'),
+    ),
+}

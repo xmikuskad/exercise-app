@@ -489,13 +489,18 @@ main{padding-bottom:5.6rem}
   <p class="warmup-intro"><strong>Približne 5–7 minút v pokojnom tempe</strong> <span>Pri každej partii si vyber jeden cvik.</span></p>
   <ul id="warmup-steps" class="warmup-steps" aria-label="Partie na rozcvičenie">@@WARMUP_ROWS@@</ul>
   <div id="warmup-options" class="warmup-options" hidden>
-    <fieldset>
+    <fieldset id="warmup-fieldset">
       <legend id="warmup-options-title" class="sr-only">Vyber cvik</legend>
       <div id="warmup-choices"></div>
     </fieldset>
     <div id="warmup-guide">
-      <p id="warmup-cue"></p>
+      <h2 id="warmup-guide-title"></h2>
+      <p id="warmup-guide-dose"></p>
       <div class="exercise-demo warmup-demo">
+        <figure class="demo-stills">
+          <img id="warmup-image" alt="" width="432" height="180">
+          <figcaption class="labels" aria-hidden="true"><span></span><span></span></figcaption>
+        </figure>
         <div class="demo-actions">
           <button class="demo-toggle" type="button" aria-expanded="false" aria-controls="warmup-video">Prehrať ukážku</button>
           <a class="demo-source" id="warmup-source" target="_blank" rel="noopener noreferrer"><span>Online ukážka</span><small></small></a>
@@ -505,6 +510,11 @@ main{padding-bottom:5.6rem}
           <figcaption class="demo-caption">Schematická ukážka pohybu</figcaption>
         </figure>
       </div>
+      <dl class="warmup-instructions">
+        <dt>Nastavenie</dt><dd id="warmup-setup"></dd>
+        <dt>Ako na pohyb</dt><dd id="warmup-cue"></dd>
+        <dt>Na čo si dať pozor</dt><dd id="warmup-mistakes"></dd>
+      </dl>
     </div>
   </div>
   <p class="warmup-note">Pred prvým cvikom so záťažou si môžeš pridať 4–6 ľahkých skúšobných opakovaní.</p>

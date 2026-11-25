@@ -1,4 +1,5 @@
 from base64 import b64encode
+from io import BytesIO
 from hashlib import sha256
 from html import escape
 from json import dumps
@@ -7,12 +8,12 @@ from re import DOTALL, search, sub
 
 from fitcamp_art import diagram as original_diagram
 from fitcamp_catalog import EXERCISES, GROUPS, PRESCRIPTIONS, PRIORITY
-from fitcamp_catalog_art import POSES, TOP_VIEW, diagram as catalog_diagram
-from fitcamp_motion import PRACTICE_CAPTIONS, video_data
+from fitcamp_catalog_art import POSES, TOP_VIEW, diagram as catalog_diagram, render as render_catalog
+from fitcamp_motion import KNEELING_PLANK_END, KNEELING_PLANK_START, PRACTICE_CAPTIONS, shoulder_roll_pose, video_data
 from fitcamp_muscles import MUSCLES, ROLES
 from fitcamp_technique import TECHNIQUE
 from fitcamp_references import DEMOS
-from fitcamp_warmup import WARMUP_GROUPS, WARMUP_ONLY_NAMES
+from fitcamp_warmup import WARMUP_GROUPS, WARMUP_ONLY_GUIDES, WARMUP_ONLY_NAMES
 from fitcamp_extra import EXTRA_CHECKS, EXTRA_ROLES
 from fitcamp_low_equipment import CHECKS_LOW_EQUIPMENT, ROLES_LOW_EQUIPMENT
 from fitcamp_bodymap import body_map, live_body_map
@@ -62,6 +63,12 @@ def demo_reference(key):
             f'<span>Online video ↗</span><small>{escape(source)}</small></a>')
 
 
+def pose_diagram(key, first, second):
+    image = BytesIO()
+    render_catalog(key, [(first, 0), (second, 1)]).save(image, 'PNG', optimize=True)
+    return 'data:image/png;base64,' + b64encode(image.getvalue()).decode('ascii')
+
+
 def warmup_data():
     groups = {}
     for group, _, variants in WARMUP_GROUPS:
@@ -69,24 +76,35 @@ def warmup_data():
         for key, dose, equipment, cue in variants:
             if key in WARMUP_ONLY_NAMES:
                 name, english = WARMUP_ONLY_NAMES[key]
+                setup, mistakes, labels = WARMUP_ONLY_GUIDES[key]
             else:
-                name, subtitle = EXERCISES[key][:2]
+                name, subtitle, labels, _, setup, _, mistakes, _ = EXERCISES[key]
                 name = SLOVAK_NAMES.get(key, name)
                 english = subtitle.split(' · ', 1)[0].split(' / ', 1)[0]
+            if key == 'plank':
+                labels = ('Predlaktia a kolená na podložke', 'Zdvihnuté boky, kolená stále dole')
             url, source = DEMOS[key]
             choices.append(dict(id=key, name=name, english=english, dose=dose,
-                                equipment=equipment, cue=cue, url=url, source=source))
+                                equipment=equipment, setup=setup, cue=cue, mistakes=mistakes,
+                                labels=labels, url=url, source=source))
         assert len({choice['id'] for choice in choices}) == len(choices)
         groups[group] = choices
-    media = {key: video_data(key) for key in WARMUP_ONLY_NAMES}
+    media = {
+        key: dict(video=video_data(key), image=(
+            pose_diagram(key, shoulder_roll_pose(0), shoulder_roll_pose(.5))
+            if key == 'shoulderwarm' else catalog_diagram(key)))
+        for key in WARMUP_ONLY_NAMES
+    }
+    media['plank'] = {'image': pose_diagram('plank', KNEELING_PLANK_START, KNEELING_PLANK_END)}
     return dumps(dict(groups=groups, media=media), ensure_ascii=False, separators=(',', ':'))
 
 
 def warmup_rows():
     return ''.join(
-        f'<li data-warmup-group="{group}"><button type="button" class="warmup-row" aria-expanded="false">'
-        f'<span><strong>{escape(title)}</strong><small class="warmup-selection"></small></span>'
-        '<span class="warmup-edit">Možnosti</span></button></li>'
+        f'<li data-warmup-group="{group}"><div class="warmup-row">'
+        f'<div><strong>{escape(title)}</strong><small class="warmup-selection"></small></div>'
+        '<div class="warmup-row-actions"><button type="button" class="warmup-info" aria-expanded="false">Pokyny</button>'
+        '<button type="button" class="warmup-edit" aria-expanded="false">Možnosti</button></div></div></li>'
         for group, title, _ in WARMUP_GROUPS
     )
 
