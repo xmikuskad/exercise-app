@@ -1,0 +1,48 @@
+EXERCISES_LOW_EQUIPMENT = {
+    'bodyweightsquat': ('Drep s vlastnou váhou', 'Bodyweight Squat · predné stehná a zadok',
+        ('Vzpriamený postoj', 'Kontrolovaný drep'), 'Voľný priestor a rovná podlaha.',
+        'Daj chodidlá približne na šírku ramien a špičky mierne von.',
+        'S nádychom pokrč bedrá a kolená. S výdychom sa postav. Hĺbku zvoľ tak, aby celé chodidlá zostali na podlahe.',
+        'Odlepovanie piat alebo rýchly pád do spodnej polohy.',
+        'Ľahšia možnosť je <a href="#sit">vstať z lavičky</a>.'),
+    'reverselunge': ('Výpad vzad', 'Bodyweight Reverse Lunge · predné stehná a zadok',
+        ('Obe nohy pod telom', 'Krok vzad a pokles'), 'Voľná podlaha. Začni bez záťaže.',
+        'Postav sa na šírku bokov. Krok rob vzad aj mierne do strany, aby chodidlá neboli v jednej línii.',
+        'S nádychom vykroč jednou nohou dozadu a mierne pokrč obe kolená. S výdychom zatlač predným chodidlom a vráť sa.',
+        'Odraz zadnou nohou alebo úzky postoj, pri ktorom sa kýveš.',
+        'Pre viac stability skús <a href="#split">drep v rozkroku s oporou</a>.'),
+    'floorpush': ('Klik na podlahe', 'Standard Push-up · hrudník, predné ramená a triceps',
+        ('Ruky takmer vystreté', 'Hrudník bližšie k podlahe'), 'Pevná podlaha a priestor pre celé telo.',
+        'Dlane polož trochu širšie než ramená. Opri sa o špičky, jemne spevni brucho.',
+        'S nádychom spúšťaj hrudník medzi dlane. Lakte veď šikmo dozadu. S výdychom sa odtlač bez zmeny polohy panvy.',
+        'Prepadnuté boky, vytláčanie hlavy a lakte kolmo od tela.',
+        'Začni <a href="#push">klikom o vyvýšenú oporu</a>, ak na podlahe nezvládneš plynulý pohyb.'),
+    'bandrow': ('Príťah gumy v sede', 'Seated Resistance Band Row · chrbát a biceps',
+        ('Ruky vpred', 'Lakte pri trupe'), 'Neporušená dlhá odporová guma a miesto na sedenie.',
+        'Sadni si s mierne pokrčenými kolenami. Gumu veď okolo stredov chodidiel v obuvi a konce drž oboma rukami.',
+        'S výdychom veď lakte dozadu a približuj ruky k spodným rebrám. S nádychom ich vráť bez pohybu trupu.',
+        'Záklon, trhnutie alebo guma položená len cez špičky.',
+        'V posilňovni môžeš použiť <a href="#row">spodnú kladku</a>.'),
+    'proney': ('Zdvih rúk do Y v ľahu na bruchu', 'Prone Y Raise · dolná časť trapézu a ramená',
+        ('Ruky do Y podopreté', 'Ruky mierne nad podlahou'), 'Podložka. Stačí váha vlastných rúk.',
+        'Ľahni si na brucho a natiahni ruky šikmo pred seba do tvaru Y. Palce nasmeruj hore, čelo má ľahkú oporu.',
+        'S výdychom zdvihni ruky o malý kúsok nad podlahu. Hrudník a panva zostávajú opreté. S nádychom ruky pomaly polož.',
+        'Vysúvanie brady, prehýbanie krížov alebo zdvíhanie ramien k ušiam.',
+        'Ak je poloha nad hlavou nepríjemná, zvoľ pohodlný <a href="#reversefly">príťah pre zadné ramená</a>.'),
+}
+
+CHECKS_LOW_EQUIPMENT = {
+    'bodyweightsquat': ('Urob najprv plytký drep.', 'Chodidlo má kontakt od päty po predok a kolená sledujú špičky.', 'Skráť rozsah, ak päty stúpajú.'),
+    'reverselunge': ('Začni malým krokom bez činky.', 'Predná päta zostáva položená pri poklese aj návrate.', 'Keď strácaš rovnováhu, skráť pokles alebo použi pevné pridržiavanie.'),
+    'floorpush': ('Prvé opakovanie urob v kratšom rozsahu.', 'Hrudník a boky sa spúšťajú naraz.', 'Ak sa boky prepadávajú, zvýš oporu pod rukami.'),
+    'bandrow': ('Skontroluj poškodenie gumy a oporu o chodidlá. Pri neistom uchytení cvik vynechaj.', 'Trup ostáva vzpriamený a ramená nestúpajú.', 'Použi ľahšiu gumu, ak musíš trhnúť alebo sa zakloniť.'),
+    'proney': ('Začni bez záťaže a s uvoľneným krkom.', 'Dvíhajú sa ruky, kým spodné rebrá zostávajú na podložke.', 'Zmenši rozsah, ak napätie cítiš hlavne v krku alebo v krížoch.'),
+}
+
+ROLES_LOW_EQUIPMENT = {
+    'bodyweightsquat': ('quad gmax', 'add ham'),
+    'reverselunge': ('quad gmax', 'ham add gmed'),
+    'floorpush': ('pec', 'dfront triceps serr trans'),
+    'bandrow': ('lat rhomb trap', 'biceps brach brad drear'),
+    'proney': ('trap', 'drear rotator'),
+}

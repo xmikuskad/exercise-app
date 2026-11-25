@@ -219,6 +219,7 @@ function renderWorkout() {
   renderWorkoutOverview(displayed, roles);
   renderCoverage(displayed, roles, running);
   renderPlanExecution(activeWorkout);
+  refreshHistoryChoices();
   renderSetLog(running);
   if (running && timerId === null) timerId = setInterval(updateClock, 1000);
   if (!running && timerId !== null) {

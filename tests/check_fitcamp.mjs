@@ -68,7 +68,7 @@ try {
       {offline:true, latency:0, downloadThroughput:0, uploadThroughput:0});
   }
   await command('Page.navigate', {url:pageURL});
-  for (let i = 0; i < 60 && !await inspect('document.querySelectorAll("details.card").length === 46'); i++)
+  for (let i = 0; i < 60 && !await inspect('document.querySelectorAll("details.card").length === 51'); i++)
     await delay(100);
   const rendered = await inspect(`(async () => {
     await Promise.all(Array.from(document.images, image => { image.loading = 'eager'; return image.decode(); }));
@@ -79,7 +79,7 @@ try {
       sources: performance.getEntriesByType('resource').filter(r => !r.name.startsWith('data:')).length
     };
   })()`);
-  assert.deepEqual(rendered, {images:92, landscapeOverflow:false, missingTargets:0, sources:0});
+  assert.deepEqual(rendered, {images:102, landscapeOverflow:false, missingTargets:0, sources:0});
   assert.equal(await inspect(`[...document.querySelectorAll('.card')].every(card =>
     card.querySelector('.exercise-name .english-name[lang=en]').textContent.startsWith('(') &&
     card.querySelector('.exercise-name .english-name[lang=en]').textContent.endsWith(')') &&
@@ -102,9 +102,10 @@ try {
   await screenshot('fitcamp-checkpoints.png');
   assert.equal(await inspect(`[...document.querySelectorAll('video')].every(video =>
     !video.hasAttribute('src') && video.dataset.src.startsWith('data:video/mp4;base64,'))`), true);
-  assert.equal(await inspect(`document.querySelectorAll('.demo-source[href^="https://"]').length`), 52);
-  assert.equal(await inspect(`document.querySelectorAll('.card .priority').length`), 46);
-  assert.equal(await inspect(`document.querySelectorAll('.card .muscle-map img').length`), 46);
+  assert.equal(await inspect(`document.querySelectorAll('.demo-source[href^="https://"]').length`), 57);
+  assert.equal(await inspect(`document.querySelectorAll('.card .priority').length`), 51);
+  assert.equal(await inspect(`document.querySelectorAll('.card .muscle-map img').length`), 51);
+  assert.equal(await inspect(`document.querySelector('#history-results').hidden`), true);
   assert.equal(await inspect(`document.querySelectorAll('.category').length`), 9);
   assert.equal(await inspect(`[...document.querySelectorAll('.category')].every(group => group.querySelector('.base'))`), true);
   assert.equal(await inspect(`document.querySelector('#biceps .priority').textContent`), 'Základ');
@@ -151,7 +152,7 @@ try {
     }
     return results;
   })()`);
-  assert.equal(clipTest.length, 52);
+  assert.equal(clipTest.length, 57);
   assert.deepEqual(clipTest.filter(clip => !clip.ok), []);
   await inspect(`document.querySelector("#press a[href='#sit']").click()`);
   await delay(250);
@@ -180,7 +181,7 @@ try {
   assert.equal(await inspect(`document.querySelectorAll('.card:not([hidden])').length`), 1);
   assert.equal(await inspect(`document.querySelector('.card:not([hidden])').id`), 'row');
   await inspect(`document.querySelector('#recent-items a').click()`);
-  assert.equal(await inspect(`document.querySelectorAll('.card:not([hidden])').length`), 46);
+  assert.equal(await inspect(`document.querySelectorAll('.card:not([hidden])').length`), 51);
 
   const pressButton = (id, button) =>
     inspect(`document.querySelector('#${id} .${button}').click()`);
@@ -336,6 +337,31 @@ try {
   assert.equal(await inspect(`document.querySelector('#sit .last').textContent.includes('3 × 8')`), true);
   assert.equal(await inspect(`document.querySelectorAll('#workout-archive option').length`), 3);
   assert.equal(await inspect(`document.querySelector('#plan-saved option[value=import-plan]').textContent`), 'Importovaný plán');
+  const workoutStorage = () => inspect(`localStorage.getItem(workoutKey)`);
+  const savedWorkouts = await workoutStorage();
+  const checkedWorkouts = () => inspect(`[...document.querySelectorAll('#history-checks input:checked')].map(input => input.value)`);
+  assert.equal((await checkedWorkouts()).length, 2);
+  assert.equal(await inspect(`historicalRoles.has('pec') && !historicalRoles.has('gmed')`), true);
+  await inspect(`document.querySelector('#history-last-three').click()`);
+  assert.equal((await checkedWorkouts()).length, 3);
+  assert.equal(await inspect(`historicalRoles.has('pec') && historicalRoles.has('gmed')`), true);
+  await inspect(`[...document.querySelectorAll('#history-checks input:checked')].filter(input => input.value !== 'backup-session')
+    .forEach(input => input.click())`);
+  assert.deepEqual(await checkedWorkouts(), ['backup-session']);
+  assert.equal(await inspect(`historicalRoles.get('gmed').main === 1 &&
+    historicalRoles.get('tfl').secondary === 1 && !historicalRoles.has('pec')`), true);
+  assert.equal(await inspect(`document.querySelector('#history-missing-list').textContent.includes('Veľký prsný sval') &&
+    document.querySelector('#history-recommendations a[href="#chest"]') !== null`), true);
+  await inspect(`document.querySelector('#history-bodyweight').click()`);
+  assert.equal(await inspect(`[...document.querySelectorAll('#history-recommendations a')]
+    .every(link => document.querySelector(link.hash).dataset.equipment === 'bodyweight') &&
+    document.querySelector('#history-recommendations a[href="#floorpush"]') !== null`), true);
+  await inspect(`document.querySelector('#pokrytie').scrollIntoView()`);
+  await screenshot('fitcamp-history.png');
+  await inspect(`document.querySelector('#history-checks input[value="backup-session"]').click()`);
+  assert.equal(await inspect(`document.querySelector('#history-results').hidden &&
+    document.querySelectorAll('#workout-archive option').length === 3`), true);
+  assert.equal(await workoutStorage(), savedWorkouts);
   await pressButton('chest', 'start-exercise');
   assert.equal(await inspect(`document.querySelector('#use-last-sets').hidden`), false);
   await inspect(`document.querySelector('#use-last-sets').click()`);
@@ -411,7 +437,7 @@ try {
   assert.equal(await inspect(`[...document.querySelectorAll('nav a')].every(a => !['#svalovica','#fitcamp'].includes(a.hash))`), true);
   await viewport(320);
   assert.equal(await inspect('document.documentElement.scrollWidth <= innerWidth'), true);
-  console.log('Chrome: four templates, custom plans, muscle and series warnings, plans resume with inline logging, fixed live map, CSV/JSON and prior exercises passed.');
+  console.log('Chrome: workout plans, inline logging, muscle maps, retrospective coverage, and legacy JSON/CSV passed.');
 } finally {
   ws?.close();
   browser.kill();

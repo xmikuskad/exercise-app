@@ -77,6 +77,18 @@ POSES = {
     'squatwarm': (
         ((102,27),(103,48),(101,96),(121,65),(142,70),(105,126),(102,155),(122,155)),
         ((107,52),(106,73),(78,111),(130,82),(153,87),(120,112),(103,155),(123,155))),
+    'reverselunge': (
+        ((122,26),(122,47),(120,98),(126,73),(140,90),(122,126),(121,152),(140,154)),
+        ((111,51),(113,72),(105,121),(120,96),(134,114),(130,119),(121,152),(140,154))),
+    'floorpush': (
+        ((159,87),(143,98),(101,113),(144,126),(145,151),(67,131),(41,145),(39,154)),
+        ((163,118),(146,127),(101,135),(122,139),(145,151),(66,143),(41,147),(39,154))),
+    'bandrow': (
+        ((73,67),(78,86),(82,146),(110,96),(145,107),(125,128),(163,150),(170,136)),
+        ((73,67),(78,86),(82,146),(57,110),(96,110),(125,128),(163,150),(170,136))),
+    'proney': (
+        ((153,138),(132,142),(83,145),(157,147),(185,149),(54,147),(31,148),(23,153)),
+        ((153,138),(132,142),(83,145),(157,131),(185,119),(54,147),(31,148),(23,153))),
     'scapwarm': (
         ((153,88),(135,103),(83,103),(135,128),(135,153),(83,150),(52,151),(40,151)),
         ((153,97),(135,112),(83,103),(135,132),(135,153),(83,150),(52,151),(40,151))),
@@ -103,11 +115,12 @@ POSES['singlecalf'] = POSES['calfstanding']
 POSES['dbshoulder'] = POSES['shoulderpress']
 POSES['cablecurl'] = POSES['biceps']
 POSES['singletricep'] = POSES['pushdown']
+POSES['bodyweightsquat'] = POSES['squatwarm']
 
 FRONT = {'lateral', 'reversefly', 'abduction'}
 LEG = {'goblet', 'split', 'extension', 'pronecurl', 'hipthrust', 'abduction', 'calfstanding', 'calfseated',
-       'anklerock', 'squatwarm', 'hack', 'stepup', 'cablekick', 'singlecalf'}
-FLOOR = {'plank', 'sideplank', 'birddog', 'scapwarm', 'reversecrunch'}
+       'anklerock', 'squatwarm', 'hack', 'stepup', 'cablekick', 'singlecalf', 'bodyweightsquat', 'reverselunge'}
+FLOOR = {'plank', 'sideplank', 'birddog', 'scapwarm', 'reversecrunch', 'floorpush', 'bandrow', 'proney'}
 DUMBBELLS = {'goblet', 'dbpress', 'incline', 'supportedrow', 'lateral', 'biceps', 'hammer', 'dbshoulder', 'preacher'}
 TOP_VIEW = {'pallof', 'facepull', 'pecdeck', 'cablefly'}
 
@@ -220,6 +233,14 @@ def render(key, frames):
             line((95,75),(121,94),(121,153),width=8)
         if key in FLOOR:
             line((20,157),(196,157),width=5)
+        if key == 'reverselunge':
+            line(hip, (round(114-20*phase),round(126+20*phase)),
+                 (round(114-50*phase),round(152-5*phase)), (round(131-63*phase),154),
+                 width=7,color=light)
+        if key == 'bandrow':
+            line((168,140),hand,width=3,color=teal)
+        if key == 'proney':
+            line(shoulder,(elbow[0]-8,elbow[1]+6),(hand[0]-17,hand[1]+5),width=6,color=light)
         if key in {'split','calfstanding','singlecalf'}:
             line((165,156),(165,31),width=7)
         if key == 'singlecalf':

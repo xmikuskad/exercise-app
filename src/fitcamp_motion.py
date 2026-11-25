@@ -76,6 +76,11 @@ PRACTICE_CAPTIONS = {
     'preacher': 'Nadlaktie leží stále na šikmej opierke. Opakuj aj druhou rukou.',
     'singletricep': 'Drž lakeť vedľa tela. Po sérii vymeň strany.',
     'reversecrunch': 'Pohyb začína podsadením panvy a končí krátkym odlepením kostrče.',
+    'bodyweightsquat': 'Celé chodidlo zostáva na podlahe a kolená sledujú smer špičiek.',
+    'reverselunge': 'Predná noha ostáva na mieste. Po návrate vymeň strany.',
+    'floorpush': 'Hrudník a boky sa spúšťajú spolu. Dlane aj špičky zostávajú na mieste.',
+    'bandrow': 'Sleduj lakeť smerujúci dozadu. Pri návrate brzdi ťah gumy.',
+    'proney': 'Ruky drž šikmo v tvare Y, ako ukazuje online video. Zdvih je malý a trup zostáva na podložke.',
 }
 
 

@@ -13,10 +13,11 @@ from fitcamp_muscles import MUSCLES, ROLES
 from fitcamp_technique import TECHNIQUE
 from fitcamp_references import DEMOS
 from fitcamp_extra import EXTRA_CHECKS, EXTRA_ROLES
+from fitcamp_low_equipment import CHECKS_LOW_EQUIPMENT, ROLES_LOW_EQUIPMENT
 from fitcamp_bodymap import body_map, live_body_map
 
-TECHNIQUE.update(EXTRA_CHECKS)
-ROLES.update(EXTRA_ROLES)
+TECHNIQUE.update(EXTRA_CHECKS | CHECKS_LOW_EQUIPMENT)
+ROLES.update(EXTRA_ROLES | ROLES_LOW_EQUIPMENT)
 
 SOURCE = Path(__file__).resolve().parent
 ROOT = SOURCE.parent
@@ -37,6 +38,11 @@ SLOVAK_NAMES = {
 PRIORITIES = {key: (priority, title) for priority, title, catalog in PRIORITY for key in catalog}
 DUMBBELL_LOAD = {'goblet', 'dbpress', 'incline', 'dbrow', 'supportedrow', 'lateral', 'biceps', 'hammer',
                  'dbshoulder', 'preacher'}
+BODYWEIGHT = {
+    'sit', 'push', 'bridge', 'split', 'calfstanding', 'singlecalf', 'deadbug',
+    'plank', 'sideplank', 'birddog', 'reversecrunch', 'bodyweightsquat', 'reverselunge',
+    'floorpush', 'proney',
+}
 MACHINE_LOAD = {'press', 'chest', 'row', 'curl', 'lat', 'extension', 'pronecurl', 'abduction',
                 'calfseated', 'straightpull', 'shoulderpress', 'reversefly', 'facepull', 'pushdown',
                 'overhead', 'pallof', 'hack', 'cablekick', 'pecdeck', 'cablecurl', 'singletricep'}
@@ -94,7 +100,7 @@ def exercise_card(key, exercise):
     )
     priority, priority_title = PRIORITIES[key]
     return f'''
-    <details class="card" id="{key}" data-main="{escape(' '.join(main), quote=True)}" data-secondary="{escape(' '.join(secondary), quote=True)}" data-aliases="{escape(f'{name} {search_aliases}', quote=True)}" data-set-unit="{set_unit}" data-per-side="{per_side}" data-load-basis="{load_basis}" data-prescription="{escape(reps, quote=True)}">
+    <details class="card" id="{key}" data-equipment="{'bodyweight' if key in BODYWEIGHT else 'equipment'}" data-main="{escape(' '.join(main), quote=True)}" data-secondary="{escape(' '.join(secondary), quote=True)}" data-aliases="{escape(f'{name} {search_aliases}', quote=True)}" data-set-unit="{set_unit}" data-per-side="{per_side}" data-load-basis="{load_basis}" data-prescription="{escape(reps, quote=True)}">
       <summary><strong class="exercise-name">{bilingual_name(key)}</strong><span class="exercise-subtitle"><small class="priority {priority}">{escape(priority_title)}</small> {escape(muscle_subtitle)}</span><span class="last" hidden></span></summary>
       <div class="inside">
         <p><strong>{escape(reps)}</strong> <span class="subtle">· jedna pracovná séria</span></p>
@@ -177,7 +183,7 @@ def group_section(group_id, title, exercises):
 
 
 keys = [key for group_id, title, exercises in GROUPS for key in exercises]
-assert len(keys) == len(set(keys)) == len(EXERCISES) == 46
+assert len(keys) == len(set(keys)) == len(EXERCISES)
 assert set(keys) == EXERCISES.keys()
 assert ROLES.keys() == EXERCISES.keys()
 assert TECHNIQUE.keys() == EXERCISES.keys() and all(len(checks) == 3 for checks in TECHNIQUE.values())
@@ -185,6 +191,7 @@ assert PRACTICE_CAPTIONS.keys() == EXERCISES.keys()
 assert PRIORITIES.keys() == EXERCISES.keys()
 assert all(PRIORITIES[catalog[0]][0] == 'base' for _, _, catalog in GROUPS)
 assert EXERCISES.keys() <= DEMOS.keys()
+assert BODYWEIGHT <= EXERCISES.keys()
 for primary, secondary in ROLES.values():
     main, support = set(primary.split()), set(secondary.split())
     assert main and not main & support and (main | support) <= MUSCLES.keys()
@@ -194,7 +201,7 @@ scripts = {
     placeholder: (SOURCE / f'fitcamp_{module}.js').read_text(encoding='utf-8')
     for placeholder, module in (
         ('SCRIPT', 'journal'), ('TRAINING', 'training'), ('SETS', 'sets'),
-        ('COVERAGE', 'coverage'), ('PLANNER', 'planner'), ('DEMOS', 'demos')
+        ('COVERAGE', 'coverage'), ('PLANNER', 'planner'), ('HISTORY', 'history'), ('DEMOS', 'demos')
     )
 }
 

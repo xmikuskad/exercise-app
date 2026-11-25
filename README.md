@@ -2,7 +2,11 @@
 
 [Otvoriť aplikáciu](https://xmikuskad.github.io/exercise-app/)
 
-Mobilná statická príručka so 46 cvikmi, plánovačom tréningov, živou mapou svalov a denníkom sérií. Obsahuje slovenské aj anglické názvy, vstavané ukážky, odkazy na ďalšie videá a export do CSV alebo JSON.
+Mobilná príručka s 51 cvikmi, plánovačom, živou mapou svalov a denníkom sérií. V denníku sa dá porovnať pokrytie svalov vo vybraných tréningoch a nájsť cviky na chýbajúce partie. Cviky majú slovenské aj anglické názvy, vstavanú ukážku a odkaz na online video. Záznamy sa dajú exportovať do CSV alebo JSON.
+
+- [Zámer produktu a hlavné používateľské postupy](product/PRODUCT.md)
+- [Údržba, kompatibilita a nasadenie](product/MAINTAINING.md)
+- [Výskumné podklady k pokrytiu a novým cvikom](product/RESEARCH.md)
 
 ## Zostavenie
 

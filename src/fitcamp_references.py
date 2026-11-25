@@ -45,4 +45,9 @@ DEMOS = {
     'preacher': (MUSCLE_STRENGTH + 'one-arm-preacher-curl.html', 'Muscle & Strength'),
     'singletricep': ('https://www.fittr.com/exercise-video/cable-one-arm-pushdown-57/', 'FITTR'),
     'reversecrunch': ('https://workouts.fitbe.io/exercises/reverse-crunch', 'FitBe'),
+    'bodyweightsquat': ('https://shuttlescience.com/library/bw-squat', 'ShuttleScience'),
+    'reverselunge': ('https://app.instructorjp.com/exercises/bodyweight_reverse_lunge_alternating_legs', 'Instructor JP'),
+    'floorpush': ('https://www.youtube.com/watch?v=WDIpL0pjun0', 'NASM'),
+    'bandrow': ('https://www.mayoclinic.org/healthy-lifestyle/fitness/multimedia/seated-row/vid-20084669', 'Mayo Clinic'),
+    'proney': ('https://www.youtube.com/watch?v=eDUzTEqpFa4', 'BEYOND Physical Therapy'),
 }
