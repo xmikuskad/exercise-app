@@ -48,6 +48,18 @@ BODYWEIGHT = {
 MACHINE_LOAD = {'press', 'chest', 'row', 'curl', 'lat', 'extension', 'pronecurl', 'abduction',
                 'calfseated', 'straightpull', 'shoulderpress', 'reversefly', 'facepull', 'pushdown',
                 'overhead', 'pallof', 'hack', 'cablekick', 'pecdeck', 'cablecurl', 'singletricep'}
+CABLE = {'row', 'lat', 'straightpull', 'facepull', 'pushdown', 'overhead', 'pallof',
+         'cablekick', 'cablecurl', 'singletricep', 'cablefly'}
+SUPPORT = {'sit', 'push', 'split', 'calfstanding', 'singlecalf', 'toeraise', 'stepup', 'hipthrust'}
+EQUIPMENT_TYPES = {
+    'floor': BODYWEIGHT - SUPPORT,
+    'support': SUPPORT,
+    'dumbbells': DUMBBELL_LOAD,
+    'band': {'bandrow'},
+    'cable': CABLE,
+    'machine': (MACHINE_LOAD - CABLE) | {'assistpull'},
+}
+EXERCISE_EQUIPMENT = {key: kind for kind, exercises in EQUIPMENT_TYPES.items() for key in exercises}
 
 
 def bilingual_name(key):
@@ -134,7 +146,7 @@ def exercise_card(key, exercise):
     )
     priority, priority_title = PRIORITIES[key]
     return f'''
-    <details class="card" id="{key}" data-equipment="{'bodyweight' if key in BODYWEIGHT else 'equipment'}" data-main="{escape(' '.join(main), quote=True)}" data-secondary="{escape(' '.join(secondary), quote=True)}" data-aliases="{escape(f'{name} {search_aliases}', quote=True)}" data-set-unit="{set_unit}" data-per-side="{per_side}" data-load-basis="{load_basis}" data-prescription="{escape(reps, quote=True)}">
+    <details class="card" id="{key}" data-equipment="{'bodyweight' if key in BODYWEIGHT else 'equipment'}" data-equipment-kind="{EXERCISE_EQUIPMENT[key]}" data-main="{escape(' '.join(main), quote=True)}" data-secondary="{escape(' '.join(secondary), quote=True)}" data-aliases="{escape(f'{name} {search_aliases}', quote=True)}" data-set-unit="{set_unit}" data-per-side="{per_side}" data-load-basis="{load_basis}" data-prescription="{escape(reps, quote=True)}">
       <summary><strong class="exercise-name">{bilingual_name(key)}</strong><span class="exercise-subtitle"><small class="priority {priority}">{escape(priority_title)}</small> {escape(muscle_subtitle)}</span><span class="last" hidden></span></summary>
       <div class="inside">
         <p><strong>{escape(reps)}</strong> <span class="subtle">· jedna pracovná séria</span></p>
@@ -228,6 +240,8 @@ assert PRIORITIES.keys() == EXERCISES.keys()
 assert all(PRIORITIES[catalog[0]][0] == 'base' for _, _, catalog in GROUPS)
 assert EXERCISES.keys() <= DEMOS.keys()
 assert BODYWEIGHT <= EXERCISES.keys()
+assert EXERCISE_EQUIPMENT.keys() == EXERCISES.keys()
+assert len(EXERCISE_EQUIPMENT) == sum(map(len, EQUIPMENT_TYPES.values()))
 for primary, secondary in ROLES.values():
     main, support = set(primary.split()), set(secondary.split())
     assert main and not main & support and (main | support) <= MUSCLES.keys()
@@ -239,7 +253,8 @@ scripts = {
     for placeholder, module in (
         ('SCRIPT', 'journal'), ('TRAINING', 'training'), ('SETS', 'sets'),
         ('COVERAGE', 'coverage'), ('PLANNER', 'planner'), ('HISTORY', 'history'), ('DEMOS', 'demos'),
-        ('INSIGHTS', 'insights'), ('APP', 'app'), ('MUSCLE_PICKER', 'muscle_picker'), ('WARMUP', 'warmup')
+        ('INSIGHTS', 'insights'), ('APP', 'app'), ('MUSCLE_PICKER', 'muscle_picker'), ('WARMUP', 'warmup'),
+        ('SUBSTITUTIONS', 'substitutions')
     )
 }
 

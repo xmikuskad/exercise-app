@@ -270,6 +270,7 @@ main{padding-bottom:5.6rem}
       <div id="inline-set-panel" class="workout-running">
       <h3>Dnešné série</h3>
       <p id="planned-set-dose" class="planned-dose subtle" hidden></p>
+      <button id="swap-current-exercise" class="text-button" type="button" hidden>Vymeniť cvik</button>
       <form id="record-set" novalidate>
         <div class="set-log-actions">
           <button id="use-last-sets" type="button" hidden>Použiť minulé</button>
@@ -562,6 +563,16 @@ main{padding-bottom:5.6rem}
   </div>
 </section>
 </main>
+<dialog id="exercise-substitutions" aria-labelledby="substitution-title">
+  <div class="coverage-dialog-head">
+    <h2 id="substitution-title">Vymeniť cvik</h2>
+    <form method="dialog"><button type="submit">Zavrieť</button></form>
+  </div>
+  <p id="substitution-original"></p>
+  <div id="substitution-equipment"></div>
+  <ul id="substitution-choices" class="exercise-options"></ul>
+  <p id="substitution-status" class="subtle" role="status"></p>
+</dialog>
 <dialog id="finish-workout-dialog" aria-labelledby="finish-workout-title" aria-describedby="finish-workout-description">
   <form method="dialog">
     <h2 id="finish-workout-title">Ukončiť tréning?</h2>
@@ -604,6 +615,7 @@ main{padding-bottom:5.6rem}
 <script>@@WARMUP@@</script>
 <script>@@INSIGHTS@@</script>
 <script>@@APP@@</script>
+<script>@@SUBSTITUTIONS@@</script>
 <script>@@MUSCLE_PICKER@@</script>
 </body>
 </html>

@@ -552,13 +552,65 @@ try {
     document.querySelector('#start-plan-preset').click()`);
   assert.equal(await activeExercise(), 'press');
   assert.equal(await inspect('activeWorkout.plan.name'), 'Celé telo A');
+  await waitFor(`document.querySelector('#press').classList.contains('view-exercise')`, 'First exercise did not open');
+  await enterSet(0, '', '20');
+  await clickUI('#swap-current-exercise');
+  assert.equal(await inspect(`document.querySelector('#substitution-status').textContent.includes('rozpísané série') &&
+    !document.querySelector('#substitution-choices button')`), true);
+  await clickUI('#exercise-substitutions form button');
+  assert.equal(await inspect(`document.querySelector('.set-row-weight').value`), '20');
+  await enterSet(0, '', '');
+  const savedLibraryBeforeSwap = await inspect('JSON.stringify(savedPlans)');
+  await clickUI('#swap-current-exercise');
+  await inspect(`substitutionEquipment.select.value = 'floor'; substitutionEquipment.select.dispatchEvent(new Event('change'))`);
+  assert.equal(await inspect(`(() => {
+    const choices = [...document.querySelectorAll('#substitution-choices button')];
+    return choices.some(button => button.dataset.exercise === 'bodyweightsquat') &&
+      choices.every(button => cards.get(button.dataset.exercise).dataset.equipmentKind === 'floor');
+  })()`), true);
+  await screenshot('fitcamp-substitutions.png');
+  await clickUI('#substitution-choices button[data-exercise=bodyweightsquat]');
+  await waitFor(`!document.querySelector('#teraz').hidden && !activeWorkout.running`, 'Swap did not return to the active plan');
+  assert.deepEqual(await inspect('activeWorkout.plan.items[0]'), {exercise:'bodyweightsquat', sets:2, reps:'8–12'});
+  assert.equal(await inspect('JSON.stringify(savedPlans)'), savedLibraryBeforeSwap);
+  assert.equal(await inspect('planPresets[0].exercises[0][0]'), 'press');
+  await command('Page.reload');
+  await waitFor(`document.body?.classList.contains('app-ready') && activeWorkout?.plan.items[0].exercise === 'bodyweightsquat'`, 'Swap did not survive reload');
+  await clickUI('#start-next-plan');
+  await waitFor(`document.querySelector('#bodyweightsquat').classList.contains('view-exercise')`, 'Replacement did not open');
+  assert.equal(await activeExercise(), 'bodyweightsquat');
+  await enterSet(0, '8');
+  await inspect(`location.hash = '#teraz'`);
+  await waitFor(`!document.querySelector('#teraz').hidden`, 'Today did not open');
+  await clickUI('#plan-execution-list [data-exercise=chest] button');
+  await clickUI('#substitution-choices button[data-exercise=floorpush]');
+  assert.equal(await inspect('activeWorkout.plan.items[1].exercise'), 'floorpush');
+  assert.equal(await inspect(`document.querySelector('.set-row-amount').value`), '8');
+  await inspect(`location.hash = '#bodyweightsquat'`);
+  await waitFor(`document.querySelector('#bodyweightsquat').classList.contains('view-exercise')`, 'Could not return to replacement');
+  await clickUI('#finish-running');
+  assert.equal(await activeExercise(), 'floorpush');
+  assert.equal(await inspect(`activeWorkout.exercises[0].exercise`), 'bodyweightsquat');
+  await inspect(`location.hash = '#planovac'`);
+  await waitFor(`!document.querySelector('#planovac').hidden`, 'Plan editor did not open');
+  await inspect(`(() => {
+    const [muscle, gear] = document.querySelectorAll('#plan-validation .muscle-picker select');
+    muscle.value = 'tibant';
+    muscle.dispatchEvent(new Event('change'));
+    gear.value = 'support';
+    gear.dispatchEvent(new Event('change'));
+  })()`);
+  await clickUI('#plan-validation .muscle-picker li button');
+  assert.equal(await inspect(`draft.items.filter(item => item.exercise === 'toeraise').length === 1 &&
+    document.querySelector('#plan-validation .muscle-picker li button').disabled &&
+    JSON.stringify(savedPlans) === ${JSON.stringify(savedLibraryBeforeSwap)}`), true);
   await assertCleanPage();
   await inspect(`localStorage.clear(); location.hash = '#teraz'`);
   await command('Page.reload');
   await waitFor(`document.body?.classList.contains('app-ready') && !activeWorkout && !workoutHistory.length`, 'Could not isolate the finish scenarios');
   await viewport(390);
   await checkFinish();
-  console.log('Chrome: workout plans, logging, muscle maps, warmup, retrospective coverage, legacy JSON/CSV, and workout finish passed.');
+  console.log('Chrome: plans, substitutions, adding from muscle maps, logging, warmup, coverage, JSON/CSV, and workout finish passed.');
   }
 } finally {
   ws?.close();

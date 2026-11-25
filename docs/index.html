@@ -2,7 +2,7 @@
 <html lang="sk">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src &#x27;none&#x27;; base-uri &#x27;none&#x27;; form-action &#x27;none&#x27;; img-src data:; media-src data:; script-src &#x27;sha256-I8ODw21V7Cf3kccakSkY90wQt1mW6rEczl30KKT18T4=&#x27; &#x27;sha256-tr+0jk41c2Tf97LhJNfxkm7+ToBH9xtX3LmkNHGf1aI=&#x27; &#x27;sha256-uKxiw9WVTZlknguZSEmy8mj3BRqb3cfMYsfcyJsysrI=&#x27; &#x27;sha256-tnyIOnfJVn3HcSndOS5UZ4rxxpkQ23i5kV0CmSIzg5c=&#x27; &#x27;sha256-GSwficxEYdecwSrx6EKMpEwVAzMRqA+Bx1HsVSVFQ0E=&#x27; &#x27;sha256-DJ9Im1j7xgs9xK4YlcF7zINe1tu5tLMgllcOGP9yXUU=&#x27; &#x27;sha256-WAZtFWFZhB6uyJf/o/fSwFFN0x+EKeUNziusI07Yzp8=&#x27; &#x27;sha256-PCh8t/evjcOJrsLvlrtMeLpdB79HrmJKo+aXKHSUGfE=&#x27; &#x27;sha256-FeQeOr4lUboqjRN6/4Q3Y/w4t2GrFqwN4sVy4Pz1ugs=&#x27; &#x27;sha256-8a+pFa/kS2QcZb37itsDBovOL7M8gsClYuL5OIebeJQ=&#x27; &#x27;sha256-oce1nGjD5K7pNRQCPdh33WrAhzhqMIFpffcKpLvo71M=&#x27;; style-src &#x27;sha256-Pogxn14cCCzuFAhY4JhO2mSiJ5D5n6HJHu35eBWgpSc=&#x27;">
+<meta http-equiv="Content-Security-Policy" content="default-src &#x27;none&#x27;; base-uri &#x27;none&#x27;; form-action &#x27;none&#x27;; img-src data:; media-src data:; script-src &#x27;sha256-I8ODw21V7Cf3kccakSkY90wQt1mW6rEczl30KKT18T4=&#x27; &#x27;sha256-tr+0jk41c2Tf97LhJNfxkm7+ToBH9xtX3LmkNHGf1aI=&#x27; &#x27;sha256-uKxiw9WVTZlknguZSEmy8mj3BRqb3cfMYsfcyJsysrI=&#x27; &#x27;sha256-tnyIOnfJVn3HcSndOS5UZ4rxxpkQ23i5kV0CmSIzg5c=&#x27; &#x27;sha256-Q/iRf+4EYHlfmca9Io0nntlhurEHyCBI8qsfV2ZoNsc=&#x27; &#x27;sha256-DJ9Im1j7xgs9xK4YlcF7zINe1tu5tLMgllcOGP9yXUU=&#x27; &#x27;sha256-WAZtFWFZhB6uyJf/o/fSwFFN0x+EKeUNziusI07Yzp8=&#x27; &#x27;sha256-PCh8t/evjcOJrsLvlrtMeLpdB79HrmJKo+aXKHSUGfE=&#x27; &#x27;sha256-FeQeOr4lUboqjRN6/4Q3Y/w4t2GrFqwN4sVy4Pz1ugs=&#x27; &#x27;sha256-k63JXkEdNBU06ehgXwuRA0y+YeiN22y4e0w00oBdt5I=&#x27; &#x27;sha256-oce1nGjD5K7pNRQCPdh33WrAhzhqMIFpffcKpLvo71M=&#x27; &#x27;sha256-FdGx8JTspG63231nWgeaSQXu1mG0MSaVGOUW5+P4d5Q=&#x27;; style-src &#x27;sha256-EB+7i/J9gLmQOABjAZ7x7WZ2VW72sqkY6yCQISeUlZ4=&#x27;">
 <meta name="referrer" content="no-referrer">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#f3f5ee">
@@ -281,6 +281,13 @@ main h2{font-size:clamp(1.35rem,4.5vw,1.85rem)}
 .muscle-picker p:empty,.muscle-picker ul:empty{display:none}
 .muscle-picker ul{display:flex;flex-wrap:wrap;gap:.25rem .85rem;list-style:none;padding:0;margin:0}
 .muscle-picker a{display:inline-flex;align-items:center;min-height:44px}
+.muscle-picker .exercise-options,.exercise-options{list-style:none;padding:0;margin:.55rem 0;display:block}
+.exercise-options li{display:flex;justify-content:space-between;align-items:center;gap:.65rem;padding:.45rem 0;border-bottom:1px solid var(--line)}
+.exercise-options li button{flex:none}
+.exercise-options small{display:block;color:var(--muted)}
+.exercise-options .english-name{font-weight:550}
+#exercise-substitutions{background:var(--paper);border-color:var(--line)}
+#exercise-substitutions .field{min-width:0}
 #rozc{max-width:37rem}
 .warmup-back{display:inline-flex;align-items:center;gap:.45rem;min-height:44px;font-weight:650;text-decoration:none}
 #rozc h1{margin:.25rem 0 .5rem;letter-spacing:-.035em}
@@ -369,6 +376,7 @@ main h2{font-size:clamp(1.35rem,4.5vw,1.85rem)}
       <div id="inline-set-panel" class="workout-running">
       <h3>Dnešné série</h3>
       <p id="planned-set-dose" class="planned-dose subtle" hidden></p>
+      <button id="swap-current-exercise" class="text-button" type="button" hidden>Vymeniť cvik</button>
       <form id="record-set" novalidate>
         <div class="set-log-actions">
           <button id="use-last-sets" type="button" hidden>Použiť minulé</button>
@@ -582,7 +590,7 @@ main h2{font-size:clamp(1.35rem,4.5vw,1.85rem)}
   </div>
   <div class="group-menu" aria-label="Svalové partie"><a href="#quads">Predné stehná</a><a href="#posterior">Zadok a zadné stehná</a><a href="#calves">Lýtka a predkolenie</a><a href="#pushes">Hrudník</a><a href="#pulls">Chrbát</a><a href="#shoulders">Ramená</a><a href="#biceps-group">Biceps</a><a href="#triceps-group">Triceps</a><a href="#core">Brucho a stred tela</a></div>
   <p id="empty-search" hidden>Taký cvik sa nenašiel. Skús kratší názov alebo partiu.</p>
-  <section class="category" id="quads" data-group="Predné stehná"><h3>Predné stehná</h3><details class="card" id="press" data-equipment="equipment" data-main="quad gmax" data-secondary="add ham" data-aliases="Tlak na nohy Leg Press" data-set-unit="reps" data-per-side="no" data-load-basis="machine" data-prescription="8–12">
+  <section class="category" id="quads" data-group="Predné stehná"><h3>Predné stehná</h3><details class="card" id="press" data-equipment="equipment" data-equipment-kind="machine" data-main="quad gmax" data-secondary="add ham" data-aliases="Tlak na nohy Leg Press" data-set-unit="reps" data-per-side="no" data-load-basis="machine" data-prescription="8–12">
       <summary><strong class="exercise-name">Tlak na nohy <small class="english-name" lang="en">(Leg Press)</small></strong><span class="exercise-subtitle"><small class="priority base">Základ</small> predné stehná a zadok</span><span class="last" hidden></span></summary>
       <div class="inside">
         <p><strong>8–12</strong> <span class="subtle">· jedna pracovná séria</span></p>
@@ -657,7 +665,7 @@ main h2{font-size:clamp(1.35rem,4.5vw,1.85rem)}
           </div>
         </details>
       </div>
-    </details><details class="card" id="goblet" data-equipment="equipment" data-main="quad gmax" data-secondary="add erector trans" data-aliases="Drep s jednoručkou pri hrudníku Goblet Squat" data-set-unit="reps" data-per-side="no" data-load-basis="per_dumbbell" data-prescription="8–12">
+    </details><details class="card" id="goblet" data-equipment="equipment" data-equipment-kind="dumbbells" data-main="quad gmax" data-secondary="add erector trans" data-aliases="Drep s jednoručkou pri hrudníku Goblet Squat" data-set-unit="reps" data-per-side="no" data-load-basis="per_dumbbell" data-prescription="8–12">
       <summary><strong class="exercise-name">Drep s jednoručkou pri hrudníku <small class="english-name" lang="en">(Goblet Squat)</small></strong><span class="exercise-subtitle"><small class="priority alternative">Alternatíva</small> predné stehná a zadok</span><span class="last" hidden></span></summary>
       <div class="inside">
         <p><strong>8–12</strong> <span class="subtle">· jedna pracovná séria</span></p>
@@ -732,7 +740,7 @@ main h2{font-size:clamp(1.35rem,4.5vw,1.85rem)}
           </div>
         </details>
       </div>
-    </details><details class="card" id="bodyweightsquat" data-equipment="bodyweight" data-main="quad gmax" data-secondary="add ham" data-aliases="Drep s vlastnou váhou Bodyweight Squat" data-set-unit="reps" data-per-side="no" data-load-basis="total_added" data-prescription="8–12">
+    </details><details class="card" id="bodyweightsquat" data-equipment="bodyweight" data-equipment-kind="floor" data-main="quad gmax" data-secondary="add ham" data-aliases="Drep s vlastnou váhou Bodyweight Squat" data-set-unit="reps" data-per-side="no" data-load-basis="total_added" data-prescription="8–12">
       <summary><strong class="exercise-name">Drep s vlastnou váhou <small class="english-name" lang="en">(Bodyweight Squat)</small></strong><span class="exercise-subtitle"><small class="priority alternative">Alternatíva</small> predné stehná a zadok</span><span class="last" hidden></span></summary>
       <div class="inside">
         <p><strong>8–12</strong> <span class="subtle">· jedna pracovná séria</span></p>
@@ -807,7 +815,7 @@ main h2{font-size:clamp(1.35rem,4.5vw,1.85rem)}
           </div>
         </details>
       </div>
-    </details><details class="card" id="sit" data-equipment="bodyweight" data-main="quad gmax" data-secondary="add erector" data-aliases="Vstávanie z lavičky Sit to Stand" data-set-unit="reps" data-per-side="no" data-load-basis="total_added" data-prescription="8–12">
+    </details><details class="card" id="sit" data-equipment="bodyweight" data-equipment-kind="support" data-main="quad gmax" data-secondary="add erector" data-aliases="Vstávanie z lavičky Sit to Stand" data-set-unit="reps" data-per-side="no" data-load-basis="total_added" data-prescription="8–12">
       <summary><strong class="exercise-name">Vstávanie z lavičky <small class="english-name" lang="en">(Sit to Stand)</small></strong><span class="exercise-subtitle"><small class="priority alternative">Alternatíva</small> predné stehná a zadok</span><span class="last" hidden></span></summary>
       <div class="inside">
         <p><strong>8–12</strong> <span class="subtle">· jedna pracovná séria</span></p>
@@ -882,7 +890,7 @@ main h2{font-size:clamp(1.35rem,4.5vw,1.85rem)}
           </div>
         </details>
       </div>
-    </details><details class="card" id="split" data-equipment="bodyweight" data-main="quad gmax" data-secondary="add gmed erector" data-aliases="Drep v rozkročnom postoji s oporou Supported Split Squat" data-set-unit="reps" data-per-side="yes" data-load-basis="total_added" data-prescription="8–10 / strana">
+    </details><details class="card" id="split" data-equipment="bodyweight" data-equipment-kind="support" data-main="quad gmax" data-secondary="add gmed erector" data-aliases="Drep v rozkročnom postoji s oporou Supported Split Squat" data-set-unit="reps" data-per-side="yes" data-load-basis="total_added" data-prescription="8–10 / strana">
       <summary><strong class="exercise-name">Drep v rozkročnom postoji s oporou <small class="english-name" lang="en">(Supported Split Squat)</small></strong><span class="exercise-subtitle"><small class="priority alternative">Alternatíva</small> predné stehná a zadok</span><span class="last" hidden></span></summary>
       <div class="inside">
         <p><strong>8–10 / strana</strong> <span class="subtle">· jedna pracovná séria</span></p>
@@ -957,7 +965,7 @@ main h2{font-size:clamp(1.35rem,4.5vw,1.85rem)}
           </div>
         </details>
       </div>
-    </details><details class="card" id="reverselunge" data-equipment="bodyweight" data-main="quad gmax" data-secondary="ham add gmed" data-aliases="Výpad vzad Bodyweight Reverse Lunge" data-set-unit="reps" data-per-side="yes" data-load-basis="total_added" data-prescription="6–10 / strana">
+    </details><details class="card" id="reverselunge" data-equipment="bodyweight" data-equipment-kind="floor" data-main="quad gmax" data-secondary="ham add gmed" data-aliases="Výpad vzad Bodyweight Reverse Lunge" data-set-unit="reps" data-per-side="yes" data-load-basis="total_added" data-prescription="6–10 / strana">
       <summary><strong class="exercise-name">Výpad vzad <small class="english-name" lang="en">(Bodyweight Reverse Lunge)</small></strong><span class="exercise-subtitle"><small class="priority alternative">Alternatíva</small> predné stehná a zadok</span><span class="last" hidden></span></summary>
       <div class="inside">
         <p><strong>6–10 / strana</strong> <span class="subtle">· jedna pracovná séria</span></p>
@@ -1032,7 +1040,7 @@ main h2{font-size:clamp(1.35rem,4.5vw,1.85rem)}
           </div>
         </details>
       </div>
-    </details><details class="card" id="stepup" data-equipment="equipment" data-main="quad gmax" data-secondary="gmed ham" data-aliases="Výstup na nízky stupienok Bodyweight Step-up" data-set-unit="reps" data-per-side="yes" data-load-basis="total_added" data-prescription="6–10 / strana">
+    </details><details class="card" id="stepup" data-equipment="equipment" data-equipment-kind="support" data-main="quad gmax" data-secondary="gmed ham" data-aliases="Výstup na nízky stupienok Bodyweight Step-up" data-set-unit="reps" data-per-side="yes" data-load-basis="total_added" data-prescription="6–10 / strana">
       <summary><strong class="exercise-name">Výstup na nízky stupienok <small class="english-name" lang="en">(Bodyweight Step-up)</small></strong><span class="exercise-subtitle"><small class="priority alternative">Alternatíva</small> predné stehná a zadok</span><span class="last" hidden></span></summary>
       <div class="inside">
         <p><strong>6–10 / strana</strong> <span class="subtle">· jedna pracovná séria</span></p>
@@ -1107,7 +1115,7 @@ main h2{font-size:clamp(1.35rem,4.5vw,1.85rem)}
           </div>
         </details>
       </div>
-    </details><details class="card" id="hack" data-equipment="equipment" data-main="quad gmax" data-secondary="add" data-aliases="Drep na hack stroji Machine Hack Squat" data-set-unit="reps" data-per-side="no" data-load-basis="machine" data-prescription="8–12">
+    </details><details class="card" id="hack" data-equipment="equipment" data-equipment-kind="machine" data-main="quad gmax" data-secondary="add" data-aliases="Drep na hack stroji Machine Hack Squat" data-set-unit="reps" data-per-side="no" data-load-basis="machine" data-prescription="8–12">
       <summary><strong class="exercise-name">Drep na hack stroji <small class="english-name" lang="en">(Machine Hack Squat)</small></strong><span class="exercise-subtitle"><small class="priority alternative">Alternatíva</small> predné stehná a zadok</span><span class="last" hidden></span></summary>
       <div class="inside">
         <p><strong>8–12</strong> <span class="subtle">· jedna pracovná séria</span></p>
@@ -1182,7 +1190,7 @@ main h2{font-size:clamp(1.35rem,4.5vw,1.85rem)}
           </div>
         </details>
       </div>
-    </details><details class="card" id="extension" data-equipment="equipment" data-main="quad" data-secondary="" data-aliases="Predkopávanie v sede Leg Extension" data-set-unit="reps" data-per-side="no" data-load-basis="machine" data-prescription="10–15">
+    </details><details class="card" id="extension" data-equipment="equipment" data-equipment-kind="machine" data-main="quad" data-secondary="" data-aliases="Predkopávanie v sede Leg Extension" data-set-unit="reps" data-per-side="no" data-load-basis="machine" data-prescription="10–15">
       <summary><strong class="exercise-name">Predkopávanie v sede <small class="english-name" lang="en">(Leg Extension)</small></strong><span class="exercise-subtitle"><small class="priority accessory">Doplnok</small> predné stehná</span><span class="last" hidden></span></summary>
       <div class="inside">
         <p><strong>10–15</strong> <span class="subtle">· jedna pracovná séria</span></p>
@@ -1257,7 +1265,7 @@ main h2{font-size:clamp(1.35rem,4.5vw,1.85rem)}
           </div>
         </details>
       </div>
-    </details></section><section class="category" id="posterior" data-group="Zadok a zadné stehná"><h3>Zadok a zadné stehná</h3><details class="card" id="curl" data-equipment="equipment" data-main="ham" data-secondary="gast" data-aliases="Zakopávanie v sede Seated Leg Curl" data-set-unit="reps" data-per-side="no" data-load-basis="machine" data-prescription="10–15">
+    </details></section><section class="category" id="posterior" data-group="Zadok a zadné stehná"><h3>Zadok a zadné stehná</h3><details class="card" id="curl" data-equipment="equipment" data-equipment-kind="machine" data-main="ham" data-secondary="gast" data-aliases="Zakopávanie v sede Seated Leg Curl" data-set-unit="reps" data-per-side="no" data-load-basis="machine" data-prescription="10–15">
       <summary><strong class="exercise-name">Zakopávanie v sede <small class="english-name" lang="en">(Seated Leg Curl)</small></strong><span class="exercise-subtitle"><small class="priority base">Základ</small> zadné stehná</span><span class="last" hidden></span></summary>
       <div class="inside">
         <p><strong>10–15</strong> <span class="subtle">· jedna pracovná séria</span></p>
@@ -1332,7 +1340,7 @@ main h2{font-size:clamp(1.35rem,4.5vw,1.85rem)}
           </div>
         </details>
       </div>
-    </details><details class="card" id="bridge" data-equipment="bodyweight" data-main="gmax" data-secondary="ham add trans" data-aliases="Most na podložke Glute Bridge" data-set-unit="reps" data-per-side="no" data-load-basis="total_added" data-prescription="10–15">
+    </details><details class="card" id="bridge" data-equipment="bodyweight" data-equipment-kind="floor" data-main="gmax" data-secondary="ham add trans" data-aliases="Most na podložke Glute Bridge" data-set-unit="reps" data-per-side="no" data-load-basis="total_added" data-prescription="10–15">
       <summary><strong class="exercise-name">Most na podložke <small class="english-name" lang="en">(Glute Bridge)</small></strong><span class="exercise-subtitle"><small class="priority base">Základ</small> zadok a zadné stehná</span><span class="last" hidden></span></summary>
       <div class="inside">
         <p><strong>10–15</strong> <span class="subtle">· jedna pracovná séria</span></p>
@@ -1407,7 +1415,7 @@ main h2{font-size:clamp(1.35rem,4.5vw,1.85rem)}
           </div>
         </details>
       </div>
-    </details><details class="card" id="pronecurl" data-equipment="equipment" data-main="ham" data-secondary="gast" data-aliases="Zakopávanie v ľahu Lying Leg Curl" data-set-unit="reps" data-per-side="no" data-load-basis="machine" data-prescription="10–15">
+    </details><details class="card" id="pronecurl" data-equipment="equipment" data-equipment-kind="machine" data-main="ham" data-secondary="gast" data-aliases="Zakopávanie v ľahu Lying Leg Curl" data-set-unit="reps" data-per-side="no" data-load-basis="machine" data-prescription="10–15">
       <summary><strong class="exercise-name">Zakopávanie v ľahu <small class="english-name" lang="en">(Lying Leg Curl)</small></strong><span class="exercise-subtitle"><small class="priority alternative">Alternatíva</small> zadné stehná</span><span class="last" hidden></span></summary>
       <div class="inside">
         <p><strong>10–15</strong> <span class="subtle">· jedna pracovná séria</span></p>
@@ -1482,7 +1490,7 @@ main h2{font-size:clamp(1.35rem,4.5vw,1.85rem)}
           </div>
         </details>
       </div>
-    </details><details class="card" id="hipthrust" data-equipment="equipment" data-main="gmax" data-secondary="ham add trans" data-aliases="Hip thrust s oporou o lavičku Bench Hip Thrust" data-set-unit="reps" data-per-side="no" data-load-basis="total_added" data-prescription="8–12">
+    </details><details class="card" id="hipthrust" data-equipment="equipment" data-equipment-kind="support" data-main="gmax" data-secondary="ham add trans" data-aliases="Hip thrust s oporou o lavičku Bench Hip Thrust" data-set-unit="reps" data-per-side="no" data-load-basis="total_added" data-prescription="8–12">
       <summary><strong class="exercise-name">Hip thrust s oporou o lavičku <small class="english-name" lang="en">(Bench Hip Thrust)</small></strong><span class="exercise-subtitle"><small class="priority alternative">Alternatíva</small> zadok</span><span class="last" hidden></span></summary>
       <div class="inside">
         <p><strong>8–12</strong> <span class="subtle">· jedna pracovná séria</span></p>
@@ -1557,7 +1565,7 @@ main h2{font-size:clamp(1.35rem,4.5vw,1.85rem)}
           </div>
         </details>
       </div>
-    </details><details class="card" id="cablekick" data-equipment="equipment" data-main="gmax" data-secondary="ham gmed" data-aliases="Zanožovanie na kladke Cable Glute Kickback" data-set-unit="reps" data-per-side="yes" data-load-basis="machine" data-prescription="10–15 / strana">
+    </details><details class="card" id="cablekick" data-equipment="equipment" data-equipment-kind="cable" data-main="gmax" data-secondary="ham gmed" data-aliases="Zanožovanie na kladke Cable Glute Kickback" data-set-unit="reps" data-per-side="yes" data-load-basis="machine" data-prescription="10–15 / strana">
       <summary><strong class="exercise-name">Zanožovanie na kladke <small class="english-name" lang="en">(Cable Glute Kickback)</small></strong><span class="exercise-subtitle"><small class="priority accessory">Doplnok</small> zadok</span><span class="last" hidden></span></summary>
       <div class="inside">
         <p><strong>10–15 / strana</strong> <span class="subtle">· jedna pracovná séria</span></p>
@@ -1632,7 +1640,7 @@ main h2{font-size:clamp(1.35rem,4.5vw,1.85rem)}
           </div>
         </details>
       </div>
-    </details><details class="card" id="abduction" data-equipment="equipment" data-main="gmed" data-secondary="tfl gmax" data-aliases="Odťahovanie stehien v sede Hip Abduction" data-set-unit="reps" data-per-side="no" data-load-basis="machine" data-prescription="12–15">
+    </details><details class="card" id="abduction" data-equipment="equipment" data-equipment-kind="machine" data-main="gmed" data-secondary="tfl gmax" data-aliases="Odťahovanie stehien v sede Hip Abduction" data-set-unit="reps" data-per-side="no" data-load-basis="machine" data-prescription="12–15">
       <summary><strong class="exercise-name">Odťahovanie stehien v sede <small class="english-name" lang="en">(Hip Abduction)</small></strong><span class="exercise-subtitle"><small class="priority accessory">Doplnok</small> bočná časť zadku</span><span class="last" hidden></span></summary>
       <div class="inside">
         <p><strong>12–15</strong> <span class="subtle">· jedna pracovná séria</span></p>
@@ -1707,7 +1715,7 @@ main h2{font-size:clamp(1.35rem,4.5vw,1.85rem)}
           </div>
         </details>
       </div>
-    </details></section><section class="category" id="calves" data-group="Lýtka a predkolenie"><h3>Lýtka a predkolenie</h3><details class="card" id="calfstanding" data-equipment="bodyweight" data-main="gast soleus" data-secondary="" data-aliases="Výpony v stoji s oporou Standing Calf Raise" data-set-unit="reps" data-per-side="no" data-load-basis="total_added" data-prescription="10–15">
+    </details></section><section class="category" id="calves" data-group="Lýtka a predkolenie"><h3>Lýtka a predkolenie</h3><details class="card" id="calfstanding" data-equipment="bodyweight" data-equipment-kind="support" data-main="gast soleus" data-secondary="" data-aliases="Výpony v stoji s oporou Standing Calf Raise" data-set-unit="reps" data-per-side="no" data-load-basis="total_added" data-prescription="10–15">
       <summary><strong class="exercise-name">Výpony v stoji s oporou <small class="english-name" lang="en">(Standing Calf Raise)</small></strong><span class="exercise-subtitle"><small class="priority base">Základ</small> lýtka</span><span class="last" hidden></span></summary>
       <div class="inside">
         <p><strong>10–15</strong> <span class="subtle">· jedna pracovná séria</span></p>
@@ -1782,7 +1790,7 @@ main h2{font-size:clamp(1.35rem,4.5vw,1.85rem)}
           </div>
         </details>
       </div>
-    </details><details class="card" id="calfseated" data-equipment="equipment" data-main="soleus" data-secondary="gast" data-aliases="Výpony v sede Seated Calf Raise" data-set-unit="reps" data-per-side="no" data-load-basis="machine" data-prescription="10–15">
+    </details><details class="card" id="calfseated" data-equipment="equipment" data-equipment-kind="machine" data-main="soleus" data-secondary="gast" data-aliases="Výpony v sede Seated Calf Raise" data-set-unit="reps" data-per-side="no" data-load-basis="machine" data-prescription="10–15">
       <summary><strong class="exercise-name">Výpony v sede <small class="english-name" lang="en">(Seated Calf Raise)</small></strong><span class="exercise-subtitle"><small class="priority alternative">Alternatíva</small> lýtka s pokrčenými kolenami</span><span class="last" hidden></span></summary>
       <div class="inside">
         <p><strong>10–15</strong> <span class="subtle">· jedna pracovná séria</span></p>
@@ -1857,7 +1865,7 @@ main h2{font-size:clamp(1.35rem,4.5vw,1.85rem)}
           </div>
         </details>
       </div>
-    </details><details class="card" id="singlecalf" data-equipment="bodyweight" data-main="gast soleus" data-secondary="" data-aliases="Výpon na jednej nohe s oporou Supported Single-Leg Calf Raise" data-set-unit="reps" data-per-side="yes" data-load-basis="total_added" data-prescription="10–15 / strana">
+    </details><details class="card" id="singlecalf" data-equipment="bodyweight" data-equipment-kind="support" data-main="gast soleus" data-secondary="" data-aliases="Výpon na jednej nohe s oporou Supported Single-Leg Calf Raise" data-set-unit="reps" data-per-side="yes" data-load-basis="total_added" data-prescription="10–15 / strana">
       <summary><strong class="exercise-name">Výpon na jednej nohe s oporou <small class="english-name" lang="en">(Supported Single-Leg Calf Raise)</small></strong><span class="exercise-subtitle"><small class="priority alternative">Alternatíva</small> lýtko</span><span class="last" hidden></span></summary>
       <div class="inside">
         <p><strong>10–15 / strana</strong> <span class="subtle">· jedna pracovná séria</span></p>
@@ -1932,7 +1940,7 @@ main h2{font-size:clamp(1.35rem,4.5vw,1.85rem)}
           </div>
         </details>
       </div>
-    </details><details class="card" id="toeraise" data-equipment="bodyweight" data-main="tibant" data-secondary="" data-aliases="Zdvíhanie špičiek v stoji Supported Toe Raise" data-set-unit="reps" data-per-side="no" data-load-basis="total_added" data-prescription="10–15">
+    </details><details class="card" id="toeraise" data-equipment="bodyweight" data-equipment-kind="support" data-main="tibant" data-secondary="" data-aliases="Zdvíhanie špičiek v stoji Supported Toe Raise" data-set-unit="reps" data-per-side="no" data-load-basis="total_added" data-prescription="10–15">
       <summary><strong class="exercise-name">Zdvíhanie špičiek v stoji <small class="english-name" lang="en">(Supported Toe Raise)</small></strong><span class="exercise-subtitle"><small class="priority accessory">Doplnok</small> predné predkolenie</span><span class="last" hidden></span></summary>
       <div class="inside">
         <p><strong>10–15</strong> <span class="subtle">· jedna pracovná séria</span></p>
@@ -2007,7 +2015,7 @@ main h2{font-size:clamp(1.35rem,4.5vw,1.85rem)}
           </div>
         </details>
       </div>
-    </details></section><section class="category" id="pushes" data-group="Hrudník"><h3>Hrudník</h3><details class="card" id="chest" data-equipment="equipment" data-main="pec" data-secondary="dfront triceps" data-aliases="Tlak na hrudník v sede Chest Press" data-set-unit="reps" data-per-side="no" data-load-basis="machine" data-prescription="8–12">
+    </details></section><section class="category" id="pushes" data-group="Hrudník"><h3>Hrudník</h3><details class="card" id="chest" data-equipment="equipment" data-equipment-kind="machine" data-main="pec" data-secondary="dfront triceps" data-aliases="Tlak na hrudník v sede Chest Press" data-set-unit="reps" data-per-side="no" data-load-basis="machine" data-prescription="8–12">
       <summary><strong class="exercise-name">Tlak na hrudník v sede <small class="english-name" lang="en">(Chest Press)</small></strong><span class="exercise-subtitle"><small class="priority base">Základ</small> hrudník, ramená a triceps</span><span class="last" hidden></span></summary>
       <div class="inside">
         <p><strong>8–12</strong> <span class="subtle">· jedna pracovná séria</span></p>
@@ -2082,7 +2090,7 @@ main h2{font-size:clamp(1.35rem,4.5vw,1.85rem)}
           </div>
         </details>
       </div>
-    </details><details class="card" id="push" data-equipment="bodyweight" data-main="pec" data-secondary="dfront triceps serr trans" data-aliases="Klik o vyvýšenú oporu Incline Push-up" data-set-unit="reps" data-per-side="no" data-load-basis="total_added" data-prescription="8–12">
+    </details><details class="card" id="push" data-equipment="bodyweight" data-equipment-kind="support" data-main="pec" data-secondary="dfront triceps serr trans" data-aliases="Klik o vyvýšenú oporu Incline Push-up" data-set-unit="reps" data-per-side="no" data-load-basis="total_added" data-prescription="8–12">
       <summary><strong class="exercise-name">Klik o vyvýšenú oporu <small class="english-name" lang="en">(Incline Push-up)</small></strong><span class="exercise-subtitle"><small class="priority alternative">Alternatíva</small> hrudník, ramená a triceps</span><span class="last" hidden></span></summary>
       <div class="inside">
         <p><strong>8–12</strong> <span class="subtle">· jedna pracovná séria</span></p>
@@ -2157,7 +2165,7 @@ main h2{font-size:clamp(1.35rem,4.5vw,1.85rem)}
           </div>
         </details>
       </div>
-    </details><details class="card" id="floorpush" data-equipment="bodyweight" data-main="pec" data-secondary="dfront triceps serr trans" data-aliases="Klik na podlahe Standard Push-up" data-set-unit="reps" data-per-side="no" data-load-basis="total_added" data-prescription="6–12">
+    </details><details class="card" id="floorpush" data-equipment="bodyweight" data-equipment-kind="floor" data-main="pec" data-secondary="dfront triceps serr trans" data-aliases="Klik na podlahe Standard Push-up" data-set-unit="reps" data-per-side="no" data-load-basis="total_added" data-prescription="6–12">
       <summary><strong class="exercise-name">Klik na podlahe <small class="english-name" lang="en">(Standard Push-up)</small></strong><span class="exercise-subtitle"><small class="priority alternative">Alternatíva</small> hrudník, predné ramená a triceps</span><span class="last" hidden></span></summary>
       <div class="inside">
         <p><strong>6–12</strong> <span class="subtle">· jedna pracovná séria</span></p>
@@ -2232,7 +2240,7 @@ main h2{font-size:clamp(1.35rem,4.5vw,1.85rem)}
           </div>
         </details>
       </div>
-    </details><details class="card" id="dbpress" data-equipment="equipment" data-main="pec" data-secondary="dfront triceps" data-aliases="Tlak jednoručiek na rovnej lavičke Dumbbell Bench Press" data-set-unit="reps" data-per-side="no" data-load-basis="per_dumbbell" data-prescription="8–12">
+    </details><details class="card" id="dbpress" data-equipment="equipment" data-equipment-kind="dumbbells" data-main="pec" data-secondary="dfront triceps" data-aliases="Tlak jednoručiek na rovnej lavičke Dumbbell Bench Press" data-set-unit="reps" data-per-side="no" data-load-basis="per_dumbbell" data-prescription="8–12">
       <summary><strong class="exercise-name">Tlak jednoručiek na rovnej lavičke <small class="english-name" lang="en">(Dumbbell Bench Press)</small></strong><span class="exercise-subtitle"><small class="priority alternative">Alternatíva</small> hrudník, ramená a triceps</span><span class="last" hidden></span></summary>
       <div class="inside">
         <p><strong>8–12</strong> <span class="subtle">· jedna pracovná séria</span></p>
@@ -2307,7 +2315,7 @@ main h2{font-size:clamp(1.35rem,4.5vw,1.85rem)}
           </div>
         </details>
       </div>
-    </details><details class="card" id="incline" data-equipment="equipment" data-main="pec" data-secondary="dfront triceps" data-aliases="Tlak jednoručiek na šikmej lavičke Incline Dumbbell Press" data-set-unit="reps" data-per-side="no" data-load-basis="per_dumbbell" data-prescription="8–12">
+    </details><details class="card" id="incline" data-equipment="equipment" data-equipment-kind="dumbbells" data-main="pec" data-secondary="dfront triceps" data-aliases="Tlak jednoručiek na šikmej lavičke Incline Dumbbell Press" data-set-unit="reps" data-per-side="no" data-load-basis="per_dumbbell" data-prescription="8–12">
       <summary><strong class="exercise-name">Tlak jednoručiek na šikmej lavičke <small class="english-name" lang="en">(Incline Dumbbell Press)</small></strong><span class="exercise-subtitle"><small class="priority alternative">Alternatíva</small> hrudník, predné ramená a triceps</span><span class="last" hidden></span></summary>
       <div class="inside">
         <p><strong>8–12</strong> <span class="subtle">· jedna pracovná séria</span></p>
@@ -2382,7 +2390,7 @@ main h2{font-size:clamp(1.35rem,4.5vw,1.85rem)}
           </div>
         </details>
       </div>
-    </details><details class="card" id="pecdeck" data-equipment="equipment" data-main="pec" data-secondary="dfront" data-aliases="Sťahovanie rúk na stroji Pec Deck / Machine Chest Fly" data-set-unit="reps" data-per-side="no" data-load-basis="machine" data-prescription="10–15">
+    </details><details class="card" id="pecdeck" data-equipment="equipment" data-equipment-kind="machine" data-main="pec" data-secondary="dfront" data-aliases="Sťahovanie rúk na stroji Pec Deck / Machine Chest Fly" data-set-unit="reps" data-per-side="no" data-load-basis="machine" data-prescription="10–15">
       <summary><strong class="exercise-name">Sťahovanie rúk na stroji <small class="english-name" lang="en">(Pec Deck)</small></strong><span class="exercise-subtitle"><small class="priority accessory">Doplnok</small> hrudník</span><span class="last" hidden></span></summary>
       <div class="inside">
         <p><strong>10–15</strong> <span class="subtle">· jedna pracovná séria</span></p>
@@ -2457,7 +2465,7 @@ main h2{font-size:clamp(1.35rem,4.5vw,1.85rem)}
           </div>
         </details>
       </div>
-    </details><details class="card" id="cablefly" data-equipment="equipment" data-main="pec" data-secondary="dfront trans" data-aliases="Sťahovanie kladiek pred hrudník Standing Cable Fly" data-set-unit="reps" data-per-side="no" data-load-basis="per_stack" data-prescription="10–15">
+    </details><details class="card" id="cablefly" data-equipment="equipment" data-equipment-kind="cable" data-main="pec" data-secondary="dfront trans" data-aliases="Sťahovanie kladiek pred hrudník Standing Cable Fly" data-set-unit="reps" data-per-side="no" data-load-basis="per_stack" data-prescription="10–15">
       <summary><strong class="exercise-name">Sťahovanie kladiek pred hrudník <small class="english-name" lang="en">(Standing Cable Fly)</small></strong><span class="exercise-subtitle"><small class="priority accessory">Doplnok</small> hrudník</span><span class="last" hidden></span></summary>
       <div class="inside">
         <p><strong>10–15</strong> <span class="subtle">· jedna pracovná séria</span></p>
@@ -2532,7 +2540,7 @@ main h2{font-size:clamp(1.35rem,4.5vw,1.85rem)}
           </div>
         </details>
       </div>
-    </details></section><section class="category" id="pulls" data-group="Chrbát"><h3>Chrbát</h3><details class="card" id="row" data-equipment="equipment" data-main="lat rhomb trap" data-secondary="drear biceps brach brad" data-aliases="Príťah v sede na spodnej kladke Seated Row / Low Row" data-set-unit="reps" data-per-side="no" data-load-basis="machine" data-prescription="8–12">
+    </details></section><section class="category" id="pulls" data-group="Chrbát"><h3>Chrbát</h3><details class="card" id="row" data-equipment="equipment" data-equipment-kind="cable" data-main="lat rhomb trap" data-secondary="drear biceps brach brad" data-aliases="Príťah v sede na spodnej kladke Seated Row / Low Row" data-set-unit="reps" data-per-side="no" data-load-basis="machine" data-prescription="8–12">
       <summary><strong class="exercise-name">Príťah v sede na spodnej kladke <small class="english-name" lang="en">(Seated Row)</small></strong><span class="exercise-subtitle"><small class="priority base">Základ</small> horný chrbát a biceps</span><span class="last" hidden></span></summary>
       <div class="inside">
         <p><strong>8–12</strong> <span class="subtle">· jedna pracovná séria</span></p>
@@ -2607,7 +2615,7 @@ main h2{font-size:clamp(1.35rem,4.5vw,1.85rem)}
           </div>
         </details>
       </div>
-    </details><details class="card" id="lat" data-equipment="equipment" data-main="lat" data-secondary="teres trap biceps brach brad" data-aliases="Sťahovanie hornej kladky Lat Pulldown / Lat Machine" data-set-unit="reps" data-per-side="no" data-load-basis="machine" data-prescription="8–12">
+    </details><details class="card" id="lat" data-equipment="equipment" data-equipment-kind="cable" data-main="lat" data-secondary="teres trap biceps brach brad" data-aliases="Sťahovanie hornej kladky Lat Pulldown / Lat Machine" data-set-unit="reps" data-per-side="no" data-load-basis="machine" data-prescription="8–12">
       <summary><strong class="exercise-name">Sťahovanie hornej kladky <small class="english-name" lang="en">(Lat Pulldown)</small></strong><span class="exercise-subtitle"><small class="priority base">Základ</small> široký sval chrbta a biceps</span><span class="last" hidden></span></summary>
       <div class="inside">
         <p><strong>8–12</strong> <span class="subtle">· jedna pracovná séria</span></p>
@@ -2682,7 +2690,7 @@ main h2{font-size:clamp(1.35rem,4.5vw,1.85rem)}
           </div>
         </details>
       </div>
-    </details><details class="card" id="bandrow" data-equipment="equipment" data-main="lat rhomb trap" data-secondary="biceps brach brad drear" data-aliases="Príťah gumy v sede Seated Resistance Band Row" data-set-unit="reps" data-per-side="no" data-load-basis="total_added" data-prescription="10–15">
+    </details><details class="card" id="bandrow" data-equipment="equipment" data-equipment-kind="band" data-main="lat rhomb trap" data-secondary="biceps brach brad drear" data-aliases="Príťah gumy v sede Seated Resistance Band Row" data-set-unit="reps" data-per-side="no" data-load-basis="total_added" data-prescription="10–15">
       <summary><strong class="exercise-name">Príťah gumy v sede <small class="english-name" lang="en">(Seated Resistance Band Row)</small></strong><span class="exercise-subtitle"><small class="priority alternative">Alternatíva</small> chrbát a biceps</span><span class="last" hidden></span></summary>
       <div class="inside">
         <p><strong>10–15</strong> <span class="subtle">· jedna pracovná séria</span></p>
@@ -2757,7 +2765,7 @@ main h2{font-size:clamp(1.35rem,4.5vw,1.85rem)}
           </div>
         </details>
       </div>
-    </details><details class="card" id="dbrow" data-equipment="equipment" data-main="lat rhomb trap" data-secondary="drear biceps brach brad" data-aliases="Príťah jednoručky s oporou Supported Dumbbell Row" data-set-unit="reps" data-per-side="yes" data-load-basis="per_dumbbell" data-prescription="8–12 / strana">
+    </details><details class="card" id="dbrow" data-equipment="equipment" data-equipment-kind="dumbbells" data-main="lat rhomb trap" data-secondary="drear biceps brach brad" data-aliases="Príťah jednoručky s oporou Supported Dumbbell Row" data-set-unit="reps" data-per-side="yes" data-load-basis="per_dumbbell" data-prescription="8–12 / strana">
       <summary><strong class="exercise-name">Príťah jednoručky s oporou <small class="english-name" lang="en">(Supported Dumbbell Row)</small></strong><span class="exercise-subtitle"><small class="priority alternative">Alternatíva</small> horný chrbát a biceps</span><span class="last" hidden></span></summary>
       <div class="inside">
         <p><strong>8–12 / strana</strong> <span class="subtle">· jedna pracovná séria</span></p>
@@ -2832,7 +2840,7 @@ main h2{font-size:clamp(1.35rem,4.5vw,1.85rem)}
           </div>
         </details>
       </div>
-    </details><details class="card" id="supportedrow" data-equipment="equipment" data-main="lat rhomb trap" data-secondary="drear biceps brach brad" data-aliases="Príťah jednoručiek na šikmej lavičke Chest-Supported Row" data-set-unit="reps" data-per-side="no" data-load-basis="per_dumbbell" data-prescription="8–12">
+    </details><details class="card" id="supportedrow" data-equipment="equipment" data-equipment-kind="dumbbells" data-main="lat rhomb trap" data-secondary="drear biceps brach brad" data-aliases="Príťah jednoručiek na šikmej lavičke Chest-Supported Row" data-set-unit="reps" data-per-side="no" data-load-basis="per_dumbbell" data-prescription="8–12">
       <summary><strong class="exercise-name">Príťah jednoručiek na šikmej lavičke <small class="english-name" lang="en">(Chest-Supported Row)</small></strong><span class="exercise-subtitle"><small class="priority alternative">Alternatíva</small> horný chrbát a biceps</span><span class="last" hidden></span></summary>
       <div class="inside">
         <p><strong>8–12</strong> <span class="subtle">· jedna pracovná séria</span></p>
@@ -2907,7 +2915,7 @@ main h2{font-size:clamp(1.35rem,4.5vw,1.85rem)}
           </div>
         </details>
       </div>
-    </details><details class="card" id="assistpull" data-equipment="equipment" data-main="lat" data-secondary="biceps brach brad trap teres" data-aliases="Zhyb na stroji s dopomocou Machine-Assisted Pull-up" data-set-unit="reps" data-per-side="no" data-load-basis="assistance" data-prescription="6–10">
+    </details><details class="card" id="assistpull" data-equipment="equipment" data-equipment-kind="machine" data-main="lat" data-secondary="biceps brach brad trap teres" data-aliases="Zhyb na stroji s dopomocou Machine-Assisted Pull-up" data-set-unit="reps" data-per-side="no" data-load-basis="assistance" data-prescription="6–10">
       <summary><strong class="exercise-name">Zhyb na stroji s dopomocou <small class="english-name" lang="en">(Machine-Assisted Pull-up)</small></strong><span class="exercise-subtitle"><small class="priority alternative">Alternatíva</small> široký sval chrbta a biceps</span><span class="last" hidden></span></summary>
       <div class="inside">
         <p><strong>6–10</strong> <span class="subtle">· jedna pracovná séria</span></p>
@@ -2982,7 +2990,7 @@ main h2{font-size:clamp(1.35rem,4.5vw,1.85rem)}
           </div>
         </details>
       </div>
-    </details><details class="card" id="straightpull" data-equipment="equipment" data-main="lat" data-secondary="teres drear triceps trans" data-aliases="Sťahovanie kladky vystretými rukami Straight-Arm Pulldown" data-set-unit="reps" data-per-side="no" data-load-basis="machine" data-prescription="10–15">
+    </details><details class="card" id="straightpull" data-equipment="equipment" data-equipment-kind="cable" data-main="lat" data-secondary="teres drear triceps trans" data-aliases="Sťahovanie kladky vystretými rukami Straight-Arm Pulldown" data-set-unit="reps" data-per-side="no" data-load-basis="machine" data-prescription="10–15">
       <summary><strong class="exercise-name">Sťahovanie kladky vystretými rukami <small class="english-name" lang="en">(Straight-Arm Pulldown)</small></strong><span class="exercise-subtitle"><small class="priority accessory">Doplnok</small> široký sval chrbta</span><span class="last" hidden></span></summary>
       <div class="inside">
         <p><strong>10–15</strong> <span class="subtle">· jedna pracovná séria</span></p>
@@ -3057,7 +3065,7 @@ main h2{font-size:clamp(1.35rem,4.5vw,1.85rem)}
           </div>
         </details>
       </div>
-    </details></section><section class="category" id="shoulders" data-group="Ramená"><h3>Ramená</h3><details class="card" id="shoulderpress" data-equipment="equipment" data-main="dfront dside" data-secondary="triceps trap serr" data-aliases="Tlak na ramená v sede Shoulder Press" data-set-unit="reps" data-per-side="no" data-load-basis="machine" data-prescription="8–12">
+    </details></section><section class="category" id="shoulders" data-group="Ramená"><h3>Ramená</h3><details class="card" id="shoulderpress" data-equipment="equipment" data-equipment-kind="machine" data-main="dfront dside" data-secondary="triceps trap serr" data-aliases="Tlak na ramená v sede Shoulder Press" data-set-unit="reps" data-per-side="no" data-load-basis="machine" data-prescription="8–12">
       <summary><strong class="exercise-name">Tlak na ramená v sede <small class="english-name" lang="en">(Shoulder Press)</small></strong><span class="exercise-subtitle"><small class="priority base">Základ</small> predné a bočné ramená, triceps</span><span class="last" hidden></span></summary>
       <div class="inside">
         <p><strong>8–12</strong> <span class="subtle">· jedna pracovná séria</span></p>
@@ -3132,7 +3140,7 @@ main h2{font-size:clamp(1.35rem,4.5vw,1.85rem)}
           </div>
         </details>
       </div>
-    </details><details class="card" id="dbshoulder" data-equipment="equipment" data-main="dfront dside" data-secondary="triceps trap serr" data-aliases="Tlak jednoručiek nad hlavu v sede Seated Dumbbell Shoulder Press" data-set-unit="reps" data-per-side="no" data-load-basis="per_dumbbell" data-prescription="8–12">
+    </details><details class="card" id="dbshoulder" data-equipment="equipment" data-equipment-kind="dumbbells" data-main="dfront dside" data-secondary="triceps trap serr" data-aliases="Tlak jednoručiek nad hlavu v sede Seated Dumbbell Shoulder Press" data-set-unit="reps" data-per-side="no" data-load-basis="per_dumbbell" data-prescription="8–12">
       <summary><strong class="exercise-name">Tlak jednoručiek nad hlavu v sede <small class="english-name" lang="en">(Seated Dumbbell Shoulder Press)</small></strong><span class="exercise-subtitle"><small class="priority alternative">Alternatíva</small> ramená a triceps</span><span class="last" hidden></span></summary>
       <div class="inside">
         <p><strong>8–12</strong> <span class="subtle">· jedna pracovná séria</span></p>
@@ -3207,7 +3215,7 @@ main h2{font-size:clamp(1.35rem,4.5vw,1.85rem)}
           </div>
         </details>
       </div>
-    </details><details class="card" id="lateral" data-equipment="equipment" data-main="dside" data-secondary="trap dfront" data-aliases="Upažovanie s jednoručkami Dumbbell Lateral Raise" data-set-unit="reps" data-per-side="no" data-load-basis="per_dumbbell" data-prescription="10–15">
+    </details><details class="card" id="lateral" data-equipment="equipment" data-equipment-kind="dumbbells" data-main="dside" data-secondary="trap dfront" data-aliases="Upažovanie s jednoručkami Dumbbell Lateral Raise" data-set-unit="reps" data-per-side="no" data-load-basis="per_dumbbell" data-prescription="10–15">
       <summary><strong class="exercise-name">Upažovanie s jednoručkami <small class="english-name" lang="en">(Dumbbell Lateral Raise)</small></strong><span class="exercise-subtitle"><small class="priority accessory">Doplnok</small> bočné ramená</span><span class="last" hidden></span></summary>
       <div class="inside">
         <p><strong>10–15</strong> <span class="subtle">· jedna pracovná séria</span></p>
@@ -3282,7 +3290,7 @@ main h2{font-size:clamp(1.35rem,4.5vw,1.85rem)}
           </div>
         </details>
       </div>
-    </details><details class="card" id="reversefly" data-equipment="equipment" data-main="drear" data-secondary="rhomb trap rotator" data-aliases="Obrátené rozpažovanie na stroji Reverse Fly" data-set-unit="reps" data-per-side="no" data-load-basis="machine" data-prescription="10–15">
+    </details><details class="card" id="reversefly" data-equipment="equipment" data-equipment-kind="machine" data-main="drear" data-secondary="rhomb trap rotator" data-aliases="Obrátené rozpažovanie na stroji Reverse Fly" data-set-unit="reps" data-per-side="no" data-load-basis="machine" data-prescription="10–15">
       <summary><strong class="exercise-name">Obrátené rozpažovanie na stroji <small class="english-name" lang="en">(Reverse Fly)</small></strong><span class="exercise-subtitle"><small class="priority accessory">Doplnok</small> zadné ramená a horný chrbát</span><span class="last" hidden></span></summary>
       <div class="inside">
         <p><strong>10–15</strong> <span class="subtle">· jedna pracovná séria</span></p>
@@ -3357,7 +3365,7 @@ main h2{font-size:clamp(1.35rem,4.5vw,1.85rem)}
           </div>
         </details>
       </div>
-    </details><details class="card" id="facepull" data-equipment="equipment" data-main="drear rhomb trap" data-secondary="rotator biceps brach" data-aliases="Príťah lana k tvári Face Pull" data-set-unit="reps" data-per-side="no" data-load-basis="machine" data-prescription="10–15">
+    </details><details class="card" id="facepull" data-equipment="equipment" data-equipment-kind="cable" data-main="drear rhomb trap" data-secondary="rotator biceps brach" data-aliases="Príťah lana k tvári Face Pull" data-set-unit="reps" data-per-side="no" data-load-basis="machine" data-prescription="10–15">
       <summary><strong class="exercise-name">Príťah lana k tvári <small class="english-name" lang="en">(Face Pull)</small></strong><span class="exercise-subtitle"><small class="priority accessory">Doplnok</small> zadné ramená a horný chrbát</span><span class="last" hidden></span></summary>
       <div class="inside">
         <p><strong>10–15</strong> <span class="subtle">· jedna pracovná séria</span></p>
@@ -3432,7 +3440,7 @@ main h2{font-size:clamp(1.35rem,4.5vw,1.85rem)}
           </div>
         </details>
       </div>
-    </details><details class="card" id="proney" data-equipment="bodyweight" data-main="trap" data-secondary="drear rotator" data-aliases="Zdvih rúk do Y v ľahu na bruchu Prone Y Raise" data-set-unit="reps" data-per-side="no" data-load-basis="total_added" data-prescription="8–12">
+    </details><details class="card" id="proney" data-equipment="bodyweight" data-equipment-kind="floor" data-main="trap" data-secondary="drear rotator" data-aliases="Zdvih rúk do Y v ľahu na bruchu Prone Y Raise" data-set-unit="reps" data-per-side="no" data-load-basis="total_added" data-prescription="8–12">
       <summary><strong class="exercise-name">Zdvih rúk do Y v ľahu na bruchu <small class="english-name" lang="en">(Prone Y Raise)</small></strong><span class="exercise-subtitle"><small class="priority accessory">Doplnok</small> dolná časť trapézu a ramená</span><span class="last" hidden></span></summary>
       <div class="inside">
         <p><strong>8–12</strong> <span class="subtle">· jedna pracovná séria</span></p>
@@ -3507,7 +3515,7 @@ main h2{font-size:clamp(1.35rem,4.5vw,1.85rem)}
           </div>
         </details>
       </div>
-    </details></section><section class="category" id="biceps-group" data-group="Biceps"><h3>Biceps</h3><details class="card" id="biceps" data-equipment="equipment" data-main="biceps" data-secondary="brach brad" data-aliases="Bicepsový zdvih s jednoručkami Dumbbell Curl" data-set-unit="reps" data-per-side="no" data-load-basis="per_dumbbell" data-prescription="10–15">
+    </details></section><section class="category" id="biceps-group" data-group="Biceps"><h3>Biceps</h3><details class="card" id="biceps" data-equipment="equipment" data-equipment-kind="dumbbells" data-main="biceps" data-secondary="brach brad" data-aliases="Bicepsový zdvih s jednoručkami Dumbbell Curl" data-set-unit="reps" data-per-side="no" data-load-basis="per_dumbbell" data-prescription="10–15">
       <summary><strong class="exercise-name">Bicepsový zdvih s jednoručkami <small class="english-name" lang="en">(Dumbbell Curl)</small></strong><span class="exercise-subtitle"><small class="priority base">Základ</small> biceps</span><span class="last" hidden></span></summary>
       <div class="inside">
         <p><strong>10–15</strong> <span class="subtle">· jedna pracovná séria</span></p>
@@ -3582,7 +3590,7 @@ main h2{font-size:clamp(1.35rem,4.5vw,1.85rem)}
           </div>
         </details>
       </div>
-    </details><details class="card" id="cablecurl" data-equipment="equipment" data-main="biceps" data-secondary="brach brad" data-aliases="Bicepsový zdvih na spodnej kladke Standing Cable Curl" data-set-unit="reps" data-per-side="no" data-load-basis="machine" data-prescription="10–15">
+    </details><details class="card" id="cablecurl" data-equipment="equipment" data-equipment-kind="cable" data-main="biceps" data-secondary="brach brad" data-aliases="Bicepsový zdvih na spodnej kladke Standing Cable Curl" data-set-unit="reps" data-per-side="no" data-load-basis="machine" data-prescription="10–15">
       <summary><strong class="exercise-name">Bicepsový zdvih na spodnej kladke <small class="english-name" lang="en">(Standing Cable Curl)</small></strong><span class="exercise-subtitle"><small class="priority alternative">Alternatíva</small> biceps</span><span class="last" hidden></span></summary>
       <div class="inside">
         <p><strong>10–15</strong> <span class="subtle">· jedna pracovná séria</span></p>
@@ -3657,7 +3665,7 @@ main h2{font-size:clamp(1.35rem,4.5vw,1.85rem)}
           </div>
         </details>
       </div>
-    </details><details class="card" id="hammer" data-equipment="equipment" data-main="brach brad" data-secondary="biceps" data-aliases="Kladivový zdvih s jednoručkami Hammer Curl" data-set-unit="reps" data-per-side="no" data-load-basis="per_dumbbell" data-prescription="10–15">
+    </details><details class="card" id="hammer" data-equipment="equipment" data-equipment-kind="dumbbells" data-main="brach brad" data-secondary="biceps" data-aliases="Kladivový zdvih s jednoručkami Hammer Curl" data-set-unit="reps" data-per-side="no" data-load-basis="per_dumbbell" data-prescription="10–15">
       <summary><strong class="exercise-name">Kladivový zdvih s jednoručkami <small class="english-name" lang="en">(Hammer Curl)</small></strong><span class="exercise-subtitle"><small class="priority accessory">Doplnok</small> ohýbače lakťa a predlaktie</span><span class="last" hidden></span></summary>
       <div class="inside">
         <p><strong>10–15</strong> <span class="subtle">· jedna pracovná séria</span></p>
@@ -3732,7 +3740,7 @@ main h2{font-size:clamp(1.35rem,4.5vw,1.85rem)}
           </div>
         </details>
       </div>
-    </details><details class="card" id="preacher" data-equipment="equipment" data-main="biceps" data-secondary="brach brad" data-aliases="Bicepsový zdvih s oporou nadlaktia One-Arm Dumbbell Preacher Curl" data-set-unit="reps" data-per-side="yes" data-load-basis="per_dumbbell" data-prescription="10–15 / strana">
+    </details><details class="card" id="preacher" data-equipment="equipment" data-equipment-kind="dumbbells" data-main="biceps" data-secondary="brach brad" data-aliases="Bicepsový zdvih s oporou nadlaktia One-Arm Dumbbell Preacher Curl" data-set-unit="reps" data-per-side="yes" data-load-basis="per_dumbbell" data-prescription="10–15 / strana">
       <summary><strong class="exercise-name">Bicepsový zdvih s oporou nadlaktia <small class="english-name" lang="en">(One-Arm Dumbbell Preacher Curl)</small></strong><span class="exercise-subtitle"><small class="priority accessory">Doplnok</small> biceps</span><span class="last" hidden></span></summary>
       <div class="inside">
         <p><strong>10–15 / strana</strong> <span class="subtle">· jedna pracovná séria</span></p>
@@ -3807,7 +3815,7 @@ main h2{font-size:clamp(1.35rem,4.5vw,1.85rem)}
           </div>
         </details>
       </div>
-    </details></section><section class="category" id="triceps-group" data-group="Triceps"><h3>Triceps</h3><details class="card" id="pushdown" data-equipment="equipment" data-main="triceps" data-secondary="" data-aliases="Tricepsové sťahovanie lana Rope Pushdown" data-set-unit="reps" data-per-side="no" data-load-basis="machine" data-prescription="10–15">
+    </details></section><section class="category" id="triceps-group" data-group="Triceps"><h3>Triceps</h3><details class="card" id="pushdown" data-equipment="equipment" data-equipment-kind="cable" data-main="triceps" data-secondary="" data-aliases="Tricepsové sťahovanie lana Rope Pushdown" data-set-unit="reps" data-per-side="no" data-load-basis="machine" data-prescription="10–15">
       <summary><strong class="exercise-name">Tricepsové sťahovanie lana <small class="english-name" lang="en">(Rope Pushdown)</small></strong><span class="exercise-subtitle"><small class="priority base">Základ</small> triceps</span><span class="last" hidden></span></summary>
       <div class="inside">
         <p><strong>10–15</strong> <span class="subtle">· jedna pracovná séria</span></p>
@@ -3882,7 +3890,7 @@ main h2{font-size:clamp(1.35rem,4.5vw,1.85rem)}
           </div>
         </details>
       </div>
-    </details><details class="card" id="singletricep" data-equipment="equipment" data-main="triceps" data-secondary="" data-aliases="Tricepsové sťahovanie jednou rukou Single-Arm Cable Pushdown" data-set-unit="reps" data-per-side="yes" data-load-basis="machine" data-prescription="10–15 / strana">
+    </details><details class="card" id="singletricep" data-equipment="equipment" data-equipment-kind="cable" data-main="triceps" data-secondary="" data-aliases="Tricepsové sťahovanie jednou rukou Single-Arm Cable Pushdown" data-set-unit="reps" data-per-side="yes" data-load-basis="machine" data-prescription="10–15 / strana">
       <summary><strong class="exercise-name">Tricepsové sťahovanie jednou rukou <small class="english-name" lang="en">(Single-Arm Cable Pushdown)</small></strong><span class="exercise-subtitle"><small class="priority alternative">Alternatíva</small> triceps</span><span class="last" hidden></span></summary>
       <div class="inside">
         <p><strong>10–15 / strana</strong> <span class="subtle">· jedna pracovná séria</span></p>
@@ -3957,7 +3965,7 @@ main h2{font-size:clamp(1.35rem,4.5vw,1.85rem)}
           </div>
         </details>
       </div>
-    </details><details class="card" id="overhead" data-equipment="equipment" data-main="triceps" data-secondary="trans" data-aliases="Triceps s lanom nad hlavou Overhead Cable Extension" data-set-unit="reps" data-per-side="no" data-load-basis="machine" data-prescription="10–15">
+    </details><details class="card" id="overhead" data-equipment="equipment" data-equipment-kind="cable" data-main="triceps" data-secondary="trans" data-aliases="Triceps s lanom nad hlavou Overhead Cable Extension" data-set-unit="reps" data-per-side="no" data-load-basis="machine" data-prescription="10–15">
       <summary><strong class="exercise-name">Triceps s lanom nad hlavou <small class="english-name" lang="en">(Overhead Cable Extension)</small></strong><span class="exercise-subtitle"><small class="priority accessory">Doplnok</small> triceps</span><span class="last" hidden></span></summary>
       <div class="inside">
         <p><strong>10–15</strong> <span class="subtle">· jedna pracovná séria</span></p>
@@ -4032,7 +4040,7 @@ main h2{font-size:clamp(1.35rem,4.5vw,1.85rem)}
           </div>
         </details>
       </div>
-    </details></section><section class="category" id="core" data-group="Brucho a stred tela"><h3>Brucho a stred tela</h3><details class="card" id="deadbug" data-equipment="bodyweight" data-main="rectus trans" data-secondary="oblique" data-aliases="Dead bug Stabilita trupu" data-set-unit="reps" data-per-side="yes" data-load-basis="total_added" data-prescription="6–8 / strana">
+    </details></section><section class="category" id="core" data-group="Brucho a stred tela"><h3>Brucho a stred tela</h3><details class="card" id="deadbug" data-equipment="bodyweight" data-equipment-kind="floor" data-main="rectus trans" data-secondary="oblique" data-aliases="Dead bug Stabilita trupu" data-set-unit="reps" data-per-side="yes" data-load-basis="total_added" data-prescription="6–8 / strana">
       <summary><strong class="exercise-name">Striedavé vystieranie v ľahu <small class="english-name" lang="en">(Stabilita trupu)</small></strong><span class="exercise-subtitle"><small class="priority base">Základ</small> 6–8 opakovaní na stranu</span><span class="last" hidden></span></summary>
       <div class="inside">
         <p><strong>6–8 / strana</strong> <span class="subtle">· jedna pracovná séria</span></p>
@@ -4107,7 +4115,7 @@ main h2{font-size:clamp(1.35rem,4.5vw,1.85rem)}
           </div>
         </details>
       </div>
-    </details><details class="card" id="plank" data-equipment="bodyweight" data-main="rectus trans" data-secondary="oblique serr gmax" data-aliases="Doska na predlaktiach Forearm Plank" data-set-unit="seconds" data-per-side="no" data-load-basis="total_added" data-prescription="15–30 s">
+    </details><details class="card" id="plank" data-equipment="bodyweight" data-equipment-kind="floor" data-main="rectus trans" data-secondary="oblique serr gmax" data-aliases="Doska na predlaktiach Forearm Plank" data-set-unit="seconds" data-per-side="no" data-load-basis="total_added" data-prescription="15–30 s">
       <summary><strong class="exercise-name">Doska na predlaktiach <small class="english-name" lang="en">(Forearm Plank)</small></strong><span class="exercise-subtitle"><small class="priority alternative">Alternatíva</small> predná strana trupu</span><span class="last" hidden></span></summary>
       <div class="inside">
         <p><strong>15–30 s</strong> <span class="subtle">· jedna pracovná séria</span></p>
@@ -4182,7 +4190,7 @@ main h2{font-size:clamp(1.35rem,4.5vw,1.85rem)}
           </div>
         </details>
       </div>
-    </details><details class="card" id="sideplank" data-equipment="bodyweight" data-main="oblique ql" data-secondary="trans gmed serr" data-aliases="Bočná doska na kolenách Knee Side Plank" data-set-unit="seconds" data-per-side="yes" data-load-basis="total_added" data-prescription="10–25 s / strana">
+    </details><details class="card" id="sideplank" data-equipment="bodyweight" data-equipment-kind="floor" data-main="oblique ql" data-secondary="trans gmed serr" data-aliases="Bočná doska na kolenách Knee Side Plank" data-set-unit="seconds" data-per-side="yes" data-load-basis="total_added" data-prescription="10–25 s / strana">
       <summary><strong class="exercise-name">Bočná doska na kolenách <small class="english-name" lang="en">(Knee Side Plank)</small></strong><span class="exercise-subtitle"><small class="priority alternative">Alternatíva</small> bočné brucho</span><span class="last" hidden></span></summary>
       <div class="inside">
         <p><strong>10–25 s / strana</strong> <span class="subtle">· jedna pracovná séria</span></p>
@@ -4257,7 +4265,7 @@ main h2{font-size:clamp(1.35rem,4.5vw,1.85rem)}
           </div>
         </details>
       </div>
-    </details><details class="card" id="birddog" data-equipment="bodyweight" data-main="multif erector" data-secondary="trans oblique gmax drear" data-aliases="Bird dog Bird Dog" data-set-unit="reps" data-per-side="yes" data-load-basis="total_added" data-prescription="6–8 / strana">
+    </details><details class="card" id="birddog" data-equipment="bodyweight" data-equipment-kind="floor" data-main="multif erector" data-secondary="trans oblique gmax drear" data-aliases="Bird dog Bird Dog" data-set-unit="reps" data-per-side="yes" data-load-basis="total_added" data-prescription="6–8 / strana">
       <summary><strong class="exercise-name">Striedavé vystieranie na štyroch <small class="english-name" lang="en">(Bird Dog)</small></strong><span class="exercise-subtitle"><small class="priority alternative">Alternatíva</small> stabilita chrbta a trupu</span><span class="last" hidden></span></summary>
       <div class="inside">
         <p><strong>6–8 / strana</strong> <span class="subtle">· jedna pracovná séria</span></p>
@@ -4332,7 +4340,7 @@ main h2{font-size:clamp(1.35rem,4.5vw,1.85rem)}
           </div>
         </details>
       </div>
-    </details><details class="card" id="pallof" data-equipment="equipment" data-main="oblique trans" data-secondary="rectus multif gmed" data-aliases="Pallof tlak na kladke Pallof Press" data-set-unit="reps" data-per-side="yes" data-load-basis="machine" data-prescription="8–10 / strana">
+    </details><details class="card" id="pallof" data-equipment="equipment" data-equipment-kind="cable" data-main="oblique trans" data-secondary="rectus multif gmed" data-aliases="Pallof tlak na kladke Pallof Press" data-set-unit="reps" data-per-side="yes" data-load-basis="machine" data-prescription="8–10 / strana">
       <summary><strong class="exercise-name">Tlak proti otáčaniu na kladke <small class="english-name" lang="en">(Pallof Press)</small></strong><span class="exercise-subtitle"><small class="priority alternative">Alternatíva</small> stabilita trupu proti otáčaniu</span><span class="last" hidden></span></summary>
       <div class="inside">
         <p><strong>8–10 / strana</strong> <span class="subtle">· jedna pracovná séria</span></p>
@@ -4407,7 +4415,7 @@ main h2{font-size:clamp(1.35rem,4.5vw,1.85rem)}
           </div>
         </details>
       </div>
-    </details><details class="card" id="reversecrunch" data-equipment="bodyweight" data-main="rectus" data-secondary="oblique trans" data-aliases="Zdvih panvy v ľahu Reverse Crunch" data-set-unit="reps" data-per-side="no" data-load-basis="total_added" data-prescription="8–12">
+    </details><details class="card" id="reversecrunch" data-equipment="bodyweight" data-equipment-kind="floor" data-main="rectus" data-secondary="oblique trans" data-aliases="Zdvih panvy v ľahu Reverse Crunch" data-set-unit="reps" data-per-side="no" data-load-basis="total_added" data-prescription="8–12">
       <summary><strong class="exercise-name">Zdvih panvy v ľahu <small class="english-name" lang="en">(Reverse Crunch)</small></strong><span class="exercise-subtitle"><small class="priority accessory">Doplnok</small> priamy brušný sval</span><span class="last" hidden></span></summary>
       <div class="inside">
         <p><strong>8–12</strong> <span class="subtle">· jedna pracovná séria</span></p>
@@ -4562,6 +4570,16 @@ main h2{font-size:clamp(1.35rem,4.5vw,1.85rem)}
   </div>
 </section>
 </main>
+<dialog id="exercise-substitutions" aria-labelledby="substitution-title">
+  <div class="coverage-dialog-head">
+    <h2 id="substitution-title">Vymeniť cvik</h2>
+    <form method="dialog"><button type="submit">Zavrieť</button></form>
+  </div>
+  <p id="substitution-original"></p>
+  <div id="substitution-equipment"></div>
+  <ul id="substitution-choices" class="exercise-options"></ul>
+  <p id="substitution-status" class="subtle" role="status"></p>
+</dialog>
 <dialog id="finish-workout-dialog" aria-labelledby="finish-workout-title" aria-describedby="finish-workout-description">
   <form method="dialog">
     <h2 id="finish-workout-title">Ukončiť tréning?</h2>
@@ -5665,13 +5683,18 @@ function renderPlanPicks() {
     const category = document.createElement('small');
     category.textContent = card.parentElement.dataset.group + ' · ' + card.querySelector('.priority').textContent;
     meta.append(exerciseLink(card.id), category);
-    row.append(meta, makePlanButton('Pridať', () => {
-      draft.items.push(defaultPlanItem(card.id));
-      if (persistPlans()) planStatus.textContent = 'Pridané · ' + exerciseNames.get(card.id);
-      renderPlanDraftContents();
-    }, 'Pridať · ' + exerciseNames.get(card.id)));
+    row.append(meta, makePlanButton('Pridať', () => addExerciseToDraft(card.id), 'Pridať · ' + exerciseNames.get(card.id)));
     list.append(row);
   }
+}
+
+function addExerciseToDraft(id) {
+  if (draft.items.some(item => item.exercise === id)) return null;
+  draft.items.push(defaultPlanItem(id));
+  const stored = persistPlans();
+  if (stored) planStatus.textContent = 'Pridané · ' + exerciseNames.get(id);
+  renderPlanDraftContents();
+  return stored;
 }
 
 function renderPlanValidation() {
@@ -5744,6 +5767,7 @@ function renderPlanExecution(workout) {
   const plannedSetDose = document.getElementById('planned-set-dose');
   const running = workout?.running;
   const current = workout?.plan?.items.find(item => item.exercise === running?.exercise);
+  document.getElementById('swap-current-exercise').hidden = !current || workout.exercises.some(block => block.exercise === current.exercise);
   plannedSetDose.hidden = !current;
   if (current) plannedSetDose.textContent = 'Plán · ' + plannedDose(current);
   if (!workout?.plan) return;
@@ -5757,6 +5781,7 @@ function renderPlanExecution(workout) {
   list.replaceChildren();
   for (const item of workout.plan.items) {
     const row = document.createElement('li');
+    row.dataset.exercise = item.exercise;
     const meta = document.createElement('div');
     const dose = document.createElement('small');
     dose.textContent = plannedDose(item);
@@ -5764,7 +5789,11 @@ function renderPlanExecution(workout) {
     const state = done.has(item.exercise) ? 'Hotovo' : item.exercise === running?.exercise ? 'Prebieha' : 'Čaká';
     const status = document.createElement('small');
     status.textContent = state;
-    row.append(meta, status);
+    meta.append(status);
+    row.append(meta);
+    if (!done.has(item.exercise)) {
+      row.append(makePlanButton('Vymeniť', () => openExerciseSubstitutions(item.exercise), 'Vymeniť · ' + exerciseNames.get(item.exercise)));
+    }
     list.append(row);
   }
 }
@@ -6686,6 +6715,116 @@ document.addEventListener('exehel:workout', updateAppWorkout);
 document.body.classList.add('app-ready');
 routeApp();
 </script>
+<script>const equipmentNames = {
+  floor:'Podlaha / podložka',
+  support:'Lavička / pevná opora',
+  dumbbells:'Jednoručky',
+  band:'Odporová guma',
+  cable:'Kladka',
+  machine:'Stroj',
+};
+const substitutionDialog = document.getElementById('exercise-substitutions');
+const substitutionList = document.getElementById('substitution-choices');
+const substitutionStatus = document.getElementById('substitution-status');
+let substitutionTarget = null;
+
+function equipmentFilter() {
+  const label = document.createElement('label');
+  label.className = 'field';
+  label.textContent = 'Dostupné vybavenie';
+  const select = document.createElement('select');
+  select.add(new Option('Všetko vybavenie', ''));
+  for (const [kind, name] of Object.entries(equipmentNames)) select.add(new Option(name, kind));
+  label.append(select);
+  return {label, select};
+}
+
+const substitutionEquipment = equipmentFilter();
+document.getElementById('substitution-equipment').append(substitutionEquipment.label);
+
+function canReplaceSlot(workout, slot) {
+  return Boolean(slot && !workout.exercises.some(block => block.exercise === slot.exercise) &&
+    (workout.running?.exercise !== slot.exercise ||
+      (!workout.running.sets.length && !readSetDraft().some(row => row.amount.trim() || row.weight.trim()))));
+}
+
+function renderExerciseSubstitutions() {
+  if (!substitutionTarget) return;
+  substitutionList.replaceChildren();
+  const workout = activeWorkout;
+  const original = cards.get(substitutionTarget.exercise);
+  const slot = workout?.plan?.items.find(item => item.exercise === original.id);
+  if (workout?.id !== substitutionTarget.workout || !slot ||
+      workout.exercises.some(block => block.exercise === original.id)) {
+    substitutionStatus.textContent = 'Tento cvik sa už v aktuálnom tréningu nedá vymeniť.';
+    return;
+  }
+  if (!canReplaceSlot(workout, slot)) {
+    substitutionStatus.textContent = 'Tento cvik už má rozpísané série. Dokonči ho a náhradu vyber pri ďalšom cviku.';
+    return;
+  }
+  const occupied = new Set([...workout.plan.items, ...workout.exercises, workout.running].filter(Boolean).map(item => item.exercise));
+  const targets = original.dataset.main.split(' ');
+  const gear = substitutionEquipment.select.value;
+  const matches = recommendationCards
+    .filter(({card}) => !occupied.has(card.id) && (!gear || card.dataset.equipmentKind === gear))
+    .map(candidate => ({...candidate, overlap:targets.filter(id => candidate.main.includes(id))}))
+    .filter(candidate => candidate.overlap.length)
+    .sort((a, b) => b.overlap.length - a.overlap.length ||
+      Number(b.card.parentElement === original.parentElement) - Number(a.card.parentElement === original.parentElement) ||
+      a.priority - b.priority);
+  substitutionStatus.textContent = matches.length
+    ? 'Počet sérií sa prenesie. Opakovania sa nastavia podľa náhrady. Zmena platí pre tento tréning.'
+    : 'Pre tento výber sa nenašiel ďalší cvik s rovnakým hlavným svalom. Skús iné vybavenie.';
+  for (const {card, overlap} of matches) {
+    const row = document.createElement('li');
+    const meta = document.createElement('div');
+    const title = card.querySelector('.exercise-name').cloneNode(true);
+    const description = document.createElement('small');
+    description.textContent = equipmentNames[card.dataset.equipmentKind] + ' · ' + overlap.map(id => muscles[id]).join(', ');
+    meta.append(title, description);
+    const choose = makePlanButton('Použiť', () => {
+      if (workout !== activeWorkout || !workout.plan.items.includes(slot) || !canReplaceSlot(workout, slot)) {
+        renderExerciseSubstitutions();
+        return;
+      }
+      const wasRunning = workout.running?.exercise === original.id;
+      workout.plan = {...workout.plan, items:workout.plan.items.map(item =>
+        item === slot ? defaultPlanItem(card.id, slot.sets) : item)};
+      if (wasRunning) {
+        workout.running = null;
+        exerciseFeedback(original.id, '');
+      }
+      substitutionDialog.close();
+      showWorkoutStatus('Náhrada · ' + exerciseNames.get(card.id));
+      persistWorkout();
+      renderWorkout();
+      const focusReplacement = () => document.querySelector('#plan-execution-list li[data-exercise="' + card.id + '"] a')?.focus();
+      if (location.hash === '#teraz') focusReplacement();
+      else if (wasRunning) {
+        window.addEventListener('hashchange', focusReplacement, {once:true});
+        location.hash = 'teraz';
+      }
+    }, 'Použiť · ' + exerciseNames.get(card.id));
+    choose.dataset.exercise = card.id;
+    row.append(meta, choose);
+    substitutionList.append(row);
+  }
+}
+
+function openExerciseSubstitutions(exercise) {
+  substitutionTarget = {workout:activeWorkout?.id, exercise};
+  document.getElementById('substitution-original').textContent = exerciseNames.get(exercise);
+  substitutionEquipment.select.value = '';
+  renderExerciseSubstitutions();
+  substitutionDialog.showModal();
+}
+
+substitutionEquipment.select.addEventListener('change', renderExerciseSubstitutions);
+document.getElementById('swap-current-exercise').addEventListener('click', () => {
+  if (activeWorkout?.running) openExerciseSubstitutions(activeWorkout.running.exercise);
+});
+</script>
 <script>function attachMusclePicker(canvas, context, getCounts, getBlocks, onLink) {
   const panel = document.createElement('div');
   panel.className = 'muscle-picker';
@@ -6701,8 +6840,14 @@ routeApp();
   overview.className = 'subtle';
   overview.setAttribute('role', 'status');
   const list = document.createElement('ul');
+  list.className = 'exercise-options';
+  const gear = equipmentFilter();
+  gear.label.hidden = true;
+  const draftFeedback = document.createElement('p');
+  draftFeedback.className = 'subtle';
+  draftFeedback.setAttribute('role', 'status');
   label.append(picker);
-  panel.append(label, overview, list);
+  panel.append(label, overview, gear.label, list, draftFeedback);
   canvas.closest('figure').after(panel);
   canvas.classList.add('interactive-map');
   const regions = Array.from(surfaceRegions).reverse();
@@ -6710,6 +6855,7 @@ routeApp();
   function renderSelection() {
     const target = picker.value;
     list.replaceChildren();
+    gear.label.hidden = !target;
     if (!target) {
       overview.textContent = '';
       return;
@@ -6734,14 +6880,29 @@ routeApp();
         text += ' · V histórii zatiaľ bez priameho tréningu';
       }
     }
-    const matches = recommendationCards.filter(item => item.main.includes(target))
+    const available = recommendationCards.filter(item => item.main.includes(target));
+    const matches = available.filter(({card}) => !gear.select.value || card.dataset.equipmentKind === gear.select.value)
       .sort((a, b) => a.priority - b.priority);
-    overview.textContent = text + (matches.length ? '' : ' · V katalógu zatiaľ chýba priamy cvik.');
+    overview.textContent = text + (matches.length ? '' : available.length
+      ? ' · S týmto vybavením tu nie je priamy cvik.' : ' · V katalógu zatiaľ chýba priamy cvik.');
     for (const {card} of matches) {
       const entry = document.createElement('li');
       const link = exerciseLink(card.id);
+      const meta = document.createElement('div');
+      const equipment = document.createElement('small');
+      equipment.textContent = equipmentNames[card.dataset.equipmentKind];
       if (onLink) link.addEventListener('click', onLink);
-      entry.append(link);
+      meta.append(link, equipment);
+      const included = draft.items.some(item => item.exercise === card.id);
+      const add = makePlanButton(included ? 'V návrhu' : 'Do návrhu', () => {
+        const stored = addExerciseToDraft(card.id);
+        renderSelection();
+        gear.select.focus();
+        draftFeedback.textContent = stored === true ? 'V návrhu plánu · ' + exerciseNames.get(card.id)
+          : stored === false ? 'Cvik je v otvorenom návrhu. Prehliadač zmenu neuložil.' : 'Cvik už je v návrhu.';
+      }, 'Pridať do návrhu plánu · ' + exerciseNames.get(card.id));
+      add.disabled = included;
+      entry.append(meta, add);
       list.append(entry);
     }
   }
@@ -6756,7 +6917,12 @@ routeApp();
       renderSelection();
     }
   });
-  picker.addEventListener('change', renderSelection);
+  function changeSelection() {
+    draftFeedback.textContent = '';
+    renderSelection();
+  }
+  picker.addEventListener('change', changeSelection);
+  gear.select.addEventListener('change', changeSelection);
   canvas.addEventListener('exehel:map', renderSelection);
 }
 

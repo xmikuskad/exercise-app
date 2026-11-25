@@ -270,13 +270,18 @@ function renderPlanPicks() {
     const category = document.createElement('small');
     category.textContent = card.parentElement.dataset.group + ' · ' + card.querySelector('.priority').textContent;
     meta.append(exerciseLink(card.id), category);
-    row.append(meta, makePlanButton('Pridať', () => {
-      draft.items.push(defaultPlanItem(card.id));
-      if (persistPlans()) planStatus.textContent = 'Pridané · ' + exerciseNames.get(card.id);
-      renderPlanDraftContents();
-    }, 'Pridať · ' + exerciseNames.get(card.id)));
+    row.append(meta, makePlanButton('Pridať', () => addExerciseToDraft(card.id), 'Pridať · ' + exerciseNames.get(card.id)));
     list.append(row);
   }
+}
+
+function addExerciseToDraft(id) {
+  if (draft.items.some(item => item.exercise === id)) return null;
+  draft.items.push(defaultPlanItem(id));
+  const stored = persistPlans();
+  if (stored) planStatus.textContent = 'Pridané · ' + exerciseNames.get(id);
+  renderPlanDraftContents();
+  return stored;
 }
 
 function renderPlanValidation() {
@@ -349,6 +354,7 @@ function renderPlanExecution(workout) {
   const plannedSetDose = document.getElementById('planned-set-dose');
   const running = workout?.running;
   const current = workout?.plan?.items.find(item => item.exercise === running?.exercise);
+  document.getElementById('swap-current-exercise').hidden = !current || workout.exercises.some(block => block.exercise === current.exercise);
   plannedSetDose.hidden = !current;
   if (current) plannedSetDose.textContent = 'Plán · ' + plannedDose(current);
   if (!workout?.plan) return;
@@ -362,6 +368,7 @@ function renderPlanExecution(workout) {
   list.replaceChildren();
   for (const item of workout.plan.items) {
     const row = document.createElement('li');
+    row.dataset.exercise = item.exercise;
     const meta = document.createElement('div');
     const dose = document.createElement('small');
     dose.textContent = plannedDose(item);
@@ -369,7 +376,11 @@ function renderPlanExecution(workout) {
     const state = done.has(item.exercise) ? 'Hotovo' : item.exercise === running?.exercise ? 'Prebieha' : 'Čaká';
     const status = document.createElement('small');
     status.textContent = state;
-    row.append(meta, status);
+    meta.append(status);
+    row.append(meta);
+    if (!done.has(item.exercise)) {
+      row.append(makePlanButton('Vymeniť', () => openExerciseSubstitutions(item.exercise), 'Vymeniť · ' + exerciseNames.get(item.exercise)));
+    }
     list.append(row);
   }
 }

@@ -12,6 +12,7 @@
 - Existujúce kľúče v `localStorage` a verejná adresa Pages umožňujú používateľovi po aktualizácii pokračovať s rovnakými údajmi. Pri zmene adresy alebo zariadenia slúži na prenos JSON.
 - Pri spätnej analýze sa počítajú ukončené záznamy cvikov z archívu. Staršie záznamy bez rozpísaných sérií sú platné. Samostatný ručný zápis na karte patrí do denníka a nemá väzbu na ukončený tréning.
 - Automaticky uložený koncept počas aktívneho cviku môže mať voliteľné pole `draftRows`. Po ukončení cviku sa ukladajú iba overené série v pôvodnom tvare. Koncept môže obsahovať rozpracované číselné vstupy a patrí len do miestneho stavu aktívneho tréningu.
+- Výmena cviku mení kópiu plánu v aktuálnom tréningu a použije predvolený rozsah opakovaní nového cviku. Katalóg aj šablóny si ponechávajú svoje identifikátory. Pridanie cviku z mapy upravuje návrh v editore, ktorý možno následne uložiť ako šablónu.
 - Výber zobrazenia histórie funguje v pamäti stránky. Výber a filter nemenia uložený denník, plány ani exporty.
 
 ## Kontrola vydania

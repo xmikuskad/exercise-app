@@ -16,7 +16,7 @@ Exehel pomáha pripraviť tréning doma, odcvičiť ho podľa šablóny alebo po
 - [x] Spúšťať vlastné a predpripravené šablóny priamo z Plánov. Zobraziť historický detail aj počas rozpracovaného tréningu.
 - [x] Ukázať vývoj vybraného cviku v posledných 12 návštevách. Použiť váhu, opakovania, výdrž alebo dopomoc podľa typu cviku.
 - [ ] Doplniť zmenu odporu pri rovnakých opakovaniach a vývoj opakovaní pri rovnakej váhe. Pridať porovnanie období.
-- [ ] Zjednodušiť výmenu obsadeného cviku v pláne. Ukázať vhodné náhrady podľa vybavenia a hlavného svalu bez straty kontextu tréningu.
+- [x] Zjednodušiť výmenu obsadeného cviku v aktívnom pláne. Ukázať vhodné náhrady podľa vybavenia a hlavného svalu. Rozpísané série a uloženú šablónu chrániť pred prepísaním.
 
 ## 3. Anatomická mapa a odporúčania
 
@@ -24,7 +24,7 @@ Exehel pomáha pripraviť tréning doma, odcvičiť ho podľa šablóny alebo po
 - [x] Odkázať z kliknutia na oblasť aj z textového výberu na kartu vhodného cviku. Overiť tiež sivé, zatiaľ neodcvičené oblasti.
 - [x] Ponúknuť filter posledných 28 dní, počet zapísaných priamych sérií a dátum posledného priameho tréningu vybraného svalu. Zachovať upozornenie pri treťom priamom cviku počas tréningu.
 - [ ] Dokončiť audit vnútra stehien, lopatiek, predlaktí a ďalších hlbších oblastí. Rozlíšiť vizuálne zakreslenie svalu a dostupnosť priameho cviku.
-- [ ] Z mapy pridať cvik priamo do rozpracovaného plánu a filtrovať náhrady podľa vybavenia.
+- [x] Z mapy pridať cvik priamo do rozpracovaného návrhu plánu a filtrovať výber podľa vybavenia.
 - [ ] Zobraziť týždenné priame série a opakované prekryvy. Pri odporúčaniach zohľadniť dĺžku záznamu a rozlišovať malý objem, iba pomocné zapojenie a chýbajúci zápis. Farba ani počet sérií samy neurčujú mieru regenerácie.
 
 ## Kontrola každej etapy

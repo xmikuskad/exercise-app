@@ -13,8 +13,14 @@ function attachMusclePicker(canvas, context, getCounts, getBlocks, onLink) {
   overview.className = 'subtle';
   overview.setAttribute('role', 'status');
   const list = document.createElement('ul');
+  list.className = 'exercise-options';
+  const gear = equipmentFilter();
+  gear.label.hidden = true;
+  const draftFeedback = document.createElement('p');
+  draftFeedback.className = 'subtle';
+  draftFeedback.setAttribute('role', 'status');
   label.append(picker);
-  panel.append(label, overview, list);
+  panel.append(label, overview, gear.label, list, draftFeedback);
   canvas.closest('figure').after(panel);
   canvas.classList.add('interactive-map');
   const regions = Array.from(surfaceRegions).reverse();
@@ -22,6 +28,7 @@ function attachMusclePicker(canvas, context, getCounts, getBlocks, onLink) {
   function renderSelection() {
     const target = picker.value;
     list.replaceChildren();
+    gear.label.hidden = !target;
     if (!target) {
       overview.textContent = '';
       return;
@@ -46,14 +53,29 @@ function attachMusclePicker(canvas, context, getCounts, getBlocks, onLink) {
         text += ' · V histórii zatiaľ bez priameho tréningu';
       }
     }
-    const matches = recommendationCards.filter(item => item.main.includes(target))
+    const available = recommendationCards.filter(item => item.main.includes(target));
+    const matches = available.filter(({card}) => !gear.select.value || card.dataset.equipmentKind === gear.select.value)
       .sort((a, b) => a.priority - b.priority);
-    overview.textContent = text + (matches.length ? '' : ' · V katalógu zatiaľ chýba priamy cvik.');
+    overview.textContent = text + (matches.length ? '' : available.length
+      ? ' · S týmto vybavením tu nie je priamy cvik.' : ' · V katalógu zatiaľ chýba priamy cvik.');
     for (const {card} of matches) {
       const entry = document.createElement('li');
       const link = exerciseLink(card.id);
+      const meta = document.createElement('div');
+      const equipment = document.createElement('small');
+      equipment.textContent = equipmentNames[card.dataset.equipmentKind];
       if (onLink) link.addEventListener('click', onLink);
-      entry.append(link);
+      meta.append(link, equipment);
+      const included = draft.items.some(item => item.exercise === card.id);
+      const add = makePlanButton(included ? 'V návrhu' : 'Do návrhu', () => {
+        const stored = addExerciseToDraft(card.id);
+        renderSelection();
+        gear.select.focus();
+        draftFeedback.textContent = stored === true ? 'V návrhu plánu · ' + exerciseNames.get(card.id)
+          : stored === false ? 'Cvik je v otvorenom návrhu. Prehliadač zmenu neuložil.' : 'Cvik už je v návrhu.';
+      }, 'Pridať do návrhu plánu · ' + exerciseNames.get(card.id));
+      add.disabled = included;
+      entry.append(meta, add);
       list.append(entry);
     }
   }
@@ -68,7 +90,12 @@ function attachMusclePicker(canvas, context, getCounts, getBlocks, onLink) {
       renderSelection();
     }
   });
-  picker.addEventListener('change', renderSelection);
+  function changeSelection() {
+    draftFeedback.textContent = '';
+    renderSelection();
+  }
+  picker.addEventListener('change', changeSelection);
+  gear.select.addEventListener('change', changeSelection);
   canvas.addEventListener('exehel:map', renderSelection);
 }
 

@@ -62,6 +62,13 @@ main h2{font-size:clamp(1.35rem,4.5vw,1.85rem)}
 .muscle-picker p:empty,.muscle-picker ul:empty{display:none}
 .muscle-picker ul{display:flex;flex-wrap:wrap;gap:.25rem .85rem;list-style:none;padding:0;margin:0}
 .muscle-picker a{display:inline-flex;align-items:center;min-height:44px}
+.muscle-picker .exercise-options,.exercise-options{list-style:none;padding:0;margin:.55rem 0;display:block}
+.exercise-options li{display:flex;justify-content:space-between;align-items:center;gap:.65rem;padding:.45rem 0;border-bottom:1px solid var(--line)}
+.exercise-options li button{flex:none}
+.exercise-options small{display:block;color:var(--muted)}
+.exercise-options .english-name{font-weight:550}
+#exercise-substitutions{background:var(--paper);border-color:var(--line)}
+#exercise-substitutions .field{min-width:0}
 #rozc{max-width:37rem}
 .warmup-back{display:inline-flex;align-items:center;gap:.45rem;min-height:44px;font-weight:650;text-decoration:none}
 #rozc h1{margin:.25rem 0 .5rem;letter-spacing:-.035em}
