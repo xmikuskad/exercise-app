@@ -187,6 +187,7 @@ function updateClock() {
 function renderWorkout() {
   const running = activeWorkout?.running;
   document.getElementById('workout-picker').hidden = Boolean(running);
+  document.getElementById('start-picked').classList.toggle('save', !activeWorkout?.plan);
   document.getElementById('finish-workout').hidden = !activeWorkout;
   document.getElementById('workout-active').hidden = !running;
   if (running) {
@@ -199,7 +200,8 @@ function renderWorkout() {
     card.querySelector('.start-exercise').hidden = isRunning;
     card.querySelector('.discard-exercise').hidden = !isRunning || Boolean(running.sets.length);
     card.querySelector('.exercise-clock').hidden = !isRunning;
-    card.querySelector('.log-set-link').hidden = !isRunning;
+    card.querySelector('.exercise-dose').hidden = isRunning &&
+      Boolean(activeWorkout?.plan?.items.some(item => item.exercise === id));
     card.querySelector('.track').hidden = isRunning;
   }
   const logHost = running ? cards.get(running.exercise).querySelector('.set-log-slot') : setPanelParking;
@@ -264,7 +266,7 @@ function beginExercise(id) {
   activeWorkout.running = {exercise:id, startedAt:now, sets:[]};
   cards.get(id).querySelector('.set-log-result').hidden = true;
   showWorkoutStatus('');
-  exerciseFeedback(id, 'Meranie beží.');
+  exerciseFeedback(id, '');
   persistWorkout();
   renderWorkout();
   if (location.hash !== '#' + id) location.hash = id;

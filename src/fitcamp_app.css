@@ -1,4 +1,5 @@
 :root{--ink:#1c241b;--muted:#4f5b4c;--paper:#f3f5ee;--line:#cfd9c8;--teal:#314a2b;--dark:#22341f;--wash:#e7eedc}
+html{scroll-padding-bottom:calc(4.25rem + env(safe-area-inset-bottom))}
 main{max-width:52rem;padding-bottom:calc(6rem + env(safe-area-inset-bottom))}
 main h1{font-size:clamp(2rem,6vw,3.2rem);max-width:none;margin:.15rem 0 1rem;overflow-wrap:anywhere}
 main h2{font-size:clamp(1.35rem,4.5vw,1.85rem)}
@@ -9,6 +10,7 @@ main h2{font-size:clamp(1.35rem,4.5vw,1.85rem)}
 .wordmark span{display:grid;place-items:center;width:1.75rem;height:1.75rem;background:var(--teal);color:var(--white);border-radius:.42rem;font-size:1rem}
 .app-bar .live-map-dock{position:static;padding:.23rem .5rem;box-shadow:none;border-color:var(--line);background:var(--wash);font-size:.88rem}
 .app-bar .live-map-dock canvas{width:31px}
+@media(max-width:360px){.app-bar:has(#resume-workout:not([hidden])) .live-map-dock canvas{display:none}}
 .app-nav{position:fixed;inset:auto 0 0;z-index:3;border-top:1px solid var(--line);border-bottom:0;background:var(--paper);padding-bottom:env(safe-area-inset-bottom)}
 .app-nav .nav-inner{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));max-width:52rem;padding:.35rem .5rem;gap:.18rem;overflow:visible}
 .app-nav a{display:grid;place-items:center;text-align:center;min-height:46px;padding:.4rem .15rem;border-radius:.45rem;font-size:.88rem}
@@ -24,9 +26,11 @@ main h2{font-size:clamp(1.35rem,4.5vw,1.85rem)}
 .app-ready #teraz:not([data-active]) .workout-panel{display:none}
 .workout-panel #free-workout-status{font-weight:750}
 #workout-active a{display:inline-flex;align-items:center;min-height:44px;font-weight:750}
+#workout-active p{display:flex;justify-content:space-between;gap:.5rem;margin:0 0 .35rem}
+#workout-active + .workout-controls{margin-top:.65rem}
+.plan-workout:not([hidden]) ~ .workout-picker{margin-top:.8rem}
 .catalog-back{display:inline-flex;align-items:center;min-height:44px;margin-bottom:.35rem}
-.app-ready #cviky:not(.exercise-view) .catalog-back{display:none}
-.exercise-view #catalog-title,.exercise-view .filter-note,.exercise-view .group-links,.exercise-view .category>h3,.exercise-view .card:not(.view-exercise),.exercise-view #empty-search{display:none}
+.exercise-view #catalog-title,.exercise-view .group-menu,.exercise-view .category>h3,.exercise-view .card:not(.view-exercise),.exercise-view #empty-search{display:none}
 .app-ready #cviky:not(.exercise-view) .card[open]>.inside{display:none}
 .app-ready #cviky:not(.exercise-view) .card>summary::after{content:'›'}
 .app-ready #cviky:not(.exercise-view) .card{margin:0;border:0;border-top:1px solid var(--line);border-radius:0;background:transparent;box-shadow:none}
@@ -42,6 +46,7 @@ main h2{font-size:clamp(1.35rem,4.5vw,1.85rem)}
 .exercise-jumps a{display:inline-flex;align-items:center;min-height:44px;font-weight:700;font-size:.88rem}
 .exercise-guide{margin:0;padding:.8rem 0 1rem;border-top:1px solid var(--line)}
 .exercise-guide h3{margin:0 0 .6rem}
+.exercise-guide .demo-view-note{margin:0 0 .4rem;color:var(--muted);font-size:.84rem}
 .exercise-guide dl{margin:.65rem 0 0}
 .exercise-guide figure{margin:0 auto .45rem}
 .exercise-guide .muscle-names{margin:0 0 .55rem}
@@ -99,7 +104,6 @@ main h2{font-size:clamp(1.35rem,4.5vw,1.85rem)}
 #exercise-substitutions{background:var(--paper);border-color:var(--line)}
 #exercise-substitutions .field{min-width:0}
 #rozc{max-width:37rem}
-.warmup-back{display:inline-flex;align-items:center;gap:.45rem;min-height:44px;font-weight:650;text-decoration:none}
 #rozc h1{margin:.25rem 0 .5rem;letter-spacing:-.035em}
 .warmup-intro{margin:0 0 1.35rem;color:var(--muted)}
 .warmup-intro strong{display:block;color:var(--ink);font-size:.94rem}

@@ -1,7 +1,6 @@
 const appSections = Array.from(document.querySelectorAll('main > section'));
 const appNav = Array.from(document.querySelectorAll('.app-nav a'));
 const catalog = document.getElementById('cviky');
-const catalogBack = document.getElementById('catalog-back');
 const resumeWorkout = document.getElementById('resume-workout');
 const startPanel = document.getElementById('workout-start-panel');
 let viewedCard = null;
@@ -42,13 +41,10 @@ function updateAppWorkout() {
   startPanel.hidden = Boolean(activeWorkout);
   appSections[0].toggleAttribute('data-active', Boolean(activeWorkout));
   document.getElementById('free-workout-status').hidden = !activeWorkout || Boolean(activeWorkout.plan);
-  resumeWorkout.hidden = !activeWorkout;
+  resumeWorkout.hidden = !running || insideWorkout || screenId === 'teraz';
   dockButton.hidden = !activeWorkout;
   resumeWorkout.href = running ? '#' + running.exercise : '#teraz';
-  resumeWorkout.textContent = running ? 'Späť k cviku' : 'Tréning';
   document.getElementById('warmup-done').href = resumeWorkout.hash;
-  catalogBack.href = activeWorkout ? '#teraz' : '#cviky';
-  catalogBack.textContent = activeWorkout ? '← Tréning' : '← Všetky cviky';
 }
 
 document.getElementById('start-free-workout').addEventListener('click', () => {

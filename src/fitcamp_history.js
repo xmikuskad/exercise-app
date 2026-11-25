@@ -103,6 +103,7 @@ function refreshHistoryChoices(force = false) {
     selectedWorkoutIds = new Set(workoutHistory.filter(workout => workout.finishedAt >= cutoff).map(workout => workout.id));
   }
   document.getElementById('history-choices').hidden = !workoutHistory.length;
+  document.getElementById('history-coverage-controls').hidden = !workoutHistory.length;
   historyChoices.replaceChildren();
   for (const workout of workoutHistory) {
     const label = document.createElement('label');

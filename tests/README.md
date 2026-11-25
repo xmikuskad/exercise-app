@@ -6,6 +6,7 @@ Po zostavení cez `python src/build_fitcamp.py` spusti z koreňa repozitára s N
 node tests/check_fitcamp.mjs
 node tests/check_fitcamp.mjs --finish-only
 node tests/check_finish_firefox.mjs
+node tests/check_fitcamp.mjs --visual-audit
 ```
 
 Prvý príkaz prejde hlavné používateľské scenáre v Chrome. Ďalšie dva spúšťajú spoločný regresný scenár ukončenia tréningu v Chrome a Firefoxe. Rozhodujúce tlačidlá v ňom ovláda prehliadač skutočným kliknutím, takže test zachytí aj prekrytý alebo skrytý ovládací prvok. Prehliadače používajú samostatné testovacie profily s fiktívnymi dátami.
@@ -23,3 +24,5 @@ Prvý príkaz prejde hlavné používateľské scenáre v Chrome. Ďalšie dva s
 | Údaje a zobrazenie | CSV, JSON, staršia záloha, odmietnutie poškodenej zálohy bez zmeny údajov, úzky mobilný viewport a kontrola chýb stránky |
 
 Pri inom umiestnení prehliadača nastav `CHROME_BIN` alebo `FIREFOX_BIN`. Firefox musí podporovať WebDriver BiDi. S `FITCAMP_TEST_URL` sa scenáre spustia proti nasadenej adrese. Snímky a profily sa ukladajú do ignorovaného priečinka `.test-artifacts/`.
+
+Vizuálna kontrola zachytí obrazovky v šírkach 320, 390 a 1280 CSS px. Priečinok určuje `EXEHEL_AUDIT_LABEL`, napríklad `before` alebo `after`. S `EXEHEL_AUDIT_ILLUSTRATIONS=1` sa uložia aj statické ukážky cvikov. [Zistenia z kontroly](../product/UI-AUDIT.md).

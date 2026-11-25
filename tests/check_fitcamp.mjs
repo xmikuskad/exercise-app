@@ -5,6 +5,7 @@ import {resolve} from 'node:path';
 import {fileURLToPath, pathToFileURL} from 'node:url';
 import {setTimeout as delay} from 'node:timers/promises';
 import {checkWorkoutFinishFlow} from './workout_finish_flow.mjs';
+import {captureVisualAudit} from './visual_audit.mjs';
 
 const project = fileURLToPath(new URL('../', import.meta.url));
 const artifacts = resolve(project, '.test-artifacts');
@@ -110,6 +111,12 @@ try {
   const checkFinish = () => checkWorkoutFinishFlow({inspect, clickUI, waitFor,
     reload:() => command('Page.reload'), assertCleanPage});
   suite: {
+  if (process.argv.includes('--visual-audit')) {
+    const output = resolve(artifacts, 'visual-' + (process.env.EXEHEL_AUDIT_LABEL ?? 'review'));
+    await captureVisualAudit({command, inspect, waitFor, output});
+    await assertCleanPage();
+    break suite;
+  }
   if (process.argv.includes('--finish-only')) {
     await checkFinish();
     console.log('Chrome: workout finish, invalid drafts, explicit discard, and planned workout passed.');
@@ -290,9 +297,23 @@ try {
   await delay(120);
   assert.equal(await inspect(`document.querySelector('#live-map-view').parentElement.id`), 'live-map-host');
   assert.equal(await inspect(`document.querySelector('#record-set').closest('.card').id`), 'chest');
-  await pressButton('chest', 'log-set-link');
-  await delay(150);
-  assert.equal(await inspect(`location.hash`), '#chest-log');
+  await waitFor(`document.querySelector('#chest').classList.contains('view-exercise')`, 'Running exercise did not open');
+  assert.equal(await inspect(`document.getElementById('resume-workout').hidden &&
+    getComputedStyle(document.querySelector('#cviky .group-menu')).display === 'none' &&
+    !document.querySelector('#chest .log-set-link') &&
+    document.querySelector('.set-row-amount').getBoundingClientRect().bottom < innerHeight - 50`), true);
+  await inspect(`location.hash = '#dennik'`);
+  await waitFor(`!document.getElementById('dennik').hidden`, 'History did not open during training');
+  await clickUI('#resume-workout');
+  await waitFor(`document.querySelector('#chest').classList.contains('view-exercise')`, 'Return to exercise did not work');
+  await inspect(`location.hash = '#teraz'`);
+  await waitFor(`!document.getElementById('teraz').hidden`, 'Today did not open during training');
+  assert.equal(await inspect(`document.getElementById('resume-workout').hidden &&
+    document.getElementById('workout-active-link').hash === '#chest'`), true);
+  await clickUI('#workout-active-link');
+  await waitFor(`document.querySelector('#chest').classList.contains('view-exercise')`, 'Resume from Today did not work');
+  await inspect(`location.hash = '#chest-log'`);
+  await waitFor(`location.hash === '#chest-log'`, 'Existing series deep link did not work');
   assert.equal(await inspect(`document.querySelectorAll('.set-sheet-group').length`), 3);
   await enterSet(0, '10', '27,5');
   await enterSet(1, '8', '30');
@@ -595,6 +616,7 @@ try {
   await enterSet(0, '8');
   await inspect(`location.hash = '#teraz'`);
   await waitFor(`!document.querySelector('#teraz').hidden`, 'Today did not open');
+  assert.equal(await inspect(`document.querySelectorAll('#teraz a[href="#bodyweightsquat"]').length`), 1);
   await clickUI('#plan-execution-list [data-exercise=chest] button');
   await clickUI('#substitution-choices button[data-exercise=floorpush]');
   assert.equal(await inspect('activeWorkout.plan.items[1].exercise'), 'floorpush');

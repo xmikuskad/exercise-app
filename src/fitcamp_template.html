@@ -97,7 +97,7 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid 
 .recent time{white-space:nowrap;font-size:.83rem;color:var(--muted)}
 .live-control{margin:-.15rem 0 .7rem}
 .exercise-commands{display:grid;gap:.45rem}
-.exercise-commands>.start-exercise,.exercise-commands>.log-set-link{display:flex;align-items:center;justify-content:center;min-height:48px;border-radius:.65rem;padding:.5rem .75rem;font-size:.94rem;font-weight:750;text-decoration:none}
+.exercise-commands>.start-exercise{display:flex;align-items:center;justify-content:center;min-height:48px;border-radius:.65rem;padding:.5rem .75rem;font-size:.94rem;font-weight:750}
 .exercise-utilities{display:flex;flex-wrap:wrap;align-items:center;gap:.42rem}
 .exercise-utilities:not(:has(> :not([hidden]))){display:none}
 .exercise-utilities:has(> :not([hidden])){margin-top:.05rem}
@@ -144,7 +144,6 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid 
 .work-items>li{padding:.4rem 0}
 .saved-set-summary{margin:.2rem 0;color:var(--ink);font-size:.9rem}
 .text-button{background:transparent;border-color:transparent;color:var(--teal);text-decoration:underline;padding-inline:.35rem}
-.log-set-link{font-size:.9rem}
 .set-log-slot{scroll-margin-top:.6rem}
 .set-log-result{padding:.7rem .85rem;background:#e8f4ee;border-radius:.7rem;margin:.55rem 0}
 .set-log-result p{margin:0 0 .35rem}
@@ -221,10 +220,10 @@ main{padding-bottom:5.6rem}
 <header class="app-header">
   <div class="app-bar">
     <a href="#teraz" class="wordmark"><span aria-hidden="true">E</span> Exehel</a>
-    <a id="resume-workout" href="#teraz" hidden>Tréning</a>
-    <button id="live-map-dock" class="live-map-dock" type="button" aria-haspopup="dialog" aria-label="Živá mapa svalov" hidden>
+    <a id="resume-workout" href="#teraz" hidden>K cviku</a>
+    <button id="live-map-dock" class="live-map-dock" type="button" aria-haspopup="dialog" aria-label="Mapa aktuálneho tréningu" hidden>
       <canvas id="live-map-dock-canvas" width="144" height="126" aria-hidden="true"></canvas>
-      <span><strong>Svaly</strong><small id="live-map-dock-status" class="sr-only"></small></span>
+      <span><strong>Mapa tréningu</strong><small id="live-map-dock-status" class="sr-only"></small></span>
     </button>
   </div>
 </header>
@@ -248,20 +247,22 @@ main{padding-bottom:5.6rem}
   <p id="workout-status" role="status" class="subtle" hidden></p>
   <div class="box workout-panel">
     <p id="free-workout-status" hidden>Voľný tréning</p>
-    <div id="workout-picker" class="workout-picker">
-      <label class="field" for="workout-pick">Cvik <select id="workout-pick"><option value="">Vyber cvik</option></select></label>
-      <button id="start-picked" class="save" type="button">Začať cvik</button>
+    <div id="workout-active" hidden>
+      <p class="subtle">Aktívny cvik <output class="workout-clock" aria-live="off" aria-label="Trvanie cviku"></output></p>
+      <a id="workout-active-link" class="action-link save"></a>
     </div>
     <div class="tools workout-controls">
       <button id="finish-workout" type="button" hidden>Ukončiť tréning</button>
-      <a href="#cviky">Vybrať v katalógu</a>
     </div>
-    <p id="workout-active" hidden>Prebieha · <a id="workout-active-link"></a> <output class="workout-clock" aria-live="off" aria-label="Trvanie cviku"></output></p>
     <div id="plan-execution" class="plan-workout" hidden>
       <h3 id="plan-execution-name"></h3>
       <p id="plan-execution-status" class="subtle"></p>
       <button id="start-next-plan" class="save" type="button">Začať ďalší cvik</button>
       <ol id="plan-execution-list" class="plan-queue"></ol>
+    </div>
+    <div id="workout-picker" class="workout-picker">
+      <label class="field" for="workout-pick">Cvik <select id="workout-pick"><option value="">Vyber cvik</option></select></label>
+      <button id="start-picked" class="save" type="button">Začať cvik</button>
     </div>
     <div id="set-panel-parking" hidden>
       <div id="inline-set-panel" class="workout-running">
@@ -410,14 +411,12 @@ main{padding-bottom:5.6rem}
   </div>
 </section>
 <section id="historia-trening">
-  <a class="catalog-back" href="#dennik">← História</a>
   <h1 id="history-workout-title">Tréning</h1>
   <div class="box" id="history-workout-detail"></div>
   <button class="save" id="save-workout-template" type="button" hidden>Vytvoriť šablónu z tréningu</button>
   <p id="workout-template-status" role="status"></p>
 </section>
 <section id="vykony">
-  <a class="catalog-back" href="#dennik">← História</a>
   <h1>Vývoj výkonu</h1>
   <div class="box">
     <label class="field">Cvik <select id="performance-exercise"></select></label>
@@ -449,7 +448,6 @@ main{padding-bottom:5.6rem}
   </div>
 </section>
 <section id="tyzdne">
-  <a class="catalog-back" href="#dennik">← História</a>
   <h1>Týždenný objem svalov</h1>
   <div class="box">
     <label class="field">Sval <select id="weekly-muscle"></select></label>
@@ -483,11 +481,13 @@ main{padding-bottom:5.6rem}
 <section id="pokrytie">
   <h2>Pokrytie posledných tréningov</h2>
   <div class="box">
-    <p>Vyber ukončené tréningy. Pod mapou nájdeš cviky, ktoré priamo cielia na svaly bez priameho cviku vo výbere.</p>
-    <div class="tools history-shortcuts">
-      <button id="history-last-two" type="button">Posledné 2</button>
-      <button id="history-last-three" type="button">Posledné 3</button>
-      <button id="history-last-month" type="button">28 dní</button>
+    <div id="history-coverage-controls" hidden>
+      <p>Vyber tréningy a pozri si, ktoré svaly ti vo výbere chýbajú.</p>
+      <div class="tools history-shortcuts">
+        <button id="history-last-two" type="button">Posledné 2</button>
+        <button id="history-last-three" type="button">Posledné 3</button>
+        <button id="history-last-month" type="button">28 dní</button>
+      </div>
     </div>
     <details id="history-choices">
       <summary>Vybrať jednotlivé tréningy</summary>
@@ -516,7 +516,6 @@ main{padding-bottom:5.6rem}
   </div>
 </section>
 <section id="cviky">
-  <a class="catalog-back" id="catalog-back" href="#cviky">← Všetky cviky</a>
   <div id="catalog-title">
   <h1>Cviky</h1>
   <p class="subtle"><strong>Základ</strong> je prvá voľba v danej svalovej skupine. <strong>Alternatívu</strong> zvoľ podľa vybavenia a istoty v pohybe. <strong>Doplnok</strong> pridaj podľa toho, ktorú partiu chceš precvičiť viac. Cviky sú zoradené podľa priority.</p>
@@ -527,7 +526,6 @@ main{padding-bottom:5.6rem}
   @@CARDS@@
 </section>
 <section id="rozc">
-  <a class="warmup-back" href="#teraz"><span aria-hidden="true">←</span> Dnes</a>
   <h1>Rozcvička</h1>
   <p class="warmup-intro"><strong>Približne 5–7 minút v pokojnom tempe</strong> <span>Pri každej partii si vyber jeden cvik.</span></p>
   <ul id="warmup-steps" class="warmup-steps" aria-label="Partie na rozcvičenie">@@WARMUP_ROWS@@</ul>
@@ -577,7 +575,6 @@ main{padding-bottom:5.6rem}
   </div>
 </section>
 <section id="pomoc">
-  <a class="catalog-back" href="#teraz">← Dnes</a>
   <h1>Pomoc</h1>
   <div class="start-links">
     <a href="#svalovica">Svalovica</a>

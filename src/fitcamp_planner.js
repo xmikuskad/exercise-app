@@ -372,8 +372,9 @@ function renderPlanExecution(workout) {
     const meta = document.createElement('div');
     const dose = document.createElement('small');
     dose.textContent = plannedDose(item);
-    meta.append(exerciseLink(item.exercise), dose);
-    const state = done.has(item.exercise) ? 'Hotovo' : item.exercise === running?.exercise ? 'Prebieha' : 'Čaká';
+    const isRunning = item.exercise === running?.exercise;
+    meta.append(isRunning ? exerciseNames.get(item.exercise) : exerciseLink(item.exercise), dose);
+    const state = done.has(item.exercise) ? 'Hotovo' : isRunning ? 'Prebieha' : 'Čaká';
     const status = document.createElement('small');
     status.textContent = state;
     meta.append(status);

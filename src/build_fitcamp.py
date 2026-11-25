@@ -149,13 +149,12 @@ def exercise_card(key, exercise):
     <details class="card" id="{key}" data-equipment="{'bodyweight' if key in BODYWEIGHT else 'equipment'}" data-equipment-kind="{EXERCISE_EQUIPMENT[key]}" data-main="{escape(' '.join(main), quote=True)}" data-secondary="{escape(' '.join(secondary), quote=True)}" data-aliases="{escape(f'{name} {search_aliases}', quote=True)}" data-set-unit="{set_unit}" data-per-side="{per_side}" data-load-basis="{load_basis}" data-prescription="{escape(reps, quote=True)}">
       <summary><strong class="exercise-name">{bilingual_name(key)}</strong><span class="exercise-subtitle"><small class="priority {priority}">{escape(priority_title)}</small> {escape(muscle_subtitle)}</span><span class="last" hidden></span></summary>
       <div class="inside">
-        <p><strong>{escape(reps)}</strong> <span class="subtle">· jedna pracovná séria</span></p>
+        <p class="exercise-dose"><strong>{escape(reps)}</strong> <span class="subtle">· jedna pracovná séria</span></p>
         <div class="live-control">
           <div class="exercise-commands">
             <button class="start-exercise save" type="button">Začať cvik</button>
-            <a class="log-set-link save" href="#{key}-log" hidden>Zapísať série ↓</a>
             <div class="exercise-utilities">
-              <button class="discard-exercise" type="button" hidden>Zrušiť meranie</button>
+              <button class="discard-exercise" type="button" hidden>Zrušiť cvik</button>
               <output class="exercise-clock" hidden aria-live="off" aria-label="Trvanie cviku"></output>
             </div>
           </div>
@@ -174,7 +173,7 @@ def exercise_card(key, exercise):
           <a href="#{key}-details" aria-label="Vybavenie a náhrady">Vybavenie</a>
         </div>
         <section id="{key}-technique" class="exercise-guide">
-          <h3>Technika</h3>
+          <h3>Technika</h3>{'<p class="demo-view-note">Schéma zhora</p>' if key in TOP_VIEW else ''}
           <div class="exercise-demo">
           <figure class="demo-stills">
             <img src="{diagram(key)}" alt="{alt}" width="432" height="180">
