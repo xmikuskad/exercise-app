@@ -422,6 +422,29 @@ main{padding-bottom:5.6rem}
   <h1>Vývoj výkonu</h1>
   <div class="box">
     <label class="field">Cvik <select id="performance-exercise"></select></label>
+    <section id="performance-comparison" aria-labelledby="performance-comparison-title" hidden>
+      <h2 id="performance-comparison-title">Porovnať obdobia</h2>
+      <div class="comparison-controls">
+        <label class="field">Dĺžka obdobia <select id="comparison-length">
+          <option value="14">14 dní</option><option value="28" selected>28 dní</option><option value="56">56 dní</option>
+        </select></label>
+        <label class="field" id="comparison-mode-field">Čo porovnať <select id="comparison-mode">
+          <option value="weight">Váhu pri rovnakých opakovaniach</option>
+          <option value="amount">Opakovania pri rovnakej váhe</option>
+        </select></label>
+        <label class="field" id="comparison-side-field" hidden>Strana <select id="comparison-side">
+          <option value="both">Obe v jednej sérii</option><option value="left">Ľavá</option><option value="right">Pravá</option>
+        </select></label>
+        <label class="field"><span id="comparison-benchmark-label">Počet opakovaní</span> <select id="comparison-benchmark"></select></label>
+      </div>
+      <dl class="comparison-results">
+        <div><dt>Predchádzajúce <small id="comparison-previous-dates"></small></dt><dd id="comparison-previous"></dd></div>
+        <div><dt>Posledné <small id="comparison-recent-dates"></small></dt><dd id="comparison-recent"></dd></div>
+      </dl>
+      <p id="comparison-status" role="status"></p>
+      <p id="comparison-note" class="subtle"></p>
+    </section>
+    <h2 id="performance-list-title" hidden>Posledné návštevy</h2>
     <p class="subtle" id="performance-caption"></p>
     <ol id="performance-data" class="performance-data"></ol>
   </div>
@@ -613,6 +636,7 @@ main{padding-bottom:5.6rem}
 <script id="warmup-data" type="application/json">@@WARMUP_DATA@@</script>
 <script>@@DEMOS@@</script>
 <script>@@WARMUP@@</script>
+<script>@@PERFORMANCE@@</script>
 <script>@@INSIGHTS@@</script>
 <script>@@APP@@</script>
 <script>@@SUBSTITUTIONS@@</script>

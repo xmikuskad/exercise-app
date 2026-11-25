@@ -604,6 +604,52 @@ try {
   assert.equal(await inspect(`draft.items.filter(item => item.exercise === 'toeraise').length === 1 &&
     document.querySelector('#plan-validation .muscle-picker li button').disabled &&
     JSON.stringify(savedPlans) === ${JSON.stringify(savedLibraryBeforeSwap)}`), true);
+  await inspect(`(() => {
+    const datedWorkout = (offset, blocks) => {
+      const now = new Date();
+      const start = new Date(now.getFullYear(), now.getMonth(), now.getDate() + offset, 12).getTime();
+      return {id:'comparison-' + Math.abs(offset), startedAt:start, finishedAt:start+2000,
+        exercises:blocks.map(([exercise, rows]) => ({exercise, startedAt:start, finishedAt:start+1000,
+          sets:rows.map(([amount, weight, side = null]) => ({amount, weight, side}))}))};
+    };
+    mergeWorkoutHistory([
+      datedWorkout(-28, [['chest',[[10,20],[12,20],[8,90]]],['assistpull',[[10,40],[10,50]]],
+        ['deadbug',[[6,null,'left']]],['plank',[[25,null]]]]),
+      datedWorkout(-2, [['chest',[[10,22.5],[14,20],[9,90]]],['assistpull',[[10,35]]],
+        ['deadbug',[[8,null,'left'],[20,null,'right']]],['plank',[[35,null]]]]),
+      datedWorkout(-56, [['chest',[[10,99]]]]),
+    ]);
+    location.hash = '#vykony';
+  })()`);
+  await waitFor(`!document.querySelector('#vykony').hidden`, 'Performance page did not open');
+  const chooseComparison = (id, value) => inspect(`(() => {
+    const select = document.getElementById(${JSON.stringify(id)});
+    select.value = ${JSON.stringify(value)};
+    select.dispatchEvent(new Event('change'));
+  })()`);
+  const comparisonValues = () => inspect(`['previous','recent','status'].map(key => document.getElementById('comparison-' + key).textContent)`);
+  const storedBeforeComparison = await inspect('localStorage.getItem(workoutKey)');
+  await chooseComparison('performance-exercise', 'chest');
+  await chooseComparison('comparison-mode', 'weight');
+  await chooseComparison('comparison-benchmark', '10');
+  assert.deepEqual(await comparisonValues(), ['20 kg', '22,5 kg', 'Rozdiel: +2,5 kg']);
+  await chooseComparison('comparison-mode', 'amount');
+  await chooseComparison('comparison-benchmark', '20');
+  assert.deepEqual(await comparisonValues(), ['12 opak.', '14 opak.', 'Rozdiel: +2 opak.']);
+  await screenshot('fitcamp-period-comparison.png');
+  await chooseComparison('comparison-length', '14');
+  assert.deepEqual(await comparisonValues(), ['—', '14 opak.', 'Pre tento výber je výsledok iba v jednom období.']);
+  await chooseComparison('comparison-length', '28');
+  await chooseComparison('performance-exercise', 'deadbug');
+  await chooseComparison('comparison-side', 'left');
+  assert.deepEqual(await comparisonValues(), ['6 opak.', '8 opak.', 'Rozdiel: +2 opak.']);
+  await chooseComparison('performance-exercise', 'plank');
+  assert.deepEqual(await comparisonValues(), ['25 s', '35 s', 'Rozdiel: +10 s']);
+  await chooseComparison('performance-exercise', 'assistpull');
+  await chooseComparison('comparison-mode', 'weight');
+  assert.deepEqual(await comparisonValues(), ['40 kg', '35 kg', 'Rozdiel: -5 kg']);
+  assert.equal(await inspect('localStorage.getItem(workoutKey)'), storedBeforeComparison);
+  assert.equal(await inspect('document.documentElement.scrollWidth <= innerWidth'), true);
   await assertCleanPage();
   await inspect(`localStorage.clear(); location.hash = '#teraz'`);
   await command('Page.reload');

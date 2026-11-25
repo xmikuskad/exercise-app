@@ -68,16 +68,20 @@ function renderPerformance() {
   const list = document.getElementById('performance-data');
   list.replaceChildren();
   const id = performancePick.value;
+  document.getElementById('performance-list-title').hidden = !id;
   if (!id) {
+    renderPeriodComparison('', []);
     caption.textContent = 'Vývoj uvidíš po zapísaní sérií a ukončení tréningu.';
     return;
   }
   const readings = workoutHistory.flatMap(workout => {
     const sets = workout.exercises.filter(block => block.exercise === id).flatMap(block => block.sets);
     return sets.length ? [{date:workout.startedAt, sets}] : [];
-  }).slice(0, 12).reverse();
+  });
+  renderPeriodComparison(id, readings);
+  const recent = readings.slice(0, 12).reverse();
   const seconds = cards.get(id).dataset.setUnit === 'seconds';
-  const hasWeight = !seconds && readings.some(({sets}) => sets.some(set => set.weight > 0));
+  const hasWeight = !seconds && recent.some(({sets}) => sets.some(set => set.weight > 0));
   const unit = seconds ? 's' : hasWeight ? 'kg' : 'opak.';
   const assistance = hasWeight && cards.get(id).dataset.loadBasis === 'assistance';
   caption.textContent = hasWeight
@@ -88,10 +92,10 @@ function renderPerformance() {
     ? (assistance ? sets.filter(set => set.weight !== null).reduce((min, set) => Math.min(min, set.weight), Infinity)
       : Math.max(...sets.map(set => set.weight ?? -1)))
     : Math.max(...sets.map(set => set.amount));
-  const metrics = readings.map(({sets}) => metric(sets));
+  const metrics = recent.map(({sets}) => metric(sets));
   const upper = Math.max(1, ...metrics.filter(Number.isFinite));
   const numbers = new Intl.NumberFormat('sk-SK', {maximumFractionDigits:2});
-  readings.forEach(({date, sets}, index) => {
+  recent.forEach(({date, sets}, index) => {
     const row = document.createElement('li');
     const header = document.createElement('div');
     const time = document.createElement('span');

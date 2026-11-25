@@ -15,7 +15,7 @@ Exehel pomáha pripraviť tréning doma, odcvičiť ho podľa šablóny alebo po
 - [x] Z ukončeného tréningu vytvoriť novú upraviteľnú šablónu. Pri opakovaní rovnakého cviku zrátať zapísané série a zachovať poradie prvého výskytu.
 - [x] Spúšťať vlastné a predpripravené šablóny priamo z Plánov. Zobraziť historický detail aj počas rozpracovaného tréningu.
 - [x] Ukázať vývoj vybraného cviku v posledných 12 návštevách. Použiť váhu, opakovania, výdrž alebo dopomoc podľa typu cviku.
-- [ ] Doplniť zmenu odporu pri rovnakých opakovaniach a vývoj opakovaní pri rovnakej váhe. Pridať porovnanie období.
+- [x] Porovnať váhu pri rovnakom počte opakovaní, opakovania pri rovnakej váhe a výdrž pri rovnakej záťaži v dvoch po sebe idúcich obdobiach.
 - [x] Zjednodušiť výmenu obsadeného cviku v aktívnom pláne. Ukázať vhodné náhrady podľa vybavenia a hlavného svalu. Rozpísané série a uloženú šablónu chrániť pred prepísaním.
 
 ## 3. Anatomická mapa a odporúčania

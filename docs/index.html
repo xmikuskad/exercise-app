@@ -2,7 +2,7 @@
 <html lang="sk">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src &#x27;none&#x27;; base-uri &#x27;none&#x27;; form-action &#x27;none&#x27;; img-src data:; media-src data:; script-src &#x27;sha256-I8ODw21V7Cf3kccakSkY90wQt1mW6rEczl30KKT18T4=&#x27; &#x27;sha256-tr+0jk41c2Tf97LhJNfxkm7+ToBH9xtX3LmkNHGf1aI=&#x27; &#x27;sha256-uKxiw9WVTZlknguZSEmy8mj3BRqb3cfMYsfcyJsysrI=&#x27; &#x27;sha256-tnyIOnfJVn3HcSndOS5UZ4rxxpkQ23i5kV0CmSIzg5c=&#x27; &#x27;sha256-Q/iRf+4EYHlfmca9Io0nntlhurEHyCBI8qsfV2ZoNsc=&#x27; &#x27;sha256-DJ9Im1j7xgs9xK4YlcF7zINe1tu5tLMgllcOGP9yXUU=&#x27; &#x27;sha256-WAZtFWFZhB6uyJf/o/fSwFFN0x+EKeUNziusI07Yzp8=&#x27; &#x27;sha256-PCh8t/evjcOJrsLvlrtMeLpdB79HrmJKo+aXKHSUGfE=&#x27; &#x27;sha256-FeQeOr4lUboqjRN6/4Q3Y/w4t2GrFqwN4sVy4Pz1ugs=&#x27; &#x27;sha256-k63JXkEdNBU06ehgXwuRA0y+YeiN22y4e0w00oBdt5I=&#x27; &#x27;sha256-oce1nGjD5K7pNRQCPdh33WrAhzhqMIFpffcKpLvo71M=&#x27; &#x27;sha256-FdGx8JTspG63231nWgeaSQXu1mG0MSaVGOUW5+P4d5Q=&#x27;; style-src &#x27;sha256-EB+7i/J9gLmQOABjAZ7x7WZ2VW72sqkY6yCQISeUlZ4=&#x27;">
+<meta http-equiv="Content-Security-Policy" content="default-src &#x27;none&#x27;; base-uri &#x27;none&#x27;; form-action &#x27;none&#x27;; img-src data:; media-src data:; script-src &#x27;sha256-I8ODw21V7Cf3kccakSkY90wQt1mW6rEczl30KKT18T4=&#x27; &#x27;sha256-tr+0jk41c2Tf97LhJNfxkm7+ToBH9xtX3LmkNHGf1aI=&#x27; &#x27;sha256-uKxiw9WVTZlknguZSEmy8mj3BRqb3cfMYsfcyJsysrI=&#x27; &#x27;sha256-tnyIOnfJVn3HcSndOS5UZ4rxxpkQ23i5kV0CmSIzg5c=&#x27; &#x27;sha256-Q/iRf+4EYHlfmca9Io0nntlhurEHyCBI8qsfV2ZoNsc=&#x27; &#x27;sha256-DJ9Im1j7xgs9xK4YlcF7zINe1tu5tLMgllcOGP9yXUU=&#x27; &#x27;sha256-WAZtFWFZhB6uyJf/o/fSwFFN0x+EKeUNziusI07Yzp8=&#x27; &#x27;sha256-/AVqvrc1LqreU76VhoBU+fmr6CQEfht5OENPBU4j4x8=&#x27; &#x27;sha256-FeQeOr4lUboqjRN6/4Q3Y/w4t2GrFqwN4sVy4Pz1ugs=&#x27; &#x27;sha256-k63JXkEdNBU06ehgXwuRA0y+YeiN22y4e0w00oBdt5I=&#x27; &#x27;sha256-oce1nGjD5K7pNRQCPdh33WrAhzhqMIFpffcKpLvo71M=&#x27; &#x27;sha256-FdGx8JTspG63231nWgeaSQXu1mG0MSaVGOUW5+P4d5Q=&#x27; &#x27;sha256-FylKzn6sJ+xDWik1I3QF/9uF+DiU2AHyESUrLDVLUvQ=&#x27;; style-src &#x27;sha256-kQ94ExvaNfnCe7eAmJqt8PSBuKYWTQDO0hgPcikB3k0=&#x27;">
 <meta name="referrer" content="no-referrer">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#f3f5ee">
@@ -275,6 +275,18 @@ main h2{font-size:clamp(1.35rem,4.5vw,1.85rem)}
 .performance-data li{border-top:1px solid var(--line);padding:.55rem 0}
 .performance-data li div{display:flex;justify-content:space-between;gap:.5rem}
 .performance-data progress{width:100%;height:.65rem;accent-color:var(--teal)}
+#performance-comparison{margin:.85rem 0 1.15rem;padding:1rem 0;border-block:1px solid var(--line)}
+#performance-comparison h2{margin:0 0 .55rem}
+.comparison-controls,.comparison-results{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.6rem .8rem}
+.comparison-controls .field{min-width:0;margin:0}
+.comparison-controls select{min-width:0;width:100%}
+.comparison-results{margin:.85rem 0 .45rem;padding:.65rem;background:var(--wash);border-radius:.65rem}
+.comparison-results dt{font-weight:700;font-size:.85rem}
+.comparison-results small{display:block;color:var(--muted);font-weight:500}
+.comparison-results dd{margin:.25rem 0 0;font-weight:750;font-size:1.2rem;font-variant-numeric:tabular-nums}
+#comparison-status,#comparison-note{margin:0}
+#comparison-status:not(:empty)+#comparison-note{margin-top:.35rem}
+@media(max-width:430px){.comparison-controls{grid-template-columns:1fr}}
 .coverage-surface .interactive-map{cursor:crosshair}
 .muscle-picker{margin:.65rem 0;padding:.65rem 0;border-top:1px solid var(--line)}
 .muscle-picker .field{min-width:0}
@@ -528,6 +540,29 @@ main h2{font-size:clamp(1.35rem,4.5vw,1.85rem)}
   <h1>Vývoj výkonu</h1>
   <div class="box">
     <label class="field">Cvik <select id="performance-exercise"></select></label>
+    <section id="performance-comparison" aria-labelledby="performance-comparison-title" hidden>
+      <h2 id="performance-comparison-title">Porovnať obdobia</h2>
+      <div class="comparison-controls">
+        <label class="field">Dĺžka obdobia <select id="comparison-length">
+          <option value="14">14 dní</option><option value="28" selected>28 dní</option><option value="56">56 dní</option>
+        </select></label>
+        <label class="field" id="comparison-mode-field">Čo porovnať <select id="comparison-mode">
+          <option value="weight">Váhu pri rovnakých opakovaniach</option>
+          <option value="amount">Opakovania pri rovnakej váhe</option>
+        </select></label>
+        <label class="field" id="comparison-side-field" hidden>Strana <select id="comparison-side">
+          <option value="both">Obe v jednej sérii</option><option value="left">Ľavá</option><option value="right">Pravá</option>
+        </select></label>
+        <label class="field"><span id="comparison-benchmark-label">Počet opakovaní</span> <select id="comparison-benchmark"></select></label>
+      </div>
+      <dl class="comparison-results">
+        <div><dt>Predchádzajúce <small id="comparison-previous-dates"></small></dt><dd id="comparison-previous"></dd></div>
+        <div><dt>Posledné <small id="comparison-recent-dates"></small></dt><dd id="comparison-recent"></dd></div>
+      </dl>
+      <p id="comparison-status" role="status"></p>
+      <p id="comparison-note" class="subtle"></p>
+    </section>
+    <h2 id="performance-list-title" hidden>Posledné návštevy</h2>
     <p class="subtle" id="performance-caption"></p>
     <ol id="performance-data" class="performance-data"></ol>
   </div>
@@ -6488,6 +6523,120 @@ window.addEventListener('hashchange', () => {
   if (location.hash !== '#rozc') closeWarmupOptions();
 });
 </script>
+<script>const comparisonPanel = document.getElementById('performance-comparison');
+const comparisonLength = document.getElementById('comparison-length');
+const comparisonMode = document.getElementById('comparison-mode');
+const comparisonSide = document.getElementById('comparison-side');
+const comparisonBenchmark = document.getElementById('comparison-benchmark');
+const comparisonStatus = document.getElementById('comparison-status');
+const comparisonNumber = new Intl.NumberFormat('sk-SK', {maximumFractionDigits:2});
+const comparisonDifference = new Intl.NumberFormat('sk-SK', {maximumFractionDigits:2, signDisplay:'exceptZero'});
+let comparedExercise = '';
+
+function comparisonPeriods(days, now = new Date()) {
+  const midnight = offset => new Date(now.getFullYear(), now.getMonth(), now.getDate() + offset);
+  return [
+    {name:'previous', start:midnight(1 - days * 2), end:midnight(1 - days), last:midnight(-days)},
+    {name:'recent', start:midnight(1 - days), end:midnight(1), last:midnight(0)},
+  ];
+}
+
+function periodBestSets(sets, compareWeight, allowUnweighted, assistance) {
+  const best = new Map();
+  for (const set of sets) {
+    if (set.weight === null && (compareWeight || !allowUnweighted)) continue;
+    const benchmark = compareWeight ? set.amount : set.weight ?? 'unweighted';
+    const value = compareWeight ? set.weight : set.amount;
+    const previous = best.get(benchmark);
+    if (previous === undefined || (compareWeight && assistance ? value < previous : value > previous)) {
+      best.set(benchmark, value);
+    }
+  }
+  return best;
+}
+
+function renderPeriodComparison(id, readings) {
+  comparisonPanel.hidden = !id;
+  if (!id) return;
+  const card = cards.get(id);
+  const seconds = card.dataset.setUnit === 'seconds';
+  const assistance = card.dataset.loadBasis === 'assistance';
+  const oneSide = card.dataset.perSide === 'yes';
+  const unweighted = card.dataset.equipment === 'bodyweight';
+  const periods = comparisonPeriods(Number(comparisonLength.value)).map(period => ({
+    ...period,
+    sets:readings.filter(({date}) => date >= period.start && date < period.end).flatMap(({sets}) => sets),
+  }));
+  const sides = new Set(periods.flatMap(({sets}) => sets.map(set => set.side ?? 'both')));
+  document.getElementById('comparison-side-field').hidden = !oneSide;
+  for (const option of comparisonSide.options) option.disabled = sides.size > 0 && !sides.has(option.value);
+  if (oneSide && !sides.has(comparisonSide.value)) {
+    comparisonSide.value = sides.has('both') ? 'both' : sides.values().next().value ?? 'both';
+  }
+  const eligible = periods.map(({sets}) => oneSide
+    ? sets.filter(set => (set.side ?? 'both') === comparisonSide.value) : sets);
+  const hasWeight = eligible.some(sets => sets.some(set => set.weight !== null));
+  document.getElementById('comparison-mode-field').hidden = seconds || !hasWeight;
+  comparisonMode.options[0].textContent = assistance
+    ? 'Dopomoc pri rovnakých opakovaniach' : 'Váhu pri rovnakých opakovaniach';
+  const compareWeight = !seconds && hasWeight && comparisonMode.value === 'weight';
+  const best = eligible.map(sets => periodBestSets(sets, compareWeight, unweighted, assistance));
+  const candidates = [...new Set(best.flatMap(values => [...values.keys()]))].sort((a, b) => {
+    const shared = key => Number(best.every(values => values.has(key)));
+    return shared(b) - shared(a) || Number(b === 'unweighted') - Number(a === 'unweighted') ||
+      Number(b) - Number(a);
+  });
+  const previousSelection = comparedExercise === id ? comparisonBenchmark.value : '';
+  comparedExercise = id;
+  comparisonBenchmark.replaceChildren();
+  comparisonBenchmark.disabled = !candidates.length;
+  document.getElementById('comparison-benchmark-label').textContent = compareWeight ? 'Počet opakovaní'
+    : assistance ? 'Dopomoc' : unweighted && !hasWeight ? 'Záťaž' : 'Zapísaná váha';
+  if (!candidates.length) comparisonBenchmark.add(new Option('Bez vhodných záznamov', ''));
+  for (const candidate of candidates) {
+    const label = candidate === 'unweighted' ? 'Bez zapísanej prídavnej váhy'
+      : comparisonNumber.format(candidate) + (compareWeight ? ' opak.' : ' kg');
+    comparisonBenchmark.add(new Option(label, String(candidate)));
+  }
+  if (candidates.some(key => String(key) === previousSelection)) comparisonBenchmark.value = previousSelection;
+  const selected = comparisonBenchmark.value;
+  const benchmark = selected === 'unweighted' ? selected : Number(selected);
+  const unit = compareWeight ? 'kg' : seconds ? 's' : 'opak.';
+  const values = best.map(results => selected ? results.get(benchmark) : undefined);
+  periods.forEach((period, index) => {
+    document.getElementById('comparison-' + period.name + '-dates').textContent =
+      displayDate(today(period.start)) + ' – ' + displayDate(today(period.last));
+    const value = values[index];
+    document.getElementById('comparison-' + period.name).textContent =
+      value === undefined ? '—' : comparisonNumber.format(value) + ' ' + unit;
+  });
+  if (values.every(value => value !== undefined)) {
+    const delta = comparisonDifference.format(values[1] - values[0]);
+    comparisonStatus.textContent = 'Rozdiel: ' + delta + ' ' + unit;
+  } else if (!selected) {
+    comparisonStatus.textContent = periods.some(period => period.sets.length)
+      ? 'V týchto obdobiach chýba záznam záťaže vhodný na porovnanie.'
+      : 'V týchto obdobiach zatiaľ nemáš zapísané série.';
+  } else {
+    comparisonStatus.textContent = 'Pre tento výber je výsledok iba v jednom období.';
+  }
+  document.getElementById('comparison-note').textContent = assistance
+    ? 'Pri rovnakom stroji znamená nižšia dopomoc menšiu pomoc.'
+    : seconds ? 'Porovnáva sa najdlhšia výdrž v rovnakej variante a so zvolenou záťažou.'
+    : 'Porovnávajú sa najlepšie série. Pri strojoch používaj rovnaké nastavenie a stupnicu.';
+}
+
+comparisonLength.addEventListener('change', () => renderPerformance());
+comparisonMode.addEventListener('change', () => {
+  comparisonBenchmark.value = '';
+  renderPerformance();
+});
+comparisonSide.addEventListener('change', () => {
+  comparisonBenchmark.value = '';
+  renderPerformance();
+});
+comparisonBenchmark.addEventListener('change', () => renderPerformance());
+</script>
 <script>const historyWorkouts = document.getElementById('history-workouts');
 const historyWorkoutDetail = document.getElementById('history-workout-detail');
 const templateButton = document.getElementById('save-workout-template');
@@ -6558,16 +6707,20 @@ function renderPerformance() {
   const list = document.getElementById('performance-data');
   list.replaceChildren();
   const id = performancePick.value;
+  document.getElementById('performance-list-title').hidden = !id;
   if (!id) {
+    renderPeriodComparison('', []);
     caption.textContent = 'Vývoj uvidíš po zapísaní sérií a ukončení tréningu.';
     return;
   }
   const readings = workoutHistory.flatMap(workout => {
     const sets = workout.exercises.filter(block => block.exercise === id).flatMap(block => block.sets);
     return sets.length ? [{date:workout.startedAt, sets}] : [];
-  }).slice(0, 12).reverse();
+  });
+  renderPeriodComparison(id, readings);
+  const recent = readings.slice(0, 12).reverse();
   const seconds = cards.get(id).dataset.setUnit === 'seconds';
-  const hasWeight = !seconds && readings.some(({sets}) => sets.some(set => set.weight > 0));
+  const hasWeight = !seconds && recent.some(({sets}) => sets.some(set => set.weight > 0));
   const unit = seconds ? 's' : hasWeight ? 'kg' : 'opak.';
   const assistance = hasWeight && cards.get(id).dataset.loadBasis === 'assistance';
   caption.textContent = hasWeight
@@ -6578,10 +6731,10 @@ function renderPerformance() {
     ? (assistance ? sets.filter(set => set.weight !== null).reduce((min, set) => Math.min(min, set.weight), Infinity)
       : Math.max(...sets.map(set => set.weight ?? -1)))
     : Math.max(...sets.map(set => set.amount));
-  const metrics = readings.map(({sets}) => metric(sets));
+  const metrics = recent.map(({sets}) => metric(sets));
   const upper = Math.max(1, ...metrics.filter(Number.isFinite));
   const numbers = new Intl.NumberFormat('sk-SK', {maximumFractionDigits:2});
-  readings.forEach(({date, sets}, index) => {
+  recent.forEach(({date, sets}, index) => {
     const row = document.createElement('li');
     const header = document.createElement('div');
     const time = document.createElement('span');
