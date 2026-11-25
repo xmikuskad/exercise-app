@@ -650,6 +650,45 @@ try {
   assert.deepEqual(await comparisonValues(), ['40 kg', '35 kg', 'Rozdiel: -5 kg']);
   assert.equal(await inspect('localStorage.getItem(workoutKey)'), storedBeforeComparison);
   assert.equal(await inspect('document.documentElement.scrollWidth <= innerWidth'), true);
+  assert.deepEqual(await inspect(`(() => {
+    const now = new Date(2026, 10, 25, 12);
+    const start = new Date(2026, 10, 22, 23, 59, 59).getTime();
+    const nextWeek = new Date(2026, 10, 23, 0).getTime();
+    const block = (exercise, sets) => ({exercise, sets:Array.from({length:sets}, () => ({amount:10, weight:null, side:null}))});
+    const weeks = weeklyVolume([{startedAt:start, exercises:[block('row', 2), block('toeraise', 0)]},
+      {startedAt:nextWeek, exercises:[block('press', 1)]}], now);
+    return [weeks[0].muscles.get('quad').directSets, weeks[1].visits,
+      weeklyAssessment(weeks, 'tibant').kind, weeklyAssessment(weeks, 'biceps').kind,
+      weeklyAssessment(weeks, 'pec').kind, weeklyAssessment(weeklyVolume([], now), 'pec').kind];
+  })()`), [1, 1, 'incomplete', 'support', 'missing', 'unlogged']);
+  await inspect(`(() => {
+    const weeks = weeklyVolume([]);
+    const fixture = (index, seriesCounts) => {
+      const start = weeks[index].start.getTime();
+      return {id:'weekly-' + index, startedAt:start, finishedAt:start+2000, exercises:seriesCounts.map(count => ({
+        exercise:'toeraise', startedAt:start, finishedAt:start+1000,
+        sets:Array.from({length:count}, () => ({amount:10, weight:null, side:null})),
+      }))};
+    };
+    mergeWorkoutHistory([fixture(1,[2]), fixture(2,[2,1,1]), fixture(3,[2,2,2]), fixture(4,[0])]);
+    location.hash = '#pokrytie';
+  })()`);
+  await waitFor(`!document.querySelector('#pokrytie').hidden`, 'History coverage did not open');
+  await inspect(`const historyMuscle = document.querySelector('#history-results .muscle-picker select');
+    historyMuscle.value = 'tibant'; historyMuscle.dispatchEvent(new Event('change'))`);
+  await clickUI('#history-results .muscle-picker a[href="#tyzdne"]');
+  await waitFor(`!document.querySelector('#tyzdne').hidden`, 'Weekly volume did not open from the muscle map');
+  assert.equal(await inspect(`document.querySelector('#weekly-muscle').value`), 'tibant');
+  assert.deepEqual(await inspect(`[...document.querySelectorAll('#weekly-volume-rows .week-value')]
+    .slice(1).map(item => item.textContent)`), ['2 priame série', '4 priame série', '6 priamych sérií', '—']);
+  assert.equal(await inspect(`document.getElementById('weekly-volume-note').textContent.includes('v 2 tréningoch') &&
+    document.getElementById('weekly-volume-guidance').textContent.includes('Menej priamych sérií') &&
+    document.getElementById('weekly-volume-guidance').textContent.includes('· 5.') &&
+    Boolean(document.querySelector('#weekly-volume-exercises a[href="#toeraise"]'))`), true);
+  assert.equal(await inspect(`[...document.querySelectorAll('#weekly-review-muscles button')].some(button =>
+    button.textContent.includes('Predný píšťalový sval'))`), true);
+  assert.equal(await inspect('document.documentElement.scrollWidth <= innerWidth'), true);
+  await screenshot('fitcamp-weekly-volume.png');
   await assertCleanPage();
   await inspect(`localStorage.clear(); location.hash = '#teraz'`);
   await command('Page.reload');

@@ -254,7 +254,7 @@ scripts = {
         ('SCRIPT', 'journal'), ('TRAINING', 'training'), ('SETS', 'sets'),
         ('COVERAGE', 'coverage'), ('PLANNER', 'planner'), ('HISTORY', 'history'), ('DEMOS', 'demos'),
         ('INSIGHTS', 'insights'), ('APP', 'app'), ('MUSCLE_PICKER', 'muscle_picker'), ('WARMUP', 'warmup'),
-        ('SUBSTITUTIONS', 'substitutions'), ('PERFORMANCE', 'performance')
+        ('SUBSTITUTIONS', 'substitutions'), ('PERFORMANCE', 'performance'), ('WEEKLY', 'weekly')
     )
 }
 

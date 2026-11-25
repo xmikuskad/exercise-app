@@ -17,6 +17,7 @@ Prvý príkaz prejde hlavné používateľské scenáre v Chrome. Ďalšie dva s
 | Zápis | Automatické uloženie rozpísaných sérií, načítanie predošlých hodnôt, kopírovanie série, desatinná čiarka, výdrž a jednostranný zápis |
 | Plány a história | Predpripravené zostavy, vlastný plán, šablóna z histórie, výmena aktívneho aj nasledujúceho cviku, ochrana rozpracovaných dát, pridanie z anatomickej mapy bez duplicít, výkon a pokrytie |
 | Porovnanie výkonu | Rovnaké opakovania, rovnaká váha, chýbajúce obdobie, hranice dátumov, časová výdrž, dopomoc, oddelené strany a zachovanie údajov |
+| Týždenný objem | Hranice kalendárneho týždňa, zapísané priame série, opakovaný prekryv, pomocné zapojenie, staré záznamy bez sérií a odporúčania podľa vlastnej histórie |
 | Rozcvička a katalóg | Vyhľadávanie, zobrazenie cviku, kontrola videí, 18 rozcvičovacích variantov, uloženie výberu |
 | Údaje a zobrazenie | CSV, JSON, staršia záloha, odmietnutie poškodenej zálohy bez zmeny údajov, úzky mobilný viewport a kontrola chýb stránky |
 

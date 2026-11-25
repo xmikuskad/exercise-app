@@ -25,7 +25,7 @@ Exehel pomáha pripraviť tréning doma, odcvičiť ho podľa šablóny alebo po
 - [x] Ponúknuť filter posledných 28 dní, počet zapísaných priamych sérií a dátum posledného priameho tréningu vybraného svalu. Zachovať upozornenie pri treťom priamom cviku počas tréningu.
 - [ ] Dokončiť audit vnútra stehien, lopatiek, predlaktí a ďalších hlbších oblastí. Rozlíšiť vizuálne zakreslenie svalu a dostupnosť priameho cviku.
 - [x] Z mapy pridať cvik priamo do rozpracovaného návrhu plánu a filtrovať výber podľa vybavenia.
-- [ ] Zobraziť týždenné priame série a opakované prekryvy. Pri odporúčaniach zohľadniť dĺžku záznamu a rozlišovať malý objem, iba pomocné zapojenie a chýbajúci zápis. Farba ani počet sérií samy neurčujú mieru regenerácie.
+- [x] Zobraziť týždenné priame série a opakované prekryvy. Porovnať nižší objem s vlastnými staršími záznamami a rozlíšiť iba pomocné zapojenie, chýbajúci zápis a neúplný počet sérií.
 
 ## Kontrola každej etapy
 

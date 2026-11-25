@@ -33,7 +33,7 @@ function routeApp() {
 function updateAppWorkout() {
   const running = activeWorkout?.running;
   const insideWorkout = Boolean(running && viewedCard?.id === running.exercise);
-  const navPage = ['pokrytie','sprava-dat','historia-trening','vykony'].includes(screenId) ? 'dennik'
+  const navPage = ['pokrytie','sprava-dat','historia-trening','vykony','tyzdne'].includes(screenId) ? 'dennik'
     : insideWorkout || ['rozc','treningy','progres','svalovica','fitcamp'].includes(screenId) ? 'teraz' : screenId;
   for (const link of appNav) {
     if (link.hash === '#' + navPage) link.setAttribute('aria-current', 'page');

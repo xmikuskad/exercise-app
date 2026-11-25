@@ -68,6 +68,14 @@ main h2{font-size:clamp(1.35rem,4.5vw,1.85rem)}
 #comparison-status,#comparison-note{margin:0}
 #comparison-status:not(:empty)+#comparison-note{margin-top:.35rem}
 @media(max-width:430px){.comparison-controls{grid-template-columns:1fr}}
+.weekly-volume-rows{list-style:none;margin:.65rem 0;padding:0}
+.weekly-volume-rows li{border-top:1px solid var(--line);padding:.6rem 0}
+.weekly-volume-rows .week-heading{display:flex;align-items:baseline;justify-content:space-between;gap:.6rem}
+.weekly-volume-rows small{display:block;margin-top:.18rem;color:var(--muted)}
+.weekly-volume-rows .week-value{text-align:right;font-weight:750;font-variant-numeric:tabular-nums}
+#weekly-volume-note{margin-bottom:1rem}
+#weekly-review{margin-top:1rem}
+#weekly-review button{width:100%;text-align:left}
 .coverage-surface .interactive-map{cursor:crosshair}
 .muscle-picker{margin:.65rem 0;padding:.65rem 0;border-top:1px solid var(--line)}
 .muscle-picker .field{min-width:0}

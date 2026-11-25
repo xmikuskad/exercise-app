@@ -401,6 +401,7 @@ main{padding-bottom:5.6rem}
   <h1>História</h1>
   <div class="start-links">
     <a href="#pokrytie">Porovnať pokrytie svalov</a>
+    <a href="#tyzdne">Týždenný objem svalov</a>
     <a href="#vykony">Vývoj výkonu</a>
     <a href="#sprava-dat">Správa dát</a>
   </div>
@@ -447,6 +448,24 @@ main{padding-bottom:5.6rem}
     <h2 id="performance-list-title" hidden>Posledné návštevy</h2>
     <p class="subtle" id="performance-caption"></p>
     <ol id="performance-data" class="performance-data"></ol>
+  </div>
+</section>
+<section id="tyzdne">
+  <a class="catalog-back" href="#dennik">← História</a>
+  <h1>Týždenný objem svalov</h1>
+  <div class="box">
+    <label class="field">Sval <select id="weekly-muscle"></select></label>
+    <p class="subtle">Priame série sú zapísané série z cvikov, ktoré cielia na vybraný sval.</p>
+    <ol id="weekly-volume-rows" class="weekly-volume-rows"></ol>
+    <p id="weekly-volume-note" class="subtle"></p>
+    <h2>Čo zvážiť v ďalšom tréningu</h2>
+    <p id="weekly-volume-guidance" role="status"></p>
+    <ul id="weekly-volume-exercises" class="exercise-options"></ul>
+  </div>
+  <div id="weekly-review" class="box" hidden>
+    <h2>Partie na kontrolu</h2>
+    <p class="subtle">Posledný ukončený týždeň. Ťukni na sval pre podrobnosti.</p>
+    <ul id="weekly-review-muscles" class="weekly-volume-rows"></ul>
   </div>
 </section>
 <section id="sprava-dat">
@@ -640,6 +659,7 @@ main{padding-bottom:5.6rem}
 <script>@@INSIGHTS@@</script>
 <script>@@APP@@</script>
 <script>@@SUBSTITUTIONS@@</script>
+<script>@@WEEKLY@@</script>
 <script>@@MUSCLE_PICKER@@</script>
 </body>
 </html>

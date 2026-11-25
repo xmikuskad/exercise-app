@@ -20,7 +20,16 @@ function attachMusclePicker(canvas, context, getCounts, getBlocks, onLink) {
   draftFeedback.className = 'subtle';
   draftFeedback.setAttribute('role', 'status');
   label.append(picker);
-  panel.append(label, overview, gear.label, list, draftFeedback);
+  panel.append(label, overview);
+  const weeklyLink = document.createElement('a');
+  if (canvas === historyContext.canvas) {
+    weeklyLink.href = '#tyzdne';
+    weeklyLink.textContent = 'Týždenný objem tohto svalu';
+    weeklyLink.hidden = true;
+    weeklyLink.addEventListener('click', () => showWeeklyMuscle(picker.value));
+    panel.append(weeklyLink);
+  }
+  panel.append(gear.label, list, draftFeedback);
   canvas.closest('figure').after(panel);
   canvas.classList.add('interactive-map');
   const regions = Array.from(surfaceRegions).reverse();
@@ -29,6 +38,7 @@ function attachMusclePicker(canvas, context, getCounts, getBlocks, onLink) {
     const target = picker.value;
     list.replaceChildren();
     gear.label.hidden = !target;
+    weeklyLink.hidden = !target;
     if (!target) {
       overview.textContent = '';
       return;
