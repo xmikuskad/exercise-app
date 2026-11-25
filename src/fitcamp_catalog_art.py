@@ -92,6 +92,9 @@ POSES = {
     'toeraise': (
         ((99,33),(101,53),(100,99),(121,76),(157,73),(102,123),(101,153),(122,154)),
         ((99,33),(101,53),(100,99),(121,76),(157,73),(102,123),(101,153),(119,143))),
+    'hipadduction': (
+        ((30,130),(53,141),(103,144),(52,151),(24,150),(145,148),(179,150),(188,144)),
+        ((30,130),(53,141),(103,144),(52,151),(24,150),(143,138),(177,131),(185,124))),
     'scapwarm': (
         ((153,88),(135,103),(83,103),(135,128),(135,153),(83,150),(52,151),(40,151)),
         ((153,97),(135,112),(83,103),(135,132),(135,153),(83,150),(52,151),(40,151))),
@@ -123,7 +126,7 @@ POSES['bodyweightsquat'] = POSES['squatwarm']
 FRONT = {'lateral', 'reversefly', 'abduction'}
 LEG = {'goblet', 'split', 'extension', 'pronecurl', 'hipthrust', 'abduction', 'calfstanding', 'calfseated',
        'anklerock', 'squatwarm', 'hack', 'stepup', 'cablekick', 'singlecalf', 'bodyweightsquat', 'reverselunge', 'toeraise'}
-FLOOR = {'plank', 'sideplank', 'birddog', 'scapwarm', 'reversecrunch', 'floorpush', 'bandrow', 'proney'}
+FLOOR = {'plank', 'sideplank', 'birddog', 'scapwarm', 'reversecrunch', 'floorpush', 'bandrow', 'proney', 'hipadduction'}
 DUMBBELLS = {'goblet', 'dbpress', 'incline', 'supportedrow', 'lateral', 'biceps', 'hammer', 'dbshoulder', 'preacher'}
 TOP_VIEW = {'pallof', 'facepull', 'pecdeck', 'cablefly'}
 
@@ -266,6 +269,8 @@ def render(key, frames):
             line((118,knee[1]-6),(137,knee[1]-6),width=8)
         if key == 'sideplank':
             line((hip[0]+2,hip[1]-6),(156,146),(169,126),(184,127),width=7,color=light)
+        if key == 'hipadduction':
+            line((hip[0],hip[1]-5),(140,113),(126,151),(139,153),width=8,color=equipment)
         if key == 'dbpress':
             bench((44,114),(135,114))
         if key == 'incline':

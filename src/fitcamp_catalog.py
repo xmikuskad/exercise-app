@@ -8,7 +8,7 @@ EXERCISES.update(EXERCISES_LOW_EQUIPMENT)
 
 GROUPS = (
     ('quads', 'Predné stehná', ('press', 'goblet', 'bodyweightsquat', 'sit', 'split', 'reverselunge', 'stepup', 'hack', 'extension')),
-    ('posterior', 'Zadok a zadné stehná', ('curl', 'bridge', 'pronecurl', 'hipthrust', 'cablekick', 'abduction')),
+    ('posterior', 'Zadok, zadné a vnútorné stehná', ('curl', 'bridge', 'pronecurl', 'hipthrust', 'cablekick', 'abduction', 'hipadduction')),
     ('calves', 'Lýtka a predkolenie', ('calfstanding', 'calfseated', 'singlecalf', 'toeraise')),
     ('pushes', 'Hrudník', ('chest', 'push', 'floorpush', 'dbpress', 'incline', 'pecdeck', 'cablefly')),
     ('pulls', 'Chrbát', ('row', 'lat', 'bandrow', 'dbrow', 'supportedrow', 'assistpull', 'straightpull')),
@@ -28,7 +28,7 @@ PRIORITY = (
                                     'dbshoulder', 'cablecurl', 'singletricep', 'bodyweightsquat', 'reverselunge', 'floorpush', 'bandrow')),
     ('accessory', 'Doplnok', ('extension', 'cablekick', 'abduction', 'pecdeck', 'cablefly',
                              'straightpull', 'lateral', 'reversefly', 'facepull', 'preacher',
-                             'hammer', 'overhead', 'reversecrunch', 'proney', 'toeraise')),
+                             'hammer', 'overhead', 'reversecrunch', 'proney', 'toeraise', 'hipadduction')),
 )
 
 # The exercise list, suggested prescriptions and diagram frames share these IDs.
@@ -45,6 +45,7 @@ PRESCRIPTIONS = {
     'pecdeck': '10–15', 'cablefly': '10–15', 'assistpull': '6–10',
     'cablecurl': '10–15', 'preacher': '10–15 / strana', 'singletricep': '10–15 / strana',
     'reverselunge': '6–10 / strana', 'floorpush': '6–12', 'bandrow': '10–15', 'proney': '8–12', 'toeraise': '10–15',
+    'hipadduction': '8–12 / strana',
 }
 
 EXERCISES.update({

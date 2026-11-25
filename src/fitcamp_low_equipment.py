@@ -35,6 +35,12 @@ EXERCISES_LOW_EQUIPMENT = {
         'Zdvihni predky oboch chodidiel smerom k predkoleniam. Päty ostávajú na mieste. Špičky pomaly polož späť.',
         'Nakláňanie trupu dozadu alebo kývanie celým telom. Pohyb vychádza z členkov.',
         'Ľahšiu verziu urob v sede s rovnakým pohybom členkov.'),
+    'hipadduction': ('Priťahovanie stehna v ľahu na boku', 'Side-Lying Hip Adduction · vnútorné stehná',
+        ('Spodná noha pri podložke', 'Spodná noha mierne zdvihnutá'), 'Stačí podložka a priestor na vystretie nôh.',
+        'Ľahni si na bok a podopri si hlavu. Spodnú nohu vystri. Horné koleno pokrč a chodidlo polož pred koleno spodnej nohy.',
+        'S výdychom zdvihni vystretú spodnú nohu o kúsok hore. Panvu drž na boku a potom nohu s nádychom pomaly spusť. Po sérii vymeň stranu.',
+        'Prevaľovanie panvy dozadu, švih alebo zdvíhanie hornej nohy. Zmenši rozsah, kým je pohyb plynulý.',
+        'Začni krátkym pohybom s vlastnou váhou a urob rovnaký počet opakovaní na druhej strane.'),
 }
 
 CHECKS_LOW_EQUIPMENT = {
@@ -44,6 +50,7 @@ CHECKS_LOW_EQUIPMENT = {
     'bandrow': ('Skontroluj poškodenie gumy a oporu o chodidlá. Pri neistom uchytení cvik vynechaj.', 'Trup ostáva vzpriamený a ramená nestúpajú.', 'Použi ľahšiu gumu, ak musíš trhnúť alebo sa zakloniť.'),
     'proney': ('Začni bez záťaže a s uvoľneným krkom.', 'Dvíhajú sa ruky, kým spodné rebrá zostávajú na podložke.', 'Zmenši rozsah, ak napätie cítiš hlavne v krku alebo v krížoch.'),
     'toeraise': ('Over stabilitu opory a polož obe päty na zem.', 'Cíť pohyb pri prednom predkolení. Ramená a boky ostávajú približne nad sebou.', 'Zmenši rozsah, ak ťa pri dvíhaní ťahá dozadu alebo musíš pokrčiť kolená.'),
+    'hipadduction': ('Horné chodidlo pevne opri pred spodnou nohou.', 'Hýbe sa spodná noha. Hrudník a panva zostávajú otočené do strany.', 'Ak strácaš stabilitu, opri hornú dlaň o podložku a zdvih skráť.'),
 }
 
 ROLES_LOW_EQUIPMENT = {
@@ -53,4 +60,5 @@ ROLES_LOW_EQUIPMENT = {
     'bandrow': ('lat rhomb trap', 'biceps brach brad drear'),
     'proney': ('trap', 'drear rotator'),
     'toeraise': ('tibant', ''),
+    'hipadduction': ('add', ''),
 }

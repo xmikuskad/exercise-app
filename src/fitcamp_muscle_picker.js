@@ -1,3 +1,8 @@
+function muscleMapRepresentation(id) {
+  if (!surfaceRegions.has(id)) return 'Iba v zozname';
+  return coverageData.schematic.includes(id) ? 'Schématická oblasť' : 'Zakreslené na postave';
+}
+
 function attachMusclePicker(canvas, context, getCounts, getBlocks, onLink) {
   const panel = document.createElement('div');
   panel.className = 'muscle-picker';
@@ -46,7 +51,7 @@ function attachMusclePicker(canvas, context, getCounts, getBlocks, onLink) {
     const count = getCounts().get(target);
     const direct = count?.main ?? 0;
     const support = count?.secondary ?? 0;
-    let text = direct + '× priamo · ' + support + '× pomocne';
+    let text = muscleMapRepresentation(target) + ' · ' + direct + '× priamo · ' + support + '× pomocne';
     if (getBlocks && direct) {
       const blocks = getBlocks().filter(block => cards.get(block.exercise).dataset.main.split(' ').includes(target));
       const logged = blocks.reduce((total, block) => total + block.sets.length, 0);
@@ -66,8 +71,8 @@ function attachMusclePicker(canvas, context, getCounts, getBlocks, onLink) {
     const available = recommendationCards.filter(item => item.main.includes(target));
     const matches = available.filter(({card}) => !gear.select.value || card.dataset.equipmentKind === gear.select.value)
       .sort((a, b) => a.priority - b.priority);
-    overview.textContent = text + (matches.length ? '' : available.length
-      ? ' · S týmto vybavením tu nie je priamy cvik.' : ' · V katalógu zatiaľ chýba priamy cvik.');
+    overview.textContent = text + (matches.length ? ' · Priame cviky v katalógu · ' + available.length : available.length
+      ? ' · S týmto vybavením tu nie je priamy cvik.' : ' · V katalógu iba pomocné zapojenie.');
     for (const {card} of matches) {
       const entry = document.createElement('li');
       const link = exerciseLink(card.id);
@@ -115,3 +120,25 @@ attachMusclePicker(coverageCanvas, coverageCanvasContext, () => completedCoverag
 attachMusclePicker(historyContext.canvas, historyContext, () => historicalRoles, () =>
   workoutHistory.filter(workout => selectedWorkoutIds.has(workout.id)).flatMap(workout => workout.exercises));
 attachMusclePicker(planCanvasContext.canvas, planCanvasContext, () => planCounts);
+
+const anatomyCatalog = document.getElementById('anatomy-catalog');
+for (const id of Object.keys(muscles).sort((a, b) => muscles[a].localeCompare(muscles[b], 'sk'))) {
+  const row = document.createElement('li');
+  const summary = document.createElement('div');
+  const title = document.createElement('strong');
+  const coverage = document.createElement('small');
+  const direct = recommendationCards.filter(item => item.main.includes(id)).sort((a, b) => a.priority - b.priority);
+  const support = recommendationCards.filter(({card}) => card.dataset.secondary.split(' ').includes(id)).length;
+  row.dataset.muscle = id;
+  title.textContent = muscles[id];
+  coverage.textContent = muscleMapRepresentation(id) + ' · ' + (direct.length ? 'Priame cviky · ' + direct.length
+    : support ? 'V katalógu iba pomocne' : 'Zatiaľ bez cviku');
+  summary.append(title, coverage);
+  if (direct.length) {
+    const example = exerciseLink(direct[0].card.id);
+    example.className = 'anatomy-example';
+    summary.append(example);
+  }
+  row.append(summary);
+  anatomyCatalog.append(row);
+}

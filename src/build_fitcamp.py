@@ -43,7 +43,7 @@ DUMBBELL_LOAD = {'goblet', 'dbpress', 'incline', 'dbrow', 'supportedrow', 'later
 BODYWEIGHT = {
     'sit', 'push', 'bridge', 'split', 'calfstanding', 'singlecalf', 'deadbug',
     'plank', 'sideplank', 'birddog', 'reversecrunch', 'bodyweightsquat', 'reverselunge',
-    'floorpush', 'proney', 'toeraise',
+    'floorpush', 'proney', 'toeraise', 'hipadduction',
 }
 MACHINE_LOAD = {'press', 'chest', 'row', 'curl', 'lat', 'extension', 'pronecurl', 'abduction',
                 'calfseated', 'straightpull', 'shoulderpress', 'reversefly', 'facepull', 'pushdown',
@@ -161,8 +161,6 @@ def exercise_card(key, exercise):
           </div>
           <p class="exercise-feedback subtle" role="status" hidden></p>
         </div>
-        <p class="exercise-setup">{escape(setup)}</p>
-        <a class="exercise-technique-link" href="#{key}-technique">Ukážka a technika ↓</a>
         <div class="set-log-slot" id="{key}-log">
           <div class="set-log-result" hidden>
             <p role="status" class="set-log-result-text"></p>
@@ -170,43 +168,56 @@ def exercise_card(key, exercise):
             <a href="#cviky">Vybrať ďalší cvik</a>
           </div>
         </div>
-        <div id="{key}-technique" class="exercise-demo">
-          <div class="demo-actions">
-            <button class="demo-toggle" type="button" aria-expanded="false" aria-controls="{key}-video">Prehrať ukážku</button>
-            {demo_reference(key)}
-          </div>
+        <div class="exercise-jumps">
+          <a class="exercise-technique-link" href="#{key}-technique">Technika</a>
+          <a class="exercise-muscle-link" href="#{key}-muscles">Svaly</a>
+          <a href="#{key}-details" aria-label="Vybavenie a náhrady">Vybavenie</a>
+        </div>
+        <section id="{key}-technique" class="exercise-guide">
+          <h3>Technika</h3>
+          <div class="exercise-demo">
           <figure class="demo-stills">
             <img src="{diagram(key)}" alt="{alt}" width="432" height="180">
             <figcaption class="labels" aria-hidden="true"><span>{escape(first)}</span><span>{escape(second)}</span></figcaption>
           </figure>
+          <div class="demo-actions">
+            <button class="demo-toggle" type="button" aria-expanded="false" aria-controls="{key}-video">Prehrať ukážku</button>
+            {demo_reference(key)}
+          </div>
           <figure class="demo-motion" id="{key}-video" hidden>
             <video data-src="{video_data(key)}" width="432" height="264" controls playsinline muted preload="none"
                    aria-label="{escape(name, quote=True)} – schematická video ukážka"></video>
             <figcaption class="demo-caption"><strong>Schematická ukážka.</strong> {escape(PRACTICE_CAPTIONS[key])}</figcaption>
           </figure>
-        </div>
-        <details class="muscle-map">
-          <summary>Mapa zapojených svalov</summary>
+          </div>
+          <dl>
+            <dt>Nastavenie</dt><dd>{escape(setup)}</dd>
+            <dt>Pohyb a dýchanie</dt><dd>{escape(movement)}</dd>
+            <dt>Časté chyby</dt><dd>{escape(mistakes)}</dd>
+          </dl>
+        </section>
+        <section class="muscle-map exercise-guide" id="{key}-muscles">
+          <h3>Zapojené svaly</h3>
+          <p class="muscle-names"><strong class="map-key main-key">Hlavné</strong> {escape(main_names)}<br>
+          <strong class="map-key support-key">Pomocné</strong> {escape(secondary_names or '—')}</p>
           <figure>
             <img src="{body_map(main, secondary)}" loading="lazy" width="480" height="420"
                  alt="{escape('Mapa spredu a zozadu. Hlavné svaly: ' + main_names + '. Pomocné: ' + (secondary_names or '—'), quote=True)}">
             <figcaption class="labels" aria-hidden="true"><span>Spredu</span><span>Zozadu</span></figcaption>
           </figure>
-          <p class="muscle-names"><strong class="map-key main-key">Hlavné</strong> {escape(main_names)}<br>
-          <strong class="map-key support-key">Pomocné</strong> {escape(secondary_names or '—')}</p>
-          <p class="subtle map-note">Viditeľné oblasti sú orientačné. Hlbšie svaly nájdeš v zozname.</p>
-        </details>
-        <div class="checkpoints">
-          <p><strong>Kontrola techniky</strong></p>
-          <ul>{checks}</ul>
-        </div>
-        <dl>
-          <dt>Ako ho nájdeš a čo potrebuješ</dt><dd>{escape(recognition)} {escape(location)}</dd>
-          <dt>Nastavenie</dt><dd>{escape(setup)}</dd>
-          <dt>Pohyb a dýchanie</dt><dd>{escape(movement)}</dd>
-          <dt>Časté chyby</dt><dd>{escape(mistakes)}</dd>
-          <dt>Variant alebo náhrada</dt><dd>{alternative}</dd>
-        </dl>
+          <p class="subtle map-note">Postava ukazuje orientačné oblasti. Zoznam zahŕňa aj nezakreslené svaly.</p>
+        </section>
+        <section class="exercise-guide" id="{key}-details">
+          <h3>Vybavenie a náhrady</h3>
+          <dl>
+            <dt>Ako ho nájdeš a čo potrebuješ</dt><dd>{escape(recognition)} {escape(location)}</dd>
+            <dt>Variant alebo náhrada</dt><dd>{alternative}</dd>
+          </dl>
+          <details class="exercise-checks">
+            <summary>Podrobná kontrola techniky</summary>
+            <div class="checkpoints"><ul>{checks}</ul></div>
+          </details>
+        </section>
         <details class="track">
           <summary>Spätný zápis alebo poznámka</summary>
           <div class="manual-entry">

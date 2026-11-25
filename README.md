@@ -2,11 +2,12 @@
 
 [Otvoriť aplikáciu](https://xmikuskad.github.io/exercise-app/)
 
-Mobilná príručka s 52 cvikmi pre voľný tréning aj tréning podľa šablóny. V histórii sa dá pozrieť vývoj výkonu, porovnať pokrytie svalov a nájsť cviky na chýbajúce partie. Cviky majú slovenské aj anglické názvy, vstavanú ukážku a odkaz na online príklad. Záznamy sa dajú exportovať do CSV alebo JSON.
+Mobilná príručka s 53 cvikmi pre voľný tréning aj tréning podľa šablóny. V histórii sa dá pozrieť vývoj výkonu, porovnať pokrytie svalov a nájsť cviky na chýbajúce partie. Cviky majú slovenské aj anglické názvy, vstavanú ukážku a odkaz na online príklad. Záznamy sa dajú exportovať do CSV alebo JSON.
 
 - [Zámer produktu a hlavné používateľské postupy](product/PRODUCT.md)
 - [Údržba, kompatibilita a nasadenie](product/MAINTAINING.md)
 - [Výskumné podklady k pokrytiu a novým cvikom](product/RESEARCH.md)
+- [Audit anatomickej mapy a pokrytia katalógu](product/ANATOMY-AUDIT.md)
 - [TODO a poradie etáp](TODO.md)
 - [Dizajn mobilného webu](DESIGN.md) · [Návrh redizajnu](product/UI-PROPOSAL.md) · [Výskum UX](product/UI-RESEARCH.md)
 

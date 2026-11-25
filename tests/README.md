@@ -19,6 +19,7 @@ Prvý príkaz prejde hlavné používateľské scenáre v Chrome. Ďalšie dva s
 | Porovnanie výkonu | Rovnaké opakovania, rovnaká váha, chýbajúce obdobie, hranice dátumov, časová výdrž, dopomoc, oddelené strany a zachovanie údajov |
 | Týždenný objem | Hranice kalendárneho týždňa, zapísané priame série, opakovaný prekryv, pomocné zapojenie, staré záznamy bez sérií a odporúčania podľa vlastnej histórie |
 | Rozcvička a katalóg | Vyhľadávanie, zobrazenie cviku, kontrola videí, 18 rozcvičovacích variantov, uloženie výberu |
+| Detail a anatómia | Skratka na svalovú mapu, navigácia v Pomoci, klik na schématickú oblasť pri lopatke, svaly iba v zozname a priamy cvik na vnútorné stehná |
 | Údaje a zobrazenie | CSV, JSON, staršia záloha, odmietnutie poškodenej zálohy bez zmeny údajov, úzky mobilný viewport a kontrola chýb stránky |
 
 Pri inom umiestnení prehliadača nastav `CHROME_BIN` alebo `FIREFOX_BIN`. Firefox musí podporovať WebDriver BiDi. S `FITCAMP_TEST_URL` sa scenáre spustia proti nasadenej adrese. Snímky a profily sa ukladajú do ignorovaného priečinka `.test-artifacts/`.

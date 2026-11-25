@@ -8,7 +8,7 @@ Exehel pomáha pripraviť tréning doma, odcvičiť ho podľa šablóny alebo po
 - [x] Zaviesť samostatné obrazovky Dnes, Plány, Cviky a História. Presunúť rozcvičku k štartu a zálohy do správy dát pod históriou.
 - [x] Ponúknuť voľný tréning aj štart zo zostavy. Pridať návrat k aktívnemu cviku a živej mape pri prechádzaní aplikácie.
 - [x] Zjednodušiť zápis na detaile cviku. Ukázať posledné série, kopírovanie rovnakých hodnôt, automaticky uložiť rozpísané polia a po potvrdení otvoriť ďalší cvik plánu.
-- [ ] Zjednotiť pokyny k technike, svalovú ilustráciu a rozšírené informácie na kompaktnom detaile. Poznámky ku klubu a svalovici sprístupniť zo spoločnej pomoci.
+- [x] Zjednotiť techniku, svalovú ilustráciu a informácie o vybavení na detaile cviku. Klubové informácie a svalovicu sprístupniť zo spoločnej Pomoci.
 
 ## 2. Šablóny a história
 
@@ -23,7 +23,7 @@ Exehel pomáha pripraviť tréning doma, odcvičiť ho podľa šablóny alebo po
 - [x] Zvýrazniť kvadricepsy na prednej strane stehien. Doplniť predné predkolenie aj samostatný cieľový cvik.
 - [x] Odkázať z kliknutia na oblasť aj z textového výberu na kartu vhodného cviku. Overiť tiež sivé, zatiaľ neodcvičené oblasti.
 - [x] Ponúknuť filter posledných 28 dní, počet zapísaných priamych sérií a dátum posledného priameho tréningu vybraného svalu. Zachovať upozornenie pri treťom priamom cviku počas tréningu.
-- [ ] Dokončiť audit vnútra stehien, lopatiek, predlaktí a ďalších hlbších oblastí. Rozlíšiť vizuálne zakreslenie svalu a dostupnosť priameho cviku.
+- [x] Dokončiť [anatomický audit](product/ANATOMY-AUDIT.md). Rozlíšiť zakreslenie a pokrytie katalógu, zvýrazniť vnútorné stehná a predlaktie, doplniť schému rombických svalov aj priamy cvik na vnútorné stehná.
 - [x] Z mapy pridať cvik priamo do rozpracovaného návrhu plánu a filtrovať výber podľa vybavenia.
 - [x] Zobraziť týždenné priame série a opakované prekryvy. Porovnať nižší objem s vlastnými staršími záznamami a rozlíšiť iba pomocné zapojenie, chýbajúci zápis a neúplný počet sérií.
 

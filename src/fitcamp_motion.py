@@ -82,6 +82,7 @@ PRACTICE_CAPTIONS = {
     'bandrow': 'Sleduj lakeť smerujúci dozadu. Pri návrate brzdi ťah gumy.',
     'proney': 'Ruky drž šikmo v tvare Y, ako ukazuje online video. Zdvih je malý a trup zostáva na podložke.',
     'toeraise': 'Obe päty nechaj položené a pomaly zdvihni špičky. Rukami sa pridrž pevnej opory.',
+    'hipadduction': 'Zvýraznená je vystretá spodná noha. Horné chodidlo zostáva opreté. Potom vymeň stranu.',
 }
 
 

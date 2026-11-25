@@ -38,8 +38,17 @@ main h2{font-size:clamp(1.35rem,4.5vw,1.85rem)}
 .exercise-view .view-exercise .english-name{display:block;margin:.28rem 0;letter-spacing:0;font-size:.62em}
 .exercise-view .view-exercise:has(#inline-set-panel) .exercise-demo{margin-top:.85rem}
 .exercise-view .inside{padding:0 1rem 1rem}
-.exercise-setup{margin:.45rem 0 0;color:var(--muted)}
-.exercise-technique-link{display:inline-flex;align-items:center;min-height:44px}
+.exercise-jumps{display:flex;flex-wrap:wrap;gap:0 .85rem;margin:.55rem 0 .3rem}
+.exercise-jumps a{display:inline-flex;align-items:center;min-height:44px;font-weight:700;font-size:.88rem}
+.exercise-guide{margin:0;padding:.8rem 0 1rem;border-top:1px solid var(--line)}
+.exercise-guide h3{margin:0 0 .6rem}
+.exercise-guide dl{margin:.65rem 0 0}
+.exercise-guide figure{margin:0 auto .45rem}
+.exercise-guide .muscle-names{margin:0 0 .55rem}
+.exercise-checks>summary{padding-left:0}
+.exercise-checks .checkpoints{margin:0}
+#anatomy-catalog .anatomy-example{display:inline-flex;align-items:center;min-height:44px}
+#pomoc>section{scroll-margin-top:.65rem}
 .exercise-view .workout-running{background:transparent;border:0;border-block:1px solid var(--line);border-radius:0;padding:.85rem 0;margin:0}
 .exercise-view .set-sheet input{font-variant-numeric:tabular-nums}
 .workout-running #finish-running{width:100%}

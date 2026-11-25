@@ -124,7 +124,7 @@ try {
       sources: performance.getEntriesByType('resource').filter(r => !r.name.startsWith('data:')).length
     };
   })()`);
-  assert.deepEqual(rendered, {images:105, landscapeOverflow:false, missingTargets:0, sources:0});
+  assert.deepEqual(rendered, {images:107, landscapeOverflow:false, missingTargets:0, sources:0});
   assert.equal(await inspect(`[...document.querySelectorAll('.card')].every(card =>
     card.querySelector('.exercise-name .english-name[lang=en]').textContent.startsWith('(') &&
     card.querySelector('.exercise-name .english-name[lang=en]').textContent.endsWith(')') &&
@@ -143,13 +143,14 @@ try {
       demo.height >= 48 && Math.abs(demo.height - source.height) < 1 && Math.abs(demo.width - source.width) < 1;
   })()`), true);
   await screenshot('fitcamp-exercise.png');
-  await inspect(`document.querySelector('#press .checkpoints').scrollIntoView({block:'start'})`);
+  await inspect(`document.querySelector('#press .exercise-checks').open = true;
+    document.querySelector('#press .checkpoints').scrollIntoView({block:'start'})`);
   await screenshot('fitcamp-checkpoints.png');
   assert.equal(await inspect(`[...document.querySelectorAll('video')].every(video =>
     !video.hasAttribute('src') && video.dataset.src.startsWith('data:video/mp4;base64,'))`), true);
-  assert.equal(await inspect(`document.querySelectorAll('.demo-source[href^="https://"]').length`), 53);
-  assert.equal(await inspect(`document.querySelectorAll('.card .priority').length`), 52);
-  assert.equal(await inspect(`document.querySelectorAll('.card .muscle-map img').length`), 52);
+  assert.equal(await inspect(`document.querySelectorAll('.demo-source[href^="https://"]').length`), 54);
+  assert.equal(await inspect(`document.querySelectorAll('.card .priority').length`), 53);
+  assert.equal(await inspect(`document.querySelectorAll('.card .muscle-map img').length`), 53);
   assert.equal(await inspect(`document.querySelector('#history-results').hidden`), true);
   assert.equal(await inspect(`document.querySelectorAll('.category').length`), 9);
   assert.equal(await inspect(`[...document.querySelectorAll('.category')].every(group => group.querySelector('.base'))`), true);
@@ -197,7 +198,7 @@ try {
     }
     return results;
   })()`);
-  assert.equal(clipTest.length, 53);
+  assert.equal(clipTest.length, 54);
   assert.deepEqual(clipTest.filter(clip => !clip.ok), []);
   await inspect(`document.querySelector("#press a[href='#sit']").click()`);
   await delay(250);
@@ -226,7 +227,7 @@ try {
   assert.equal(await inspect(`document.querySelectorAll('.card:not([hidden])').length`), 1);
   assert.equal(await inspect(`document.querySelector('.card:not([hidden])').id`), 'row');
   await inspect(`document.querySelector('#recent-items a').click()`);
-  assert.equal(await inspect(`document.querySelectorAll('.card:not([hidden])').length`), 52);
+  assert.equal(await inspect(`document.querySelectorAll('.card:not([hidden])').length`), 53);
 
   const pressButton = (id, button) =>
     inspect(`document.querySelector('#${id} .${button}').click()`);
@@ -272,6 +273,17 @@ try {
       clientY:bounds.top + bounds.height * 333/420}));
   })()`);
   assert.equal(await inspect(`document.querySelector('#live-map-view .muscle-picker select').value`), 'tibant');
+  await inspect(`(() => {
+    const canvas = document.querySelector('#coverage-canvas');
+    const bounds = canvas.getBoundingClientRect();
+    canvas.dispatchEvent(new MouseEvent('click', {
+      clientX:bounds.left + bounds.width * 370/480, clientY:bounds.top + bounds.height * 132/420,
+    }));
+  })()`);
+  assert.equal(await inspect(`document.querySelector('#live-map-view .muscle-picker select').value`), 'rhomb');
+  assert.equal(await inspect(`document.querySelector('#live-map-view .muscle-picker p').textContent.includes('Schématická oblasť')`), true);
+  await inspect(`const liveMuscle = document.querySelector('#live-map-view .muscle-picker select');
+    liveMuscle.value = 'tibant'; liveMuscle.dispatchEvent(new Event('change'))`);
   assert.equal(await inspect(`Boolean(document.querySelector('#live-map-view .muscle-picker a[href="#toeraise"]'))`), true);
   await screenshot('fitcamp-coverage-pending.png');
   await inspect(`document.querySelector('#coverage-dialog button').click()`);
@@ -438,8 +450,9 @@ try {
   await screenshot('fitcamp-side-plank.png');
   await inspect(`location.hash = '#biceps'`);
   await delay(150);
-  await inspect(`document.querySelector('#biceps .muscle-map summary').click();
-    document.querySelector('#biceps .muscle-map').scrollIntoView({block:'start'})`);
+  await clickUI('#biceps .exercise-muscle-link');
+  await waitFor(`location.hash === '#biceps-muscles' && document.querySelector('#biceps-muscles img').getClientRects().length > 0`,
+    'Muscle shortcut did not open the map');
   await screenshot('fitcamp-muscle-map.png');
   await inspect(`location.hash = '#rozc'`);
   await delay(150);
@@ -689,6 +702,35 @@ try {
     button.textContent.includes('Predný píšťalový sval'))`), true);
   assert.equal(await inspect('document.documentElement.scrollWidth <= innerWidth'), true);
   await screenshot('fitcamp-weekly-volume.png');
+  await inspect(`location.hash = '#teraz'`);
+  await waitFor(`!document.querySelector('#teraz').hidden`, 'Today did not open');
+  await clickUI('#teraz a[href="#pomoc"]');
+  await waitFor(`!document.querySelector('#pomoc').hidden`, 'Help did not open');
+  await clickUI('#pomoc a[href="#svalovica"]');
+  await waitFor(`location.hash === '#svalovica' && !document.querySelector('#pomoc').hidden &&
+    document.querySelector('#svalovica').getBoundingClientRect().top < 130`, 'Help topic did not scroll into view');
+  await clickUI('#pomoc a[href="#fitcamp"]');
+  await waitFor(`location.hash === '#fitcamp' && !document.querySelector('#pomoc').hidden &&
+    document.querySelector('#fitcamp').getBoundingClientRect().top < 130`, 'Club information did not scroll into view');
+  await clickUI('#pomoc a[href="#anatomia"]');
+  await waitFor(`!document.querySelector('#anatomia').hidden`, 'Anatomy catalog did not open');
+  assert.deepEqual(await inspect(`['add','rhomb','brach','brad','tfl'].map(id => {
+    const row = document.querySelector('#anatomy-catalog [data-muscle="' + id + '"]');
+    return [row.querySelector('small').textContent, row.querySelector('a')?.hash ?? null];
+  })`), [
+    ['Zakreslené na postave · Priame cviky · 1', '#hipadduction'],
+    ['Schématická oblasť · Priame cviky · 5', '#row'],
+    ['Iba v zozname · Priame cviky · 1', '#hammer'],
+    ['Zakreslené na postave · Priame cviky · 1', '#hammer'],
+    ['Zakreslené na postave · V katalógu iba pomocne', null],
+  ]);
+  await clickUI('#anatomy-catalog [data-muscle=add] a');
+  await waitFor(`document.querySelector('#hipadduction').classList.contains('view-exercise')`, 'Adduction exercise did not open');
+  assert.equal(await inspect(`document.querySelector('#hipadduction').dataset.perSide === 'yes' &&
+    document.querySelector('#hipadduction').dataset.main === 'add' &&
+    document.querySelector('#hipadduction .demo-source').href.includes('hip-adduction-in-side-lying')`), true);
+  assert.equal(await inspect('document.documentElement.scrollWidth <= innerWidth'), true);
+  await screenshot('fitcamp-adduction.png');
   await assertCleanPage();
   await inspect(`localStorage.clear(); location.hash = '#teraz'`);
   await command('Page.reload');
