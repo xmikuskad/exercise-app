@@ -166,7 +166,7 @@ function downloadJournalFile(contents, type, filename) {
 
 document.getElementById('export-log').addEventListener('click', () => {
   const backup = {version:1, entries, workouts:workoutHistory, plans:savedPlans};
-  downloadJournalFile(JSON.stringify(backup), 'application/json', 'fitcamp-zaloha-' + today() + '.json');
+  downloadJournalFile(JSON.stringify(backup), 'application/json', 'exehel-zaloha-' + today() + '.json');
 });
 
 document.getElementById('import-log').addEventListener('click', () => backupInput.click());

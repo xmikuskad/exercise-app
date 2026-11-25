@@ -68,7 +68,7 @@ try {
       {offline:true, latency:0, downloadThroughput:0, uploadThroughput:0});
   }
   await command('Page.navigate', {url:pageURL});
-  for (let i = 0; i < 60 && !await inspect('document.querySelectorAll("details.card").length === 51'); i++)
+  for (let i = 0; i < 60 && !await inspect('document.body.classList.contains("app-ready")'); i++)
     await delay(100);
   const rendered = await inspect(`(async () => {
     await Promise.all(Array.from(document.images, image => { image.loading = 'eager'; return image.decode(); }));
@@ -79,7 +79,7 @@ try {
       sources: performance.getEntriesByType('resource').filter(r => !r.name.startsWith('data:')).length
     };
   })()`);
-  assert.deepEqual(rendered, {images:102, landscapeOverflow:false, missingTargets:0, sources:0});
+  assert.deepEqual(rendered, {images:104, landscapeOverflow:false, missingTargets:0, sources:0});
   assert.equal(await inspect(`[...document.querySelectorAll('.card')].every(card =>
     card.querySelector('.exercise-name .english-name[lang=en]').textContent.startsWith('(') &&
     card.querySelector('.exercise-name .english-name[lang=en]').textContent.endsWith(')') &&
@@ -102,9 +102,9 @@ try {
   await screenshot('fitcamp-checkpoints.png');
   assert.equal(await inspect(`[...document.querySelectorAll('video')].every(video =>
     !video.hasAttribute('src') && video.dataset.src.startsWith('data:video/mp4;base64,'))`), true);
-  assert.equal(await inspect(`document.querySelectorAll('.demo-source[href^="https://"]').length`), 57);
-  assert.equal(await inspect(`document.querySelectorAll('.card .priority').length`), 51);
-  assert.equal(await inspect(`document.querySelectorAll('.card .muscle-map img').length`), 51);
+  assert.equal(await inspect(`document.querySelectorAll('.demo-source[href^="https://"]').length`), 58);
+  assert.equal(await inspect(`document.querySelectorAll('.card .priority').length`), 52);
+  assert.equal(await inspect(`document.querySelectorAll('.card .muscle-map img').length`), 52);
   assert.equal(await inspect(`document.querySelector('#history-results').hidden`), true);
   assert.equal(await inspect(`document.querySelectorAll('.category').length`), 9);
   assert.equal(await inspect(`[...document.querySelectorAll('.category')].every(group => group.querySelector('.base'))`), true);
@@ -152,7 +152,7 @@ try {
     }
     return results;
   })()`);
-  assert.equal(clipTest.length, 57);
+  assert.equal(clipTest.length, 58);
   assert.deepEqual(clipTest.filter(clip => !clip.ok), []);
   await inspect(`document.querySelector("#press a[href='#sit']").click()`);
   await delay(250);
@@ -176,12 +176,12 @@ try {
 
   await inspect(`const testSearch = document.querySelector('#exercise-search');
     testSearch.value = 'lytka'; testSearch.dispatchEvent(new Event('input'));`);
-  assert.equal(await inspect(`document.querySelectorAll('.card:not([hidden])').length`), 3);
+  assert.equal(await inspect(`document.querySelectorAll('.card:not([hidden])').length`), 4);
   await inspect(`testSearch.value = 'low row'; testSearch.dispatchEvent(new Event('input'))`);
   assert.equal(await inspect(`document.querySelectorAll('.card:not([hidden])').length`), 1);
   assert.equal(await inspect(`document.querySelector('.card:not([hidden])').id`), 'row');
   await inspect(`document.querySelector('#recent-items a').click()`);
-  assert.equal(await inspect(`document.querySelectorAll('.card:not([hidden])').length`), 51);
+  assert.equal(await inspect(`document.querySelectorAll('.card:not([hidden])').length`), 52);
 
   const pressButton = (id, button) =>
     inspect(`document.querySelector('#${id} .${button}').click()`);
@@ -207,6 +207,11 @@ try {
       repInput.dispatchEvent(new Event('input', {bubbles:true}));
     })()
   `);
+  await inspect(`location.hash = 'teraz'`);
+  await delay(80);
+  assert.equal(await inspect(`!document.querySelector('#workout-start-panel').hidden && document.querySelector('#live-map-dock').hidden`), true);
+  await inspect(`document.querySelector('#start-free-workout').click()`);
+  assert.equal(await inspect(`!activeWorkout.plan && !document.querySelector('#live-map-dock').hidden`), true);
   await inspect(`document.querySelector('#workout-pick').value = 'chest'; document.querySelector('#start-picked').click()`);
   await pressButton('row', 'start-exercise');
   assert.equal(await activeExercise(), 'chest');
@@ -215,6 +220,14 @@ try {
   await inspect(`document.querySelector('#live-map-dock').click()`);
   assert.equal(await inspect(`document.querySelector('#coverage-dialog').open &&
     document.querySelector('#live-map-view').closest('#coverage-dialog') !== null`), true);
+  await inspect(`(() => {
+    const canvas = document.querySelector('#coverage-canvas');
+    const bounds = canvas.getBoundingClientRect();
+    canvas.dispatchEvent(new MouseEvent('click', {clientX:bounds.left + bounds.width * 150/480,
+      clientY:bounds.top + bounds.height * 333/420}));
+  })()`);
+  assert.equal(await inspect(`document.querySelector('#live-map-view .muscle-picker select').value`), 'tibant');
+  assert.equal(await inspect(`Boolean(document.querySelector('#live-map-view .muscle-picker a[href="#toeraise"]'))`), true);
   await screenshot('fitcamp-coverage-pending.png');
   await inspect(`document.querySelector('#coverage-dialog button').click()`);
   await delay(120);
@@ -226,7 +239,6 @@ try {
   assert.equal(await inspect(`document.querySelectorAll('.set-sheet-group').length`), 3);
   await enterSet(0, '10', '27,5');
   await enterSet(1, '8', '30');
-  await inspect(`document.querySelector('#save-sets-draft').click()`);
   await command('Page.reload');
   for (let i = 0; i < 60 && await activeExercise() !== 'chest'; i++) await delay(100);
   assert.equal(await activeExercise(), 'chest', 'exercise running before reload should remain active');
@@ -362,6 +374,9 @@ try {
   assert.equal(await inspect(`document.querySelector('#history-results').hidden &&
     document.querySelectorAll('#workout-archive option').length === 3`), true);
   assert.equal(await workoutStorage(), savedWorkouts);
+  await inspect(`document.querySelector('#history-last-month').click()`);
+  assert.equal((await checkedWorkouts()).length, 2);
+  assert.equal(await inspect(`document.querySelector('#history-last-month').getAttribute('aria-pressed')`), 'true');
   await pressButton('chest', 'start-exercise');
   assert.equal(await inspect(`document.querySelector('#use-last-sets').hidden`), false);
   await inspect(`document.querySelector('#use-last-sets').click()`);
@@ -424,19 +439,40 @@ try {
   assert.equal(await activeExercise(), 'chest');
   assert.equal(await inspect(`document.querySelector('#planned-set-dose').textContent.includes('2 série')`), true);
   await enterSet(0, '9', '27,5');
+  assert.equal(await inspect(`document.querySelector('#repeat-set-values').hidden`), false);
+  await inspect(`document.querySelector('#repeat-set-values').click()`);
+  assert.equal(await inspect(`document.querySelectorAll('.set-row-amount')[1].value`), '9');
+  assert.equal(await inspect(`document.querySelector('#finish-running').textContent`), 'Uložiť a pokračovať');
   await inspect(`document.querySelector('#finish-running').click()`);
   assert.equal(await inspect(`document.querySelector('#plan-execution-status').textContent`), 'Hotovo 1 z 7');
-  assert.equal(await inspect(`document.querySelector('#chest .next-planned-exercise').hidden`), false);
-  await inspect(`document.querySelector('#chest .next-planned-exercise').click()`);
   assert.equal(await activeExercise(), 'press');
   await command('Page.reload');
   for (let i = 0; i < 60 && await activeExercise() !== 'press'; i++) await delay(100);
   assert.equal(await activeExercise(), 'press');
   assert.equal(await inspect(`document.querySelector('#plan-execution-status').textContent`), 'Hotovo 1 z 7');
-  assert.equal(await inspect(`getComputedStyle(document.getElementById('live-map-dock')).position`), 'fixed');
+  assert.equal(await inspect(`!document.getElementById('live-map-dock').hidden &&
+    getComputedStyle(document.querySelector('.app-header')).position === 'sticky'`), true);
   assert.equal(await inspect(`[...document.querySelectorAll('nav a')].every(a => !['#svalovica','#fitcamp'].includes(a.hash))`), true);
   await viewport(320);
+  await inspect(`location.hash = '#dennik'`);
+  await delay(100);
+  assert.equal(await inspect(`[...document.querySelectorAll('main > section:not([hidden])')].map(section => section.id).join(',')`), 'dennik');
+  await inspect(`document.querySelector('#history-workouts .history-workout').click()`);
+  await delay(80);
+  assert.equal(await inspect(`!document.querySelector('#historia-trening').hidden && document.querySelector('#history-workout-detail li') !== null`), true);
+  const savedCount = await inspect('savedPlans.length');
+  await inspect(`document.querySelector('#save-workout-template').click()`);
+  assert.equal(await inspect('savedPlans.length'), savedCount + 1);
+  assert.equal(await inspect(`savedPlans[0].items.length > 0 && activeWorkout.running.exercise === 'press'`), true);
+  await inspect(`location.hash = '#vykony'; performancePick.value = 'chest'; performancePick.dispatchEvent(new Event('change'))`);
+  await delay(80);
+  assert.equal(await inspect(`Boolean(document.getElementById('performance-data').querySelector('progress'))`), true);
   assert.equal(await inspect('document.documentElement.scrollWidth <= innerWidth'), true);
+  await inspect(`document.querySelector('#press .discard-exercise').click();
+    document.querySelector('#finish-workout').click();
+    document.querySelector('#start-plan-preset').click()`);
+  assert.equal(await activeExercise(), 'press');
+  assert.equal(await inspect('activeWorkout.plan.name'), 'Celé telo A');
   console.log('Chrome: workout plans, inline logging, muscle maps, retrospective coverage, and legacy JSON/CSV passed.');
 } finally {
   ws?.close();

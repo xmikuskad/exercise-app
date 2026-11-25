@@ -5,8 +5,8 @@
 <meta http-equiv="Content-Security-Policy" content="@@CSP@@">
 <meta name="referrer" content="no-referrer">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#102b2c">
-<title>FitCamp · zásobník cvikov a denník</title>
+<meta name="theme-color" content="#f3f5ee">
+<title>Exehel · silový tréning</title>
 <style>
 :root{color-scheme:light;--ink:#152e31;--muted:#475e61;--paper:#f1f5f3;--line:#cfded9;--teal:#006c57;--dark:#102b2c;--white:#fff}
 *{box-sizing:border-box}
@@ -221,32 +221,46 @@ main{padding-bottom:5.6rem}
 @media(max-width:440px){.nav-inner{padding-inline:.15rem}.nav-inner a{flex-grow:1;text-align:center;padding-inline:.28rem;font-size:.75rem}}
 @media(min-width:720px){.two{grid-template-columns:1fr 1fr}.three{grid-template-columns:repeat(3,1fr)}.nav-inner a{padding-inline:1rem}.live-map-dock canvas{width:76px}}
 @media print{nav,.back,.live-map-dock{display:none}header{color:var(--ink);background:#fff;padding:0 1rem}header p,.place{color:var(--ink)}details{break-inside:avoid}details>.inside{display:block;content-visibility:visible}}
+@@APP_STYLE@@
 </style>
 </head>
 <body>
-<header>
-  <div>
-    <span class="place">Form Factory FitCamp · Bratislava</span>
-    <h1>Tréning vo FitCampe</h1>
-    <p>Plánuj tréningy, zapisuj série a porovnaj si zapojenie svalov medzi návštevami.</p>
+<header class="app-header">
+  <div class="app-bar">
+    <a href="#teraz" class="wordmark"><span aria-hidden="true">E</span> Exehel</a>
+    <a id="resume-workout" href="#teraz" hidden>Tréning</a>
+    <button id="live-map-dock" class="live-map-dock" type="button" aria-haspopup="dialog" aria-label="Živá mapa svalov" hidden>
+      <canvas id="live-map-dock-canvas" width="144" height="126" aria-hidden="true"></canvas>
+      <span><strong>Svaly</strong><small id="live-map-dock-status" class="sr-only"></small></span>
+    </button>
   </div>
 </header>
-<nav aria-label="Sekcie príručky"><div class="nav-inner">
-  <a href="#teraz">Tréning</a><a href="#planovac">Plánovač</a><a href="#rozc">Rozcvička</a><a href="#cviky">Cviky</a><a href="#dennik">Denník</a>
+<nav class="app-nav" aria-label="Hlavné sekcie"><div class="nav-inner">
+  <a href="#teraz" aria-current="page">Dnes</a><a href="#planovac">Plány</a><a href="#cviky">Cviky</a><a href="#dennik">História</a>
 </div></nav>
 <main>
 <section id="teraz">
-  <h2>Aktuálny tréning</h2>
+  <h1>Dnes</h1>
+  <div id="workout-start-panel">
+    <div class="start-feature">
+      <h2>Tréning podľa plánu</h2>
+      <p>Vyber si pripravenú šablónu alebo vlastný plán.</p>
+      <a class="action-link save" href="#planovac">Vybrať plán</a>
+    </div>
+    <div class="start-links">
+      <button type="button" id="start-free-workout">Začať voľný tréning</button>
+      <a href="#rozc">Rozcvička <small>6 min</small></a>
+    </div>
+  </div>
   <div class="box workout-panel">
-    <p>Otvor kartu cviku. Po poslednej sérii zapíš všetky série naraz priamo v nej.</p>
+    <p id="free-workout-status" hidden>Voľný tréning</p>
     <div id="workout-picker" class="workout-picker">
       <label class="field" for="workout-pick">Cvik <select id="workout-pick"><option value="">Vyber cvik</option></select></label>
       <button id="start-picked" class="save" type="button">Začať cvik</button>
     </div>
     <div class="tools workout-controls">
       <button id="finish-workout" type="button" hidden>Ukončiť tréning</button>
-      <a href="#cviky">Technika cvikov</a>
-      <a href="#planovac">Naplánovať tréning</a>
+      <a href="#cviky">Vybrať v katalógu</a>
     </div>
     <p id="workout-status" role="status" class="subtle" hidden></p>
     <p id="workout-active" hidden>Prebieha · <a id="workout-active-link"></a> <output class="workout-clock" aria-live="off" aria-label="Trvanie cviku"></output></p>
@@ -258,20 +272,21 @@ main{padding-bottom:5.6rem}
     </div>
     <div id="set-panel-parking" hidden>
       <div id="inline-set-panel" class="workout-running">
-      <h3>Série v tomto tréningu</h3>
+      <h3>Dnešné série</h3>
       <p id="planned-set-dose" class="planned-dose subtle" hidden></p>
       <form id="record-set" novalidate>
         <div class="set-log-actions">
-          <button id="use-last-sets" type="button" hidden>Načítať minulé série</button>
+          <button id="use-last-sets" type="button" hidden>Použiť minulé</button>
         </div>
+        <p id="last-set-values" class="subtle" hidden></p>
         <div class="set-sheet set-sheet-head" aria-hidden="true"><span>Séria</span><span id="set-amount-label">Opakovania</span><span>Váha (kg)</span></div>
         <div id="set-sheet-rows" aria-label="Série tohto cviku"></div>
         <small id="set-weight-hint" class="set-hint"></small>
         <p class="set-hint">Riadky, ktoré necháš prázdne, sa preskočia.</p>
         <div class="tools"><button id="finish-running" class="save" type="button">Uložiť série a ukončiť cvik</button></div>
         <div class="set-log-actions">
-          <button id="add-set-row" class="text-button" type="button">Pridať riadok</button>
-          <button id="save-sets-draft" class="text-button" type="button">Priebežne uložiť</button>
+          <button id="add-set-row" class="text-button" type="button">Pridať sériu</button>
+          <button id="repeat-set-values" class="text-button" type="button" hidden>Skopírovať 1. sériu</button>
         </div>
         <p id="set-status" role="status" class="set-hint"></p>
       </form>
@@ -308,23 +323,23 @@ main{padding-bottom:5.6rem}
         <div id="workout-muscles"></div>
       </details>
     </div>
-    <p class="subtle">Upozornenie sa zobrazí pri treťom cviku na rovnaký hlavný sval v jednom tréningu.</p>
   </div>
 </section>
 <section id="planovac">
-  <h2>Plánovač tréningu</h2>
+  <h1>Plány</h1>
   <div class="grid two plan-library">
     <div class="box">
       <h3>Pripravené šablóny</h3>
       <label class="field">Šablóna <select id="plan-preset"></select></label>
       <p id="plan-preset-description" class="subtle"></p>
       <p class="subtle">Pri novom cviku začni jednou ľahkou pracovnou sériou.</p>
-      <div class="tools"><button id="load-plan-preset" type="button">Načítať šablónu</button></div>
+      <div class="tools"><button id="start-plan-preset" class="save" type="button">Spustiť šablónu</button><button id="load-plan-preset" type="button">Upraviť šablónu</button></div>
     </div>
     <div class="box">
       <h3>Moje uložené plány</h3>
       <label class="field">Uložený plán <select id="plan-saved"></select></label>
       <div class="tools">
+        <button id="start-saved-plan" class="save" type="button" disabled>Spustiť plán</button>
         <button id="load-saved-plan" type="button">Otvoriť plán</button>
         <button id="new-plan-draft" type="button">Nový plán</button>
       </div>
@@ -385,10 +400,37 @@ main{padding-bottom:5.6rem}
   <p><a href="#planovac">Otvoriť hotové šablóny v Plánovači</a></p>
 </section>
 <section id="dennik">
-  <h2>Čo si cvičil naposledy</h2>
+  <h1>História</h1>
+  <div class="start-links">
+    <a href="#pokrytie">Porovnať pokrytie svalov</a>
+    <a href="#vykony">Vývoj výkonu</a>
+    <a href="#sprava-dat">Správa dát</a>
+  </div>
   <div class="box">
-    <p><a href="#pokrytie">Porovnať svaly z posledných tréningov</a></p>
-    <p>Ukončené meranie sa automaticky zapíše k cviku. Pri spätnom zápise použi <strong>Označiť ako odcvičené</strong> a prípadne pridaj váhu, série alebo nastavenie stroja. Ručné zápisy spätne nemenia prehľad svalov. Pri každom cviku uvidíš posledný uložený záznam.</p>
+    <div id="history-workouts"></div>
+    <h2>Naposledy odcvičené</h2>
+    <ul id="recent-items" class="recent" aria-label="Naposledy označené cviky"></ul>
+  </div>
+</section>
+<section id="historia-trening">
+  <a class="catalog-back" href="#dennik">← História</a>
+  <h1 id="history-workout-title">Tréning</h1>
+  <div class="box" id="history-workout-detail"></div>
+  <button class="save" id="save-workout-template" type="button" hidden>Vytvoriť šablónu z tréningu</button>
+  <p id="workout-template-status" role="status"></p>
+</section>
+<section id="vykony">
+  <a class="catalog-back" href="#dennik">← História</a>
+  <h1>Vývoj výkonu</h1>
+  <div class="box">
+    <label class="field">Cvik <select id="performance-exercise"></select></label>
+    <p class="subtle" id="performance-caption"></p>
+    <ol id="performance-data" class="performance-data"></ol>
+  </div>
+</section>
+<section id="sprava-dat">
+  <h1>Správa dát</h1>
+  <div class="box">
     <div class="tools">
       <label class="field day">Dátum tréningu <input id="training-date" type="date"></label>
       <button id="export-sets" class="save" type="button">Export sérií CSV</button>
@@ -397,7 +439,6 @@ main{padding-bottom:5.6rem}
       <input id="backup-file" type="file" accept=".json,application/json" hidden>
     </div>
     <p id="journal-status" class="subtle log-output" role="status"></p>
-    <ul id="recent-items" class="recent" aria-label="Naposledy označené cviky"></ul>
     <p class="subtle">CSV má jeden riadok na zapísanú sériu a dá sa poslať na vyhodnotenie progresu. Záloha JSON uchová uložené plány, denník aj ukončené tréningy. Záznamy sa ukladajú do tohto prehliadača. Pred prenesením si tréning ukonči.</p>
   </div>
 </section>
@@ -408,6 +449,7 @@ main{padding-bottom:5.6rem}
     <div class="tools history-shortcuts">
       <button id="history-last-two" type="button">Posledné 2</button>
       <button id="history-last-three" type="button">Posledné 3</button>
+      <button id="history-last-month" type="button">28 dní</button>
     </div>
     <details id="history-choices">
       <summary>Vybrať jednotlivé tréningy</summary>
@@ -431,14 +473,17 @@ main{padding-bottom:5.6rem}
         <summary>Všetky sledované svaly bez zapojenia</summary>
         <p id="history-missing-list"></p>
       </details>
-      <p class="subtle">Mapa vychádza z ukončených záznamov o cvikoch, aj keď starší záznam nemá rozpísané série. Farba vyjadruje úlohu svalu pri cviku. Začni partiami, ktoré chceš pokryť počas týždňa.</p>
+    <p class="subtle">Mapa ukazuje zapojenie podľa zapísaných cvikov. Staršie návštevy sa započítajú aj bez rozpísaných sérií. Tento prehľad pomáha pri výbere cvikov podľa toho, čo si odcvičil.</p>
     </div>
   </div>
 </section>
 <section id="cviky">
-  <h2>Repertoár podľa svalov</h2>
+  <a class="catalog-back" id="catalog-back" href="#cviky">← Všetky cviky</a>
+  <div id="catalog-title">
+  <h1>Cviky</h1>
   <p class="subtle"><strong>Základ</strong> je prvá voľba v danej svalovej skupine. <strong>Alternatívu</strong> zvoľ podľa vybavenia a istoty v pohybe. <strong>Doplnok</strong> pridaj podľa toho, ktorú partiu chceš precvičiť viac. Cviky sú zoradené podľa priority.</p>
   <label class="field">Nájdi cvik alebo partiu <input id="exercise-search" type="search" placeholder="Napr. kladka, hrudník, lýtka"></label>
+  </div>
   <div class="group-menu" aria-label="Svalové partie">@@GROUP_LINKS@@</div>
   <p id="empty-search" hidden>Taký cvik sa nenašiel. Skús kratší názov alebo partiu.</p>
   @@CARDS@@
@@ -525,10 +570,6 @@ main{padding-bottom:5.6rem}
   </div>
 </section>
 </main>
-<button id="live-map-dock" class="live-map-dock" type="button" aria-haspopup="dialog">
-  <canvas id="live-map-dock-canvas" width="144" height="126" aria-hidden="true"></canvas>
-  <span><strong>Živá mapa</strong><small id="live-map-dock-status">Bez tréningu</small></span>
-</button>
 <dialog id="overlap-warning" aria-labelledby="overlap-title" aria-describedby="overlap-list">
   <form method="dialog">
     <h2 id="overlap-title">Prekrytie hlavných svalov</h2>
@@ -556,5 +597,8 @@ main{padding-bottom:5.6rem}
 <script>@@PLANNER@@</script>
 <script>@@TRAINING@@</script>
 <script>@@DEMOS@@</script>
+<script>@@INSIGHTS@@</script>
+<script>@@APP@@</script>
+<script>@@MUSCLE_PICKER@@</script>
 </body>
 </html>

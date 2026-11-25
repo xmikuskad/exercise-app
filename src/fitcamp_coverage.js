@@ -12,7 +12,7 @@ const coverageDialogHost = document.getElementById('coverage-dialog-host');
 const coverageStatus = document.getElementById('coverage-status');
 const surfaceRegions = new Map();
 const groupTargets = {
-  quads:['quad'], posterior:['gmax','gmed','ham'], calves:['gast','soleus'],
+  quads:['quad'], posterior:['gmax','gmed','ham'], calves:['gast','soleus','tibant'],
   pushes:['pec'], pulls:['lat','rhomb','trap'],
   shoulders:['dfront','dside','drear'], 'biceps-group':['biceps','brach','brad'],
   'triceps-group':['triceps'], core:['rectus','oblique','trans','erector','multif','ql'],
@@ -82,6 +82,7 @@ function paintMuscleMap(context, counts, preview = []) {
   for (const muscle of preview) {
     for (const path of surfaceRegions.get(muscle) ?? []) context.stroke(path);
   }
+  context.canvas.dispatchEvent(new Event('exehel:map'));
 }
 
 function paintCoverage() {

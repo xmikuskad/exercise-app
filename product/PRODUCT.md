@@ -1,6 +1,6 @@
-# Tréning vo FitCampe
+# Exehel
 
-Mobilná pomôcka pre začínajúceho silového cvičenca, ktorý chce napredovať v sile a naberať svaly. Prvý používateľ chodí do posilňovne dva až tri razy týždenne. Aplikácia mu pomáha pripraviť si tréning doma, odcvičiť ho s telefónom po ruke a spätne sa rozhodnúť, čo má zmysel precvičiť nabudúce.
+Mobilná pomôcka pre začínajúceho silového cvičenca, ktorý chce napredovať v sile a naberať svaly. Prvý používateľ chodí do posilňovne dva až tri razy týždenne. Doma si pripravuje zostavy a sleduje výkony. V posilňovni môže nasledovať šablónu alebo vyberať cviky podľa voľných strojov. Živá mapa pomáha pri voľbe ďalšieho cviku, história pri rozhodovaní o ďalších tréningoch.
 
 ## Hlavné postupy
 

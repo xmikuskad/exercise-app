@@ -5,6 +5,7 @@ const bodyweightFilter = document.getElementById('history-bodyweight');
 let coverageHistory = null;
 let selectedWorkoutIds = new Set();
 let recentWorkoutCount = 2;
+let historyPeriodDays = 0;
 let historicalRoles = new Map();
 
 const recommendationCards = Array.from(cards.values()).map(card => ({
@@ -74,8 +75,10 @@ function renderHistoryCoverage() {
   for (const [elementId, count] of recentButtons) {
     document.getElementById(elementId).setAttribute('aria-pressed', String(recentWorkoutCount === count));
   }
+  document.getElementById('history-last-month').setAttribute('aria-pressed', String(Boolean(historyPeriodDays)));
   historyStatus.textContent = selected.length
     ? 'Vybrané tréningy · ' + selected.length + ' | Záznamy cvikov · ' + blocks.length
+    : historyPeriodDays ? 'Za posledných 28 dní tu nemáš tréning.'
     : workoutHistory.length ? 'Vyber aspoň jeden tréning.' : 'Porovnanie bude k dispozícii po ukončení prvého tréningu.';
   if (!selected.length) return;
   const missing = Object.keys(muscles).filter(id => !historicalRoles.has(id));
@@ -93,6 +96,11 @@ function refreshHistoryChoices(force = false) {
   coverageHistory = workoutHistory;
   if (recentWorkoutCount) {
     selectedWorkoutIds = new Set(workoutHistory.slice(0, recentWorkoutCount).map(workout => workout.id));
+  } else if (historyPeriodDays) {
+    const cutoff = new Date();
+    cutoff.setDate(cutoff.getDate() - historyPeriodDays + 1);
+    cutoff.setHours(0, 0, 0, 0);
+    selectedWorkoutIds = new Set(workoutHistory.filter(workout => workout.finishedAt >= cutoff).map(workout => workout.id));
   }
   document.getElementById('history-choices').hidden = !workoutHistory.length;
   historyChoices.replaceChildren();
@@ -104,6 +112,7 @@ function refreshHistoryChoices(force = false) {
     checkbox.checked = selectedWorkoutIds.has(workout.id);
     checkbox.addEventListener('change', () => {
       recentWorkoutCount = 0;
+      historyPeriodDays = 0;
       if (checkbox.checked) selectedWorkoutIds.add(workout.id);
       else selectedWorkoutIds.delete(workout.id);
       renderHistoryCoverage();
@@ -119,8 +128,14 @@ const recentButtons = [['history-last-two', 2], ['history-last-three', 3]];
 for (const [elementId, count] of recentButtons) {
   document.getElementById(elementId).addEventListener('click', () => {
     recentWorkoutCount = count;
+      historyPeriodDays = 0;
     refreshHistoryChoices(true);
   });
 }
+document.getElementById('history-last-month').addEventListener('click', () => {
+  recentWorkoutCount = 0;
+  historyPeriodDays = 28;
+  refreshHistoryChoices(true);
+});
 bodyweightFilter.addEventListener('change', renderHistoryRecommendations);
 coverageBase.addEventListener('load', paintHistoryCoverage);

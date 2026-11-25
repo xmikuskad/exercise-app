@@ -137,10 +137,14 @@ function saveDraft(asCopy) {
   const plan = completePlanDraft(asCopy);
   if (!plan) return;
   draft = decodePlan(plan, true);
+  setPlanEditorTitle();
+  if (storePlan(plan)) planStatus.textContent = 'Uložený plán · ' + plan.name;
+}
+
+function storePlan(plan) {
   savedPlans = [plan, ...savedPlans.filter(existing => existing.id !== plan.id)];
   renderSavedPlans(plan.id);
-  setPlanEditorTitle();
-  if (persistPlans()) planStatus.textContent = 'Uložený plán · ' + plan.name;
+  return persistPlans();
 }
 
 function makePlanButton(label, click, ariaLabel) {
@@ -168,6 +172,7 @@ function renderSavedPlans(selected = draft.id || planSavedSelect.value) {
   planSavedSelect.replaceChildren(new Option(savedPlans.length ? 'Vyber uložený plán' : 'Zatiaľ bez uložených plánov', ''));
   for (const plan of savedPlans) planSavedSelect.add(new Option(plan.name, plan.id));
   if (savedPlans.some(plan => plan.id === selected)) planSavedSelect.value = selected;
+  document.getElementById('start-saved-plan').disabled = !planSavedSelect.value;
   document.getElementById('load-saved-plan').disabled = !savedPlans.length;
 }
 
@@ -369,18 +374,23 @@ function renderPlanExecution(workout) {
   }
 }
 
-function startDraftWorkout() {
+function startPlanWorkout(plan, startFirst = false) {
   if (activeWorkout) {
     planStatus.textContent = 'Jeden tréning už prebieha. Otvor ho v časti Tréning.';
     return;
   }
-  const plan = completePlanDraft();
   if (!plan) return;
   activeWorkout = newWorkout(Date.now(), plan);
   persistWorkout();
   renderWorkout();
   planStatus.textContent = 'Plán spustený.';
-  location.hash = 'teraz';
+  if (startFirst) startNextPlanExercise();
+  else location.hash = 'teraz';
+}
+
+function selectedPresetDraft() {
+  const preset = planPresets[Number(planPresetSelect.value)];
+  return {...emptyPlan(), name:preset.name, items:preset.exercises.map(([id, sets]) => defaultPlanItem(id, sets))};
 }
 
 planName.addEventListener('input', () => { draft.name = planName.value; persistPlans(); });
@@ -390,8 +400,7 @@ planPresetSelect.addEventListener('change', () => {
   document.getElementById('plan-preset-description').textContent = planPresets[Number(planPresetSelect.value)].description;
 });
 document.getElementById('load-plan-preset').addEventListener('click', () => {
-  const preset = planPresets[Number(planPresetSelect.value)];
-  openDraft({...emptyPlan(), name:preset.name, items:preset.exercises.map(([id, sets]) => defaultPlanItem(id, sets))});
+  openDraft(selectedPresetDraft());
   document.getElementById('plan-editor-title').scrollIntoView();
 });
 document.getElementById('load-saved-plan').addEventListener('click', () => {
@@ -404,7 +413,17 @@ document.getElementById('load-saved-plan').addEventListener('click', () => {
 document.getElementById('new-plan-draft').addEventListener('click', () => { openDraft(emptyPlan()); planName.focus(); });
 document.getElementById('save-plan').addEventListener('click', () => saveDraft(false));
 document.getElementById('duplicate-plan').addEventListener('click', () => saveDraft(true));
-document.getElementById('start-plan').addEventListener('click', startDraftWorkout);
+document.getElementById('start-plan').addEventListener('click', () => startPlanWorkout(completePlanDraft()));
+document.getElementById('start-plan-preset').addEventListener('click', () => {
+  const plan = {...selectedPresetDraft(), id:planIdentity(), updatedAt:Date.now()};
+  startPlanWorkout(plan, true);
+});
+document.getElementById('start-saved-plan').addEventListener('click', () => {
+  startPlanWorkout(savedPlans.find(plan => plan.id === planSavedSelect.value), true);
+});
+planSavedSelect.addEventListener('change', () => {
+  document.getElementById('start-saved-plan').disabled = !planSavedSelect.value;
+});
 document.getElementById('start-next-plan').addEventListener('click', startNextPlanExercise);
 for (const card of cards.values()) card.querySelector('.next-planned-exercise').addEventListener('click', startNextPlanExercise);
 coverageBase.addEventListener('load', () => paintMuscleMap(planCanvasContext, planCounts));

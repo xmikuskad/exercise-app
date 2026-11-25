@@ -29,6 +29,12 @@ EXERCISES_LOW_EQUIPMENT = {
         'S výdychom zdvihni ruky o malý kúsok nad podlahu. Hrudník a panva zostávajú opreté. S nádychom ruky pomaly polož.',
         'Vysúvanie brady, prehýbanie krížov alebo zdvíhanie ramien k ušiam.',
         'Ak je poloha nad hlavou nepríjemná, zvoľ pohodlný <a href="#reversefly">príťah pre zadné ramená</a>.'),
+    'toeraise': ('Zdvíhanie špičiek v stoji', 'Supported Toe Raise · predné predkolenie',
+        ('Celé chodidlá na podlahe', 'Špičky hore, päty na podlahe'), 'Rovná podlaha a pevná opora na ruky.',
+        'Pridrž sa stojana alebo inej pevnej opory. Chodidlá daj na šírku bokov a kolená nechaj voľné.',
+        'Zdvihni predky oboch chodidiel smerom k predkoleniam. Päty ostávajú na mieste. Špičky pomaly polož späť.',
+        'Nakláňanie trupu dozadu alebo kývanie celým telom. Pohyb vychádza z členkov.',
+        'Ľahšiu verziu urob v sede s rovnakým pohybom členkov.'),
 }
 
 CHECKS_LOW_EQUIPMENT = {
@@ -37,6 +43,7 @@ CHECKS_LOW_EQUIPMENT = {
     'floorpush': ('Prvé opakovanie urob v kratšom rozsahu.', 'Hrudník a boky sa spúšťajú naraz.', 'Ak sa boky prepadávajú, zvýš oporu pod rukami.'),
     'bandrow': ('Skontroluj poškodenie gumy a oporu o chodidlá. Pri neistom uchytení cvik vynechaj.', 'Trup ostáva vzpriamený a ramená nestúpajú.', 'Použi ľahšiu gumu, ak musíš trhnúť alebo sa zakloniť.'),
     'proney': ('Začni bez záťaže a s uvoľneným krkom.', 'Dvíhajú sa ruky, kým spodné rebrá zostávajú na podložke.', 'Zmenši rozsah, ak napätie cítiš hlavne v krku alebo v krížoch.'),
+    'toeraise': ('Over stabilitu opory a polož obe päty na zem.', 'Cíť pohyb pri prednom predkolení. Ramená a boky ostávajú približne nad sebou.', 'Zmenši rozsah, ak ťa pri dvíhaní ťahá dozadu alebo musíš pokrčiť kolená.'),
 }
 
 ROLES_LOW_EQUIPMENT = {
@@ -45,4 +52,5 @@ ROLES_LOW_EQUIPMENT = {
     'floorpush': ('pec', 'dfront triceps serr trans'),
     'bandrow': ('lat rhomb trap', 'biceps brach brad drear'),
     'proney': ('trap', 'drear rotator'),
+    'toeraise': ('tibant', ''),
 }

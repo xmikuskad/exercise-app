@@ -29,6 +29,9 @@ function decodeTimedExercise(value, completed) {
       throw new Error('Invalid finish time');
     }
     result.finishedAt = value.finishedAt;
+  } else {
+    const draftRows = decodeSetDraft(value.draftRows);
+    if (draftRows) result.draftRows = draftRows;
   }
   return result;
 }
@@ -221,6 +224,9 @@ function renderWorkout() {
   renderPlanExecution(activeWorkout);
   refreshHistoryChoices();
   renderSetLog(running);
+  document.getElementById('finish-running').textContent = hasNextAfter(running)
+    ? 'Uložiť a pokračovať' : 'Uložiť série a ukončiť cvik';
+  document.dispatchEvent(new Event('exehel:workout'));
   if (running && timerId === null) timerId = setInterval(updateClock, 1000);
   if (!running && timerId !== null) {
     clearInterval(timerId);
@@ -232,6 +238,12 @@ function renderWorkout() {
 function newWorkout(startedAt, plan = null) {
   const id = startedAt + '-' + Math.random().toString(36).slice(2);
   return {id, startedAt, running:null, exercises:[], plan};
+}
+
+function hasNextAfter(running) {
+  if (!running || !activeWorkout?.plan) return false;
+  return activeWorkout.plan.items.some(item => item.exercise !== running.exercise &&
+    !activeWorkout.exercises.some(block => block.exercise === item.exercise));
 }
 
 function exerciseFeedback(id, message) {
@@ -293,7 +305,9 @@ function finishExercise(id, completed) {
   activeWorkout.running = null;
   if (completed) {
     const finishedAt = Math.max(Date.now(), running.startedAt);
-    activeWorkout.exercises.push({...running, finishedAt});
+    activeWorkout.exercises.push({
+      exercise:id, startedAt:running.startedAt, finishedAt, sets:running.sets,
+    });
     const card = cards.get(id);
     const date = today(new Date(finishedAt));
     const oldEntry = entries[id];
@@ -317,6 +331,7 @@ function finishExercise(id, completed) {
   showWorkoutStatus('');
   persistWorkout();
   renderWorkout();
+  return true;
 }
 
 warning.addEventListener('close', () => {
@@ -346,7 +361,11 @@ document.getElementById('start-picked').addEventListener('click', () => {
     workoutPick.focus();
   }
 });
-document.getElementById('finish-running').addEventListener('click', () => finishExercise(activeWorkout?.running?.exercise, true));
+document.getElementById('finish-running').addEventListener('click', () => {
+  const running = activeWorkout?.running;
+  const advance = hasNextAfter(running);
+  if (finishExercise(running?.exercise, true) && advance) startNextPlanExercise();
+});
 document.getElementById('finish-workout').addEventListener('click', () => {
   if (!activeWorkout) return;
   if (activeWorkout.running) {

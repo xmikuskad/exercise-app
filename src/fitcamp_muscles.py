@@ -8,6 +8,7 @@ MUSCLES = {
     'add': 'Priťahovače stehna',
     'gast': 'Dvojhlavý lýtkový sval',
     'soleus': 'Šikmý lýtkový sval (soleus)',
+    'tibant': 'Predný píšťalový sval (predné predkolenie)',
     'pec': 'Veľký prsný sval',
     'dfront': 'Predný deltový sval',
     'dside': 'Bočný deltový sval',

@@ -50,4 +50,5 @@ DEMOS = {
     'floorpush': ('https://www.youtube.com/watch?v=WDIpL0pjun0', 'NASM'),
     'bandrow': ('https://www.mayoclinic.org/healthy-lifestyle/fitness/multimedia/seated-row/vid-20084669', 'Mayo Clinic'),
     'proney': ('https://www.youtube.com/watch?v=eDUzTEqpFa4', 'BEYOND Physical Therapy'),
+    'toeraise': ('https://www.kingstonandrichmond.nhs.uk/patients-and-families/patient-leaflets/home-exercise-programme-falls-prevention#toc-14-toe-lifts', 'Kingston and Richmond NHS'),
 }

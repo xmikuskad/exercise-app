@@ -41,7 +41,7 @@ DUMBBELL_LOAD = {'goblet', 'dbpress', 'incline', 'dbrow', 'supportedrow', 'later
 BODYWEIGHT = {
     'sit', 'push', 'bridge', 'split', 'calfstanding', 'singlecalf', 'deadbug',
     'plank', 'sideplank', 'birddog', 'reversecrunch', 'bodyweightsquat', 'reverselunge',
-    'floorpush', 'proney',
+    'floorpush', 'proney', 'toeraise',
 }
 MACHINE_LOAD = {'press', 'chest', 'row', 'curl', 'lat', 'extension', 'pronecurl', 'abduction',
                 'calfseated', 'straightpull', 'shoulderpress', 'reversefly', 'facepull', 'pushdown',
@@ -115,7 +115,16 @@ def exercise_card(key, exercise):
           </div>
           <p class="exercise-feedback subtle" role="status" hidden></p>
         </div>
-        <div class="exercise-demo">
+        <p class="exercise-setup">{escape(setup)}</p>
+        <a class="exercise-technique-link" href="#{key}-technique">Ukážka a technika ↓</a>
+        <div class="set-log-slot" id="{key}-log">
+          <div class="set-log-result" hidden>
+            <p role="status" class="set-log-result-text"></p>
+            <button type="button" class="save next-planned-exercise" hidden>Začať ďalší podľa plánu</button>
+            <a href="#cviky">Vybrať ďalší cvik</a>
+          </div>
+        </div>
+        <div id="{key}-technique" class="exercise-demo">
           <div class="demo-actions">
             <button class="demo-toggle" type="button" aria-expanded="false" aria-controls="{key}-video">Prehrať ukážku</button>
             {demo_reference(key)}
@@ -152,13 +161,6 @@ def exercise_card(key, exercise):
           <dt>Časté chyby</dt><dd>{escape(mistakes)}</dd>
           <dt>Variant alebo náhrada</dt><dd>{alternative}</dd>
         </dl>
-        <div class="set-log-slot" id="{key}-log">
-          <div class="set-log-result" hidden>
-            <p role="status" class="set-log-result-text"></p>
-            <button type="button" class="save next-planned-exercise" hidden>Začať ďalší podľa plánu</button>
-            <a href="#cviky">Vybrať ďalší cvik</a>
-          </div>
-        </div>
         <details class="track">
           <summary>Spätný zápis alebo poznámka</summary>
           <div class="manual-entry">
@@ -196,12 +198,14 @@ for primary, secondary in ROLES.values():
     main, support = set(primary.split()), set(secondary.split())
     assert main and not main & support and (main | support) <= MUSCLES.keys()
 template = (SOURCE / 'fitcamp_template.html').read_text(encoding='utf-8')
+template = template.replace('@@APP_STYLE@@', (SOURCE / 'fitcamp_app.css').read_text(encoding='utf-8'))
 template = sub(r'@@NAME:([a-z]+)@@', lambda match: bilingual_name(match[1]), template)
 scripts = {
     placeholder: (SOURCE / f'fitcamp_{module}.js').read_text(encoding='utf-8')
     for placeholder, module in (
         ('SCRIPT', 'journal'), ('TRAINING', 'training'), ('SETS', 'sets'),
-        ('COVERAGE', 'coverage'), ('PLANNER', 'planner'), ('HISTORY', 'history'), ('DEMOS', 'demos')
+        ('COVERAGE', 'coverage'), ('PLANNER', 'planner'), ('HISTORY', 'history'), ('DEMOS', 'demos'),
+        ('INSIGHTS', 'insights'), ('APP', 'app'), ('MUSCLE_PICKER', 'muscle_picker')
     )
 }
 

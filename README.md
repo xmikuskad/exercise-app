@@ -1,12 +1,16 @@
-# Tréning vo FitCampe
+# Exehel
 
 [Otvoriť aplikáciu](https://xmikuskad.github.io/exercise-app/)
 
-Mobilná príručka s 51 cvikmi, plánovačom, živou mapou svalov a denníkom sérií. V denníku sa dá porovnať pokrytie svalov vo vybraných tréningoch a nájsť cviky na chýbajúce partie. Cviky majú slovenské aj anglické názvy, vstavanú ukážku a odkaz na online video. Záznamy sa dajú exportovať do CSV alebo JSON.
+Mobilná príručka s 52 cvikmi pre voľný tréning aj tréning podľa šablóny. V histórii sa dá pozrieť vývoj výkonu, porovnať pokrytie svalov a nájsť cviky na chýbajúce partie. Cviky majú slovenské aj anglické názvy, vstavanú ukážku a odkaz na online príklad. Záznamy sa dajú exportovať do CSV alebo JSON.
 
 - [Zámer produktu a hlavné používateľské postupy](product/PRODUCT.md)
 - [Údržba, kompatibilita a nasadenie](product/MAINTAINING.md)
 - [Výskumné podklady k pokrytiu a novým cvikom](product/RESEARCH.md)
+- [TODO a poradie etáp](TODO.md)
+- [Dizajn mobilného webu](DESIGN.md) · [Návrh redizajnu](product/UI-PROPOSAL.md) · [Výskum UX](product/UI-RESEARCH.md)
+
+V `.agents/skills/` sú projektové skilly [Impeccable](https://github.com/pbakaus/impeccable) (revízia `9e460a87`) a [Frontend Design](https://github.com/anthropics/skills/tree/main/skills/frontend-design) (revízia `e4bb5d96`). Otvor projekt v novej relácii, aby ich Codex načítal.
 
 ## Zostavenie
 
