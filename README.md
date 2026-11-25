@@ -29,7 +29,7 @@ Test v prehliadači vyžaduje Node.js 22+ a Chrome alebo Chromium.
 node tests/check_fitcamp.mjs
 ```
 
-Pri inej inštalácii nastav `CHROME_BIN`. Premenná `FITCAMP_TEST_URL` umožní testovať nasadenú verziu.
+Príkaz `node tests/check_fitcamp.mjs --finish-only` spustí len regresný scenár ukončenia. Rovnaký scenár vo Firefoxe spustíš cez `node tests/check_finish_firefox.mjs`. [Pokrytie testov a nastavenie prehliadačov](tests/README.md).
 
 ## Úložisko a súkromie
 

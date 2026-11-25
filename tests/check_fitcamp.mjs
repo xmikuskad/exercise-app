@@ -4,6 +4,7 @@ import {mkdir, mkdtemp, readFile, readdir, writeFile} from 'node:fs/promises';
 import {resolve} from 'node:path';
 import {fileURLToPath, pathToFileURL} from 'node:url';
 import {setTimeout as delay} from 'node:timers/promises';
+import {checkWorkoutFinishFlow} from './workout_finish_flow.mjs';
 
 const project = fileURLToPath(new URL('../', import.meta.url));
 const artifacts = resolve(project, '.test-artifacts');
@@ -36,8 +37,13 @@ try {
   });
   let id = 0;
   const pending = new Map();
+  const pageErrors = [];
   ws.addEventListener('message', ({data}) => {
     const message = JSON.parse(data);
+    if (message.method === 'Runtime.exceptionThrown') {
+      const details = message.params.exceptionDetails;
+      pageErrors.push(details.exception?.description ?? details.text);
+    }
     const handler = pending.get(message.id);
     if (!handler) return;
     pending.delete(message.id);
@@ -62,14 +68,53 @@ try {
 
   await viewport(390);
   await command('Page.enable');
+  await command('Runtime.enable');
   await command('Network.enable');
+  await command('Page.addScriptToEvaluateOnNewDocument', {source:`
+    window.cspViolations = [];
+    document.addEventListener('securitypolicyviolation', event => {
+      window.cspViolations.push(event.effectiveDirective + ' · ' + event.blockedURI);
+    });
+  `});
   if (pageURL.startsWith('file:')) {
     await command('Network.emulateNetworkConditions',
       {offline:true, latency:0, downloadThroughput:0, uploadThroughput:0});
   }
   await command('Page.navigate', {url:pageURL});
-  for (let i = 0; i < 60 && !await inspect('document.body.classList.contains("app-ready")'); i++)
+  for (let i = 0; i < 60 && !await inspect('document.body?.classList.contains("app-ready")'); i++)
     await delay(100);
+  const clickUI = async selector => {
+    const point = await inspect(`(() => {
+      const element = document.querySelector(${JSON.stringify(selector)});
+      if (!element?.getClientRects().length || element.disabled) return null;
+      element.scrollIntoView({block:'center'});
+      const {x, y, width, height} = element.getBoundingClientRect();
+      const point = {x:x + width / 2, y:y + height / 2};
+      return element.contains(document.elementFromPoint(point.x, point.y)) ? point : null;
+    })()`);
+    assert.ok(point, 'Control is unavailable to a real click: ' + selector);
+    await command('Input.dispatchMouseEvent', {...point, type:'mousePressed', button:'left', clickCount:1});
+    await command('Input.dispatchMouseEvent', {...point, type:'mouseReleased', button:'left', clickCount:1});
+  };
+  const waitFor = async (expression, description) => {
+    for (let attempt = 0; attempt < 50; attempt++) {
+      if (await inspect(expression)) return;
+      await delay(40);
+    }
+    assert.fail(description);
+  };
+  const assertCleanPage = async () => {
+    assert.deepEqual(pageErrors, [], 'Uncaught application errors');
+    assert.deepEqual(await inspect('window.cspViolations'), [], 'Content Security Policy violations');
+  };
+  const checkFinish = () => checkWorkoutFinishFlow({inspect, clickUI, waitFor,
+    reload:() => command('Page.reload'), assertCleanPage});
+  suite: {
+  if (process.argv.includes('--finish-only')) {
+    await checkFinish();
+    console.log('Chrome: workout finish, invalid drafts, explicit discard, and planned workout passed.');
+    break suite;
+  }
   const rendered = await inspect(`(async () => {
     await Promise.all(Array.from(document.images, image => { image.loading = 'eager'; return image.decode(); }));
     return {
@@ -351,6 +396,12 @@ try {
   assert.equal(await inspect(`document.querySelector('#plan-saved option[value=import-plan]').textContent`), 'Importovaný plán');
   const workoutStorage = () => inspect(`localStorage.getItem(workoutKey)`);
   const savedWorkouts = await workoutStorage();
+  const invalidBackup = resolve(profile, 'invalid-import.json');
+  await writeFile(invalidBackup, JSON.stringify({version:1, entries:{}, workouts:[{id:'damaged'}], plans:[]}));
+  const savedBeforeInvalidImport = await inspect(`[storageKey, workoutKey, planStorageKey].map(key => localStorage.getItem(key))`);
+  await command('DOM.setFileInputFiles', {files:[invalidBackup], nodeId:inputId});
+  await waitFor(`document.getElementById('journal-status').textContent.includes('nepodarilo načítať')`, 'Invalid backup was not rejected');
+  assert.deepEqual(await inspect(`[storageKey, workoutKey, planStorageKey].map(key => localStorage.getItem(key))`), savedBeforeInvalidImport);
   const checkedWorkouts = () => inspect(`[...document.querySelectorAll('#history-checks input:checked')].map(input => input.value)`);
   assert.equal((await checkedWorkouts()).length, 2);
   assert.equal(await inspect(`historicalRoles.has('pec') && !historicalRoles.has('gmed')`), true);
@@ -501,7 +552,14 @@ try {
     document.querySelector('#start-plan-preset').click()`);
   assert.equal(await activeExercise(), 'press');
   assert.equal(await inspect('activeWorkout.plan.name'), 'Celé telo A');
-  console.log('Chrome: workout plans, inline logging, muscle maps, retrospective coverage, and legacy JSON/CSV passed.');
+  await assertCleanPage();
+  await inspect(`localStorage.clear(); location.hash = '#teraz'`);
+  await command('Page.reload');
+  await waitFor(`document.body?.classList.contains('app-ready') && !activeWorkout && !workoutHistory.length`, 'Could not isolate the finish scenarios');
+  await viewport(390);
+  await checkFinish();
+  console.log('Chrome: workout plans, logging, muscle maps, warmup, retrospective coverage, legacy JSON/CSV, and workout finish passed.');
+  }
 } finally {
   ws?.close();
   browser.kill();

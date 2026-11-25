@@ -7,6 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#f3f5ee">
 <title>Exehel · silový tréning</title>
+<link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAw0lEQVR42mNkwAIMvbT/M9AAnN92lRFdjJEeFuNzCBO9LUe3i4nelqM7golhgAHjQPgeGQx4CIw6gIUUxee2XiFK3cxl0xhmLp1GfQfAwLb9Wxi+fP2MU/7qrSu0CQEYmLNiJsODJ/dHE+GoA+ifDWFg3czNVMmCNMmGpGTB0Ww46oChmw1TItLxVkZHzhxmOHL6EO0c4OXog1f+/af3RDtgtE3IhK27RC9wfttVxsGRDQciFGB2MuHrudKjc8o40N1zAP3vVpq89LWnAAAAAElFTkSuQmCC">
 <style>
 :root{color-scheme:light;--ink:#152e31;--muted:#475e61;--paper:#f1f5f3;--line:#cfded9;--teal:#006c57;--dark:#102b2c;--white:#fff}
 *{box-sizing:border-box}
@@ -247,6 +248,7 @@ main{padding-bottom:5.6rem}
       <a href="#rozc">Rozcvička <small>5–7 min</small></a>
     </div>
   </div>
+  <p id="workout-status" role="status" class="subtle" hidden></p>
   <div class="box workout-panel">
     <p id="free-workout-status" hidden>Voľný tréning</p>
     <div id="workout-picker" class="workout-picker">
@@ -257,7 +259,6 @@ main{padding-bottom:5.6rem}
       <button id="finish-workout" type="button" hidden>Ukončiť tréning</button>
       <a href="#cviky">Vybrať v katalógu</a>
     </div>
-    <p id="workout-status" role="status" class="subtle" hidden></p>
     <p id="workout-active" hidden>Prebieha · <a id="workout-active-link"></a> <output class="workout-clock" aria-live="off" aria-label="Trvanie cviku"></output></p>
     <div id="plan-execution" class="plan-workout" hidden>
       <h3 id="plan-execution-name"></h3>
@@ -282,6 +283,7 @@ main{padding-bottom:5.6rem}
         <div class="set-log-actions">
           <button id="add-set-row" class="text-button" type="button">Pridať sériu</button>
           <button id="repeat-set-values" class="text-button" type="button" hidden>Skopírovať 1. sériu</button>
+          <button id="finish-workout-from-exercise" class="text-button" type="button">Ukončiť tréning</button>
         </div>
         <p id="set-status" role="status" class="set-hint"></p>
       </form>
@@ -560,6 +562,17 @@ main{padding-bottom:5.6rem}
   </div>
 </section>
 </main>
+<dialog id="finish-workout-dialog" aria-labelledby="finish-workout-title" aria-describedby="finish-workout-description">
+  <form method="dialog">
+    <h2 id="finish-workout-title">Ukončiť tréning?</h2>
+    <p id="finish-workout-description"></p>
+    <div class="finish-workout-options">
+      <button type="submit" class="save" value="save">Uložiť cvik a ukončiť</button>
+      <button type="submit" value="discard">Ukončiť bez tohto cviku</button>
+      <button type="submit" value="keep" autofocus>Pokračovať v tréningu</button>
+    </div>
+  </form>
+</dialog>
 <dialog id="overlap-warning" aria-labelledby="overlap-title" aria-describedby="overlap-list">
   <form method="dialog">
     <h2 id="overlap-title">Prekrytie hlavných svalov</h2>

@@ -45,6 +45,9 @@ main h2{font-size:clamp(1.35rem,4.5vw,1.85rem)}
 .workout-running #finish-running{width:100%}
 .workout-running .set-log-actions{align-items:center;gap:.3rem .8rem}
 .workout-running .set-log-actions .text-button{flex:0 0 auto;padding:.4rem 0;border:0;background:transparent;text-decoration:underline}
+#finish-workout-dialog{background:var(--paper);border-color:var(--line)}
+.finish-workout-options{display:grid;gap:.45rem}
+.set-sheet input[aria-invalid=true]{border-color:#a13d2d}
 .history-workout{display:flex;align-items:center;justify-content:space-between;gap:.6rem;width:100%;border:0;border-bottom:1px solid var(--line);border-radius:0;background:transparent;text-align:left}
 .history-workout small{color:var(--muted)}
 .history-workout-list{list-style:none;padding:0;margin:0 0 1.5rem}

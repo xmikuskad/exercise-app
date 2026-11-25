@@ -2,11 +2,12 @@
 <html lang="sk">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src &#x27;none&#x27;; base-uri &#x27;none&#x27;; form-action &#x27;none&#x27;; img-src data:; media-src data:; script-src &#x27;sha256-I8ODw21V7Cf3kccakSkY90wQt1mW6rEczl30KKT18T4=&#x27; &#x27;sha256-n6APAeqYK+PyhTZ6rMZQPQ3SrpcIOqOU7UXpPgkw7BE=&#x27; &#x27;sha256-YQHqwyTaPHBB4xuui9N/scgafS0gAQ0n5Sro+1twZCI=&#x27; &#x27;sha256-tnyIOnfJVn3HcSndOS5UZ4rxxpkQ23i5kV0CmSIzg5c=&#x27; &#x27;sha256-GSwficxEYdecwSrx6EKMpEwVAzMRqA+Bx1HsVSVFQ0E=&#x27; &#x27;sha256-DJ9Im1j7xgs9xK4YlcF7zINe1tu5tLMgllcOGP9yXUU=&#x27; &#x27;sha256-WAZtFWFZhB6uyJf/o/fSwFFN0x+EKeUNziusI07Yzp8=&#x27; &#x27;sha256-PCh8t/evjcOJrsLvlrtMeLpdB79HrmJKo+aXKHSUGfE=&#x27; &#x27;sha256-FeQeOr4lUboqjRN6/4Q3Y/w4t2GrFqwN4sVy4Pz1ugs=&#x27; &#x27;sha256-8a+pFa/kS2QcZb37itsDBovOL7M8gsClYuL5OIebeJQ=&#x27; &#x27;sha256-oce1nGjD5K7pNRQCPdh33WrAhzhqMIFpffcKpLvo71M=&#x27;; style-src &#x27;sha256-cnJnwhA3UdKeMrmd+a3Ldlo3C8XJCSQGMA8YPimRv50=&#x27;">
+<meta http-equiv="Content-Security-Policy" content="default-src &#x27;none&#x27;; base-uri &#x27;none&#x27;; form-action &#x27;none&#x27;; img-src data:; media-src data:; script-src &#x27;sha256-I8ODw21V7Cf3kccakSkY90wQt1mW6rEczl30KKT18T4=&#x27; &#x27;sha256-tr+0jk41c2Tf97LhJNfxkm7+ToBH9xtX3LmkNHGf1aI=&#x27; &#x27;sha256-uKxiw9WVTZlknguZSEmy8mj3BRqb3cfMYsfcyJsysrI=&#x27; &#x27;sha256-tnyIOnfJVn3HcSndOS5UZ4rxxpkQ23i5kV0CmSIzg5c=&#x27; &#x27;sha256-GSwficxEYdecwSrx6EKMpEwVAzMRqA+Bx1HsVSVFQ0E=&#x27; &#x27;sha256-DJ9Im1j7xgs9xK4YlcF7zINe1tu5tLMgllcOGP9yXUU=&#x27; &#x27;sha256-WAZtFWFZhB6uyJf/o/fSwFFN0x+EKeUNziusI07Yzp8=&#x27; &#x27;sha256-PCh8t/evjcOJrsLvlrtMeLpdB79HrmJKo+aXKHSUGfE=&#x27; &#x27;sha256-FeQeOr4lUboqjRN6/4Q3Y/w4t2GrFqwN4sVy4Pz1ugs=&#x27; &#x27;sha256-8a+pFa/kS2QcZb37itsDBovOL7M8gsClYuL5OIebeJQ=&#x27; &#x27;sha256-oce1nGjD5K7pNRQCPdh33WrAhzhqMIFpffcKpLvo71M=&#x27;; style-src &#x27;sha256-Pogxn14cCCzuFAhY4JhO2mSiJ5D5n6HJHu35eBWgpSc=&#x27;">
 <meta name="referrer" content="no-referrer">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#f3f5ee">
 <title>Exehel · silový tréning</title>
+<link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAw0lEQVR42mNkwAIMvbT/M9AAnN92lRFdjJEeFuNzCBO9LUe3i4nelqM7golhgAHjQPgeGQx4CIw6gIUUxee2XiFK3cxl0xhmLp1GfQfAwLb9Wxi+fP2MU/7qrSu0CQEYmLNiJsODJ/dHE+GoA+ifDWFg3czNVMmCNMmGpGTB0Ww46oChmw1TItLxVkZHzhxmOHL6EO0c4OXog1f+/af3RDtgtE3IhK27RC9wfttVxsGRDQciFGB2MuHrudKjc8o40N1zAP3vVpq89LWnAAAAAElFTkSuQmCC">
 <style>
 :root{color-scheme:light;--ink:#152e31;--muted:#475e61;--paper:#f1f5f3;--line:#cfded9;--teal:#006c57;--dark:#102b2c;--white:#fff}
 *{box-sizing:border-box}
@@ -263,6 +264,9 @@ main h2{font-size:clamp(1.35rem,4.5vw,1.85rem)}
 .workout-running #finish-running{width:100%}
 .workout-running .set-log-actions{align-items:center;gap:.3rem .8rem}
 .workout-running .set-log-actions .text-button{flex:0 0 auto;padding:.4rem 0;border:0;background:transparent;text-decoration:underline}
+#finish-workout-dialog{background:var(--paper);border-color:var(--line)}
+.finish-workout-options{display:grid;gap:.45rem}
+.set-sheet input[aria-invalid=true]{border-color:#a13d2d}
 .history-workout{display:flex;align-items:center;justify-content:space-between;gap:.6rem;width:100%;border:0;border-bottom:1px solid var(--line);border-radius:0;background:transparent;text-align:left}
 .history-workout small{color:var(--muted)}
 .history-workout-list{list-style:none;padding:0;margin:0 0 1.5rem}
@@ -343,6 +347,7 @@ main h2{font-size:clamp(1.35rem,4.5vw,1.85rem)}
       <a href="#rozc">Rozcvička <small>5–7 min</small></a>
     </div>
   </div>
+  <p id="workout-status" role="status" class="subtle" hidden></p>
   <div class="box workout-panel">
     <p id="free-workout-status" hidden>Voľný tréning</p>
     <div id="workout-picker" class="workout-picker">
@@ -353,7 +358,6 @@ main h2{font-size:clamp(1.35rem,4.5vw,1.85rem)}
       <button id="finish-workout" type="button" hidden>Ukončiť tréning</button>
       <a href="#cviky">Vybrať v katalógu</a>
     </div>
-    <p id="workout-status" role="status" class="subtle" hidden></p>
     <p id="workout-active" hidden>Prebieha · <a id="workout-active-link"></a> <output class="workout-clock" aria-live="off" aria-label="Trvanie cviku"></output></p>
     <div id="plan-execution" class="plan-workout" hidden>
       <h3 id="plan-execution-name"></h3>
@@ -378,6 +382,7 @@ main h2{font-size:clamp(1.35rem,4.5vw,1.85rem)}
         <div class="set-log-actions">
           <button id="add-set-row" class="text-button" type="button">Pridať sériu</button>
           <button id="repeat-set-values" class="text-button" type="button" hidden>Skopírovať 1. sériu</button>
+          <button id="finish-workout-from-exercise" class="text-button" type="button">Ukončiť tréning</button>
         </div>
         <p id="set-status" role="status" class="set-hint"></p>
       </form>
@@ -4557,6 +4562,17 @@ main h2{font-size:clamp(1.35rem,4.5vw,1.85rem)}
   </div>
 </section>
 </main>
+<dialog id="finish-workout-dialog" aria-labelledby="finish-workout-title" aria-describedby="finish-workout-description">
+  <form method="dialog">
+    <h2 id="finish-workout-title">Ukončiť tréning?</h2>
+    <p id="finish-workout-description"></p>
+    <div class="finish-workout-options">
+      <button type="submit" class="save" value="save">Uložiť cvik a ukončiť</button>
+      <button type="submit" value="discard">Ukončiť bez tohto cviku</button>
+      <button type="submit" value="keep" autofocus>Pokračovať v tréningu</button>
+    </div>
+  </form>
+</dialog>
 <dialog id="overlap-warning" aria-labelledby="overlap-title" aria-describedby="overlap-list">
   <form method="dialog">
     <h2 id="overlap-title">Prekrytie hlavných svalov</h2>
@@ -5009,11 +5025,13 @@ function savePendingSet(running) {
     if (!/^\d+$/.test(amountText) || !validSetAmount(amount)) {
       const unit = cards.get(running.exercise).dataset.setUnit;
       setStatus.textContent = prefix + (unit === 'seconds' ? 'zadaj výdrž ako celé sekundy.' : 'zadaj celý počet opakovaní.');
+      amountInput.setAttribute('aria-invalid', 'true');
       amountInput.focus();
       return false;
     }
     if ((weightText && !/^(?:\d+(?:[.,]\d+)?|[.,]\d+)$/.test(weightText)) || !validSetWeight(weight)) {
       setStatus.textContent = prefix + 'zadaj váhu v kg, napríklad 7,5.';
+      weightInput.setAttribute('aria-invalid', 'true');
       weightInput.focus();
       return false;
     }
@@ -5025,9 +5043,10 @@ function savePendingSet(running) {
 }
 
 setForm.addEventListener('submit', event => event.preventDefault());
-setForm.addEventListener('input', () => {
+setForm.addEventListener('input', event => {
   const running = activeWorkout?.running;
   if (!running) return;
+  event.target.removeAttribute('aria-invalid');
   updateDraftActions(running);
   saveSetDraft(running);
 });
@@ -5828,6 +5847,7 @@ const overlapThreshold = 2;
 const muscles = JSON.parse(document.getElementById('muscle-names').textContent);
 const exerciseNames = new Map(Array.from(cards, ([id, card]) => [id, card.querySelector('.exercise-name').textContent]));
 const warning = document.getElementById('overlap-warning');
+const finishWorkoutDialog = document.getElementById('finish-workout-dialog');
 const workoutArchive = document.getElementById('workout-archive');
 const workoutPick = document.getElementById('workout-pick');
 const inlineSetPanel = document.getElementById('inline-set-panel');
@@ -5838,6 +5858,7 @@ let activeWorkout = null;
 let workoutHistory = [];
 let selectedArchive = null;
 let candidateId = null;
+let finishRequest = null;
 let timerId = null;
 
 function isTimestamp(value) {
@@ -6119,10 +6140,10 @@ function requestExercise(id) {
   warning.showModal();
 }
 
-function finishExercise(id, completed) {
+function finishExercise(id, completed, {endWorkout = false} = {}) {
   const running = activeWorkout?.running;
   if (!running || running.exercise !== id) return;
-  if (!completed && running.sets.length) return;
+  if (!completed && running.sets.length && !endWorkout) return;
   if (completed && !savePendingSet(running)) {
     exerciseFeedback(id, 'Dokonči alebo uprav rozpísanú sériu nižšie v karte.');
     return;
@@ -6154,8 +6175,11 @@ function finishExercise(id, completed) {
     exerciseFeedback(id, 'Meranie zrušené.');
   }
   showWorkoutStatus('');
-  persistWorkout();
-  renderWorkout();
+  if (endWorkout) archiveActiveWorkout();
+  else {
+    persistWorkout();
+    renderWorkout();
+  }
   return true;
 }
 
@@ -6191,12 +6215,8 @@ document.getElementById('finish-running').addEventListener('click', () => {
   const advance = hasNextAfter(running);
   if (finishExercise(running?.exercise, true) && advance) startNextPlanExercise();
 });
-document.getElementById('finish-workout').addEventListener('click', () => {
+function archiveActiveWorkout() {
   if (!activeWorkout) return;
-  if (activeWorkout.running) {
-    showWorkoutStatus('Najprv ukonči aktuálne meranie cviku.');
-    return;
-  }
   const {id, startedAt, exercises, plan} = activeWorkout;
   activeWorkout = null;
   selectedArchive = id;
@@ -6207,6 +6227,47 @@ document.getElementById('finish-workout').addEventListener('click', () => {
   } else {
     persistWorkout();
     renderWorkout();
+  }
+  if (location.hash !== '#teraz') location.hash = 'teraz';
+}
+
+function requestWorkoutFinish() {
+  if (!activeWorkout) return;
+  const running = activeWorkout.running;
+  if (!running) {
+    archiveActiveWorkout();
+    return;
+  }
+  finishRequest = {workout:activeWorkout.id, exercise:running.exercise, startedAt:running.startedAt};
+  document.getElementById('finish-workout-description').textContent =
+    'Rozpracovaný cvik: ' + exerciseNames.get(running.exercise) + '. Už ukončené cviky zostanú v tréningu.';
+  finishWorkoutDialog.showModal();
+}
+
+function openInvalidSet(exercise) {
+  const invalid = setForm.querySelector('[aria-invalid=true]');
+  const target = '#' + exercise + '-log';
+  if (location.hash === target) invalid?.focus();
+  else {
+    window.addEventListener('hashchange', () => invalid?.focus(), {once:true});
+    location.hash = target;
+  }
+}
+
+document.getElementById('finish-workout').addEventListener('click', requestWorkoutFinish);
+document.getElementById('finish-workout-from-exercise').addEventListener('click', requestWorkoutFinish);
+finishWorkoutDialog.addEventListener('cancel', () => { finishRequest = null; });
+finishWorkoutDialog.querySelector('form').addEventListener('submit', event => {
+  event.preventDefault();
+  const request = finishRequest;
+  finishRequest = null;
+  const action = event.submitter?.value;
+  finishWorkoutDialog.close(action);
+  const running = activeWorkout?.running;
+  if (!request || !running || request.workout !== activeWorkout.id || request.exercise !== running.exercise ||
+      request.startedAt !== running.startedAt || !['save','discard'].includes(action)) return;
+  if (!finishExercise(running.exercise, action === 'save', {endWorkout:true}) && action === 'save') {
+    openInvalidSet(running.exercise);
   }
 });
 workoutArchive.addEventListener('change', () => {

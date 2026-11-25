@@ -181,11 +181,13 @@ function savePendingSet(running) {
     if (!/^\d+$/.test(amountText) || !validSetAmount(amount)) {
       const unit = cards.get(running.exercise).dataset.setUnit;
       setStatus.textContent = prefix + (unit === 'seconds' ? 'zadaj výdrž ako celé sekundy.' : 'zadaj celý počet opakovaní.');
+      amountInput.setAttribute('aria-invalid', 'true');
       amountInput.focus();
       return false;
     }
     if ((weightText && !/^(?:\d+(?:[.,]\d+)?|[.,]\d+)$/.test(weightText)) || !validSetWeight(weight)) {
       setStatus.textContent = prefix + 'zadaj váhu v kg, napríklad 7,5.';
+      weightInput.setAttribute('aria-invalid', 'true');
       weightInput.focus();
       return false;
     }
@@ -197,9 +199,10 @@ function savePendingSet(running) {
 }
 
 setForm.addEventListener('submit', event => event.preventDefault());
-setForm.addEventListener('input', () => {
+setForm.addEventListener('input', event => {
   const running = activeWorkout?.running;
   if (!running) return;
+  event.target.removeAttribute('aria-invalid');
   updateDraftActions(running);
   saveSetDraft(running);
 });

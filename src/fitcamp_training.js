@@ -3,6 +3,7 @@ const overlapThreshold = 2;
 const muscles = JSON.parse(document.getElementById('muscle-names').textContent);
 const exerciseNames = new Map(Array.from(cards, ([id, card]) => [id, card.querySelector('.exercise-name').textContent]));
 const warning = document.getElementById('overlap-warning');
+const finishWorkoutDialog = document.getElementById('finish-workout-dialog');
 const workoutArchive = document.getElementById('workout-archive');
 const workoutPick = document.getElementById('workout-pick');
 const inlineSetPanel = document.getElementById('inline-set-panel');
@@ -13,6 +14,7 @@ let activeWorkout = null;
 let workoutHistory = [];
 let selectedArchive = null;
 let candidateId = null;
+let finishRequest = null;
 let timerId = null;
 
 function isTimestamp(value) {
@@ -294,10 +296,10 @@ function requestExercise(id) {
   warning.showModal();
 }
 
-function finishExercise(id, completed) {
+function finishExercise(id, completed, {endWorkout = false} = {}) {
   const running = activeWorkout?.running;
   if (!running || running.exercise !== id) return;
-  if (!completed && running.sets.length) return;
+  if (!completed && running.sets.length && !endWorkout) return;
   if (completed && !savePendingSet(running)) {
     exerciseFeedback(id, 'Dokonči alebo uprav rozpísanú sériu nižšie v karte.');
     return;
@@ -329,8 +331,11 @@ function finishExercise(id, completed) {
     exerciseFeedback(id, 'Meranie zrušené.');
   }
   showWorkoutStatus('');
-  persistWorkout();
-  renderWorkout();
+  if (endWorkout) archiveActiveWorkout();
+  else {
+    persistWorkout();
+    renderWorkout();
+  }
   return true;
 }
 
@@ -366,12 +371,8 @@ document.getElementById('finish-running').addEventListener('click', () => {
   const advance = hasNextAfter(running);
   if (finishExercise(running?.exercise, true) && advance) startNextPlanExercise();
 });
-document.getElementById('finish-workout').addEventListener('click', () => {
+function archiveActiveWorkout() {
   if (!activeWorkout) return;
-  if (activeWorkout.running) {
-    showWorkoutStatus('Najprv ukonči aktuálne meranie cviku.');
-    return;
-  }
   const {id, startedAt, exercises, plan} = activeWorkout;
   activeWorkout = null;
   selectedArchive = id;
@@ -382,6 +383,47 @@ document.getElementById('finish-workout').addEventListener('click', () => {
   } else {
     persistWorkout();
     renderWorkout();
+  }
+  if (location.hash !== '#teraz') location.hash = 'teraz';
+}
+
+function requestWorkoutFinish() {
+  if (!activeWorkout) return;
+  const running = activeWorkout.running;
+  if (!running) {
+    archiveActiveWorkout();
+    return;
+  }
+  finishRequest = {workout:activeWorkout.id, exercise:running.exercise, startedAt:running.startedAt};
+  document.getElementById('finish-workout-description').textContent =
+    'Rozpracovaný cvik: ' + exerciseNames.get(running.exercise) + '. Už ukončené cviky zostanú v tréningu.';
+  finishWorkoutDialog.showModal();
+}
+
+function openInvalidSet(exercise) {
+  const invalid = setForm.querySelector('[aria-invalid=true]');
+  const target = '#' + exercise + '-log';
+  if (location.hash === target) invalid?.focus();
+  else {
+    window.addEventListener('hashchange', () => invalid?.focus(), {once:true});
+    location.hash = target;
+  }
+}
+
+document.getElementById('finish-workout').addEventListener('click', requestWorkoutFinish);
+document.getElementById('finish-workout-from-exercise').addEventListener('click', requestWorkoutFinish);
+finishWorkoutDialog.addEventListener('cancel', () => { finishRequest = null; });
+finishWorkoutDialog.querySelector('form').addEventListener('submit', event => {
+  event.preventDefault();
+  const request = finishRequest;
+  finishRequest = null;
+  const action = event.submitter?.value;
+  finishWorkoutDialog.close(action);
+  const running = activeWorkout?.running;
+  if (!request || !running || request.workout !== activeWorkout.id || request.exercise !== running.exercise ||
+      request.startedAt !== running.startedAt || !['save','discard'].includes(action)) return;
+  if (!finishExercise(running.exercise, action === 'save', {endWorkout:true}) && action === 'save') {
+    openInvalidSet(running.exercise);
   }
 });
 workoutArchive.addEventListener('change', () => {
