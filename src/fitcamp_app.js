@@ -46,6 +46,7 @@ function updateAppWorkout() {
   dockButton.hidden = !activeWorkout;
   resumeWorkout.href = running ? '#' + running.exercise : '#teraz';
   resumeWorkout.textContent = running ? 'Späť k cviku' : 'Tréning';
+  document.getElementById('warmup-done').href = resumeWorkout.hash;
   catalogBack.href = activeWorkout ? '#teraz' : '#cviky';
   catalogBack.textContent = activeWorkout ? '← Tréning' : '← Všetky cviky';
 }

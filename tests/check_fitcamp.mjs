@@ -102,7 +102,7 @@ try {
   await screenshot('fitcamp-checkpoints.png');
   assert.equal(await inspect(`[...document.querySelectorAll('video')].every(video =>
     !video.hasAttribute('src') && video.dataset.src.startsWith('data:video/mp4;base64,'))`), true);
-  assert.equal(await inspect(`document.querySelectorAll('.demo-source[href^="https://"]').length`), 58);
+  assert.equal(await inspect(`document.querySelectorAll('.demo-source[href^="https://"]').length`), 53);
   assert.equal(await inspect(`document.querySelectorAll('.card .priority').length`), 52);
   assert.equal(await inspect(`document.querySelectorAll('.card .muscle-map img').length`), 52);
   assert.equal(await inspect(`document.querySelector('#history-results').hidden`), true);
@@ -152,7 +152,7 @@ try {
     }
     return results;
   })()`);
-  assert.equal(clipTest.length, 58);
+  assert.equal(clipTest.length, 53);
   assert.deepEqual(clipTest.filter(clip => !clip.ok), []);
   await inspect(`document.querySelector("#press a[href='#sit']").click()`);
   await delay(250);
@@ -392,12 +392,29 @@ try {
   await screenshot('fitcamp-muscle-map.png');
   await inspect(`location.hash = '#rozc'`);
   await delay(150);
-  assert.equal(await inspect(`document.querySelectorAll('#warmup-steps>li video').length`), 6);
+  assert.equal(await inspect(`document.querySelectorAll('#warmup-steps>li').length`), 6);
+  assert.equal(await inspect(`Object.values(warmup.groups).every(variants => variants.length === 3 &&
+    variants.every(variant => variant.url.startsWith('https://') &&
+      (warmup.media[variant.id] || cards.get(variant.id).querySelector('video').dataset.src).startsWith('data:video/mp4;base64,')))`), true);
   assert.equal(await inspect(`document.querySelector('#warmup-clock') === null &&
     !document.querySelector('#rozc').textContent.toLowerCase().includes('stena')`), true);
   await screenshot('fitcamp-warmup.png');
-  await inspect(`document.querySelector('[aria-controls=warmup-anklerock-video]').click()`);
-  assert.equal(await inspect(`!document.querySelector('#warmup-anklerock-video').hidden`), true);
+  await inspect(`document.querySelector('[data-warmup-group=ankles] button').click();
+    document.querySelector('#warmup-choices input[value=toeraise]').click();
+    document.querySelector('#rozc .demo-toggle').click()`);
+  assert.equal(await inspect(`!document.querySelector('#warmup-video').hidden &&
+    document.querySelector('[data-warmup-group=ankles] .warmup-selection').textContent.includes('Zdvíhanie špičiek') &&
+    document.querySelector('#warmup-source').href.includes('kingstonandrichmond')`), true);
+  await inspect(`document.querySelector('[data-warmup-group=shoulders] button').click()`);
+  assert.equal(await inspect(`document.querySelectorAll('#rozc .warmup-row[aria-expanded=true]').length === 1 &&
+    document.querySelector('#warmup-video').hidden`), true);
+  await screenshot('fitcamp-warmup-options.png');
+  await inspect(`document.querySelector('#warmup-choices input[value=""]').click()`);
+  assert.equal(await inspect(`document.querySelector('#warmup-guide').hidden &&
+    JSON.parse(localStorage.getItem(warmupKey)).shoulders === ''`), true);
+  await viewport(320);
+  assert.equal(await inspect('document.documentElement.scrollWidth <= innerWidth'), true);
+  await viewport(390);
   await inspect(`location.hash = '#pallof'`);
   await delay(150);
   await screenshot('fitcamp-journal-card.png');
@@ -432,6 +449,7 @@ try {
   for (let i = 0; i < 60 && !await inspect(`document.querySelector('#plan-items li')?.dataset.exercise === 'chest'`); i++)
     await delay(100);
   assert.equal(await inspect(`document.querySelector('#plan-name').value`), 'FitCamp plán na skúšku');
+  assert.equal(await inspect(`document.querySelector('[data-warmup-group=shoulders] .warmup-selection').textContent`), 'Vynechané');
   await inspect(`document.querySelector('#start-plan').click()`);
   assert.equal(await inspect(`document.querySelector('#plan-execution-name').textContent`), 'FitCamp plán na skúšku');
   assert.equal(await inspect(`document.querySelector('#plan-execution-status').textContent`), 'Hotovo 0 z 7');

@@ -12,6 +12,7 @@ from fitcamp_motion import PRACTICE_CAPTIONS, video_data
 from fitcamp_muscles import MUSCLES, ROLES
 from fitcamp_technique import TECHNIQUE
 from fitcamp_references import DEMOS
+from fitcamp_warmup import WARMUP_GROUPS, WARMUP_ONLY_NAMES
 from fitcamp_extra import EXTRA_CHECKS, EXTRA_ROLES
 from fitcamp_low_equipment import CHECKS_LOW_EQUIPMENT, ROLES_LOW_EQUIPMENT
 from fitcamp_bodymap import body_map, live_body_map
@@ -61,18 +62,33 @@ def demo_reference(key):
             f'<span>Online video ↗</span><small>{escape(source)}</small></a>')
 
 
-def warmup_demo(key, name, cue):
-    return f'''
-    <div class="exercise-demo">
-      <div class="demo-actions"><button class="demo-toggle" type="button"
-           aria-expanded="false" aria-controls="warmup-{key}-video">Prehrať ukážku</button>{demo_reference(key)}</div>
-      <figure class="demo-motion" id="warmup-{key}-video" hidden>
-        <video data-src="{video_data(key)}" width="432" height="264" controls playsinline muted preload="none"
-               aria-label="{escape(name, quote=True)} – schematická video ukážka"></video>
-        <figcaption class="demo-caption">{escape(cue)}</figcaption>
-      </figure>
-    </div>
-    '''.strip()
+def warmup_data():
+    groups = {}
+    for group, _, variants in WARMUP_GROUPS:
+        choices = []
+        for key, dose, equipment, cue in variants:
+            if key in WARMUP_ONLY_NAMES:
+                name, english = WARMUP_ONLY_NAMES[key]
+            else:
+                name, subtitle = EXERCISES[key][:2]
+                name = SLOVAK_NAMES.get(key, name)
+                english = subtitle.split(' · ', 1)[0].split(' / ', 1)[0]
+            url, source = DEMOS[key]
+            choices.append(dict(id=key, name=name, english=english, dose=dose,
+                                equipment=equipment, cue=cue, url=url, source=source))
+        assert len({choice['id'] for choice in choices}) == len(choices)
+        groups[group] = choices
+    media = {key: video_data(key) for key in WARMUP_ONLY_NAMES}
+    return dumps(dict(groups=groups, media=media), ensure_ascii=False, separators=(',', ':'))
+
+
+def warmup_rows():
+    return ''.join(
+        f'<li data-warmup-group="{group}"><button type="button" class="warmup-row" aria-expanded="false">'
+        f'<span><strong>{escape(title)}</strong><small class="warmup-selection"></small></span>'
+        '<span class="warmup-edit">Možnosti</span></button></li>'
+        for group, title, _ in WARMUP_GROUPS
+    )
 
 
 def exercise_card(key, exercise):
@@ -205,7 +221,7 @@ scripts = {
     for placeholder, module in (
         ('SCRIPT', 'journal'), ('TRAINING', 'training'), ('SETS', 'sets'),
         ('COVERAGE', 'coverage'), ('PLANNER', 'planner'), ('HISTORY', 'history'), ('DEMOS', 'demos'),
-        ('INSIGHTS', 'insights'), ('APP', 'app'), ('MUSCLE_PICKER', 'muscle_picker')
+        ('INSIGHTS', 'insights'), ('APP', 'app'), ('MUSCLE_PICKER', 'muscle_picker'), ('WARMUP', 'warmup')
     )
 }
 
@@ -229,12 +245,8 @@ target.parent.mkdir(exist_ok=True)
 target.write_text(template.replace('@@CARDS@@', cards).replace('@@GROUP_LINKS@@', group_links)
                   .replace('@@CLUB@@', CLUB)
                   .replace('@@COVERAGE_DATA@@', dumps(live_body_map(), ensure_ascii=False, separators=(',', ':')))
-                  .replace('@@ANKLE_DEMO@@', warmup_demo('anklerock', 'Prenášanie váhy v rozkroku', 'Päta prednej nohy ostáva na podlahe. Po ôsmich opakovaniach vymeň nohy.'))
-                  .replace('@@SQUAT_DEMO@@', warmup_demo('squatwarm', 'Drep s vlastnou váhou', 'Smer pohybu kolien sleduje špičky. Dole na chvíľu zastav.'))
-                  .replace('@@SHOULDER_DEMO@@', warmup_demo('shoulderwarm', 'Krúženie ramenami', 'Ramená vedú kruh. Ruky voľne visia a trup ostáva pokojný.'))
-                  .replace('@@SCAP_DEMO@@', warmup_demo('scapwarm', 'Klik lopatkami na štyroch', 'Sleduj malý pohyb hrudníka pri vystretých lakťoch.'))
-                  .replace('@@BRIDGE_DEMO@@', warmup_demo('bridge', 'Most na podložke', 'Zdvihni boky a hore na chvíľu zastav. Ramená a chodidlá zostávajú opreté.'))
-                  .replace('@@DEADBUG_DEMO@@', warmup_demo('deadbug', 'Striedavé vystieranie v ľahu', 'Ukážka jednej strany. Po návrate vymeň ruku aj nohu.'))
+                  .replace('@@WARMUP_ROWS@@', warmup_rows())
+                  .replace('@@WARMUP_DATA@@', warmup_data())
                   .replace('@@MUSCLES@@', dumps(MUSCLES, ensure_ascii=False)),
                   encoding='utf-8', newline='\n')
 print(target)

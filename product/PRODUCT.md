@@ -5,7 +5,7 @@ Mobilná pomôcka pre začínajúceho silového cvičenca, ktorý chce napredova
 ## Hlavné postupy
 
 1. **Pred tréningom** si používateľ vyberie uloženú zostavu, predpripravenú šablónu alebo si poskladá vlastný plán. Mapa plánovaného zapojenia pomáha vidieť prekryv pred príchodom do posilňovne.
-2. **V posilňovni** si otvorí kartu cviku. Nastavenie, technika, krátka ukážka, svaly aj zápis sérií sú na tej istej karte. Základným postupom je otvoriť cvik, spustiť ho, odcvičiť série a zapísať ich naraz. Rozcvička má fungovať ako krátka zostava v stoji alebo na podložke.
+2. **V posilňovni** si otvorí kartu cviku. Nastavenie, technika, krátka ukážka, svaly aj zápis sérií sú na tej istej karte. Základným postupom je otvoriť cvik, spustiť ho, odcvičiť série a zapísať ich naraz. V rozcvičke si môže pre každú partiu zvoliť variant podľa vybavenia alebo ju vynechať. Výber sa zapamätá v tomto prehliadači.
 3. **Po tréningu** si v denníku vyberie ukončené tréningy. Mapa ukáže priame aj pomocné zapojenie a aplikácia ponúkne cviky s chýbajúcim svalom ako hlavným cieľom. Živá mapa aktuálneho tréningu je dostupná aj počas prezerania iných sekcií.
 4. **Pri posudzovaní progresu** si stiahne CSV sérií na vlastnú analýzu alebo zdieľanie s trénerom či AI. JSON je záloha na prenesenie denníka, tréningov a plánov.
 

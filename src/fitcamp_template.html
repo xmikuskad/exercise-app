@@ -61,11 +61,6 @@ figure img{display:block;width:100%;height:auto;border-radius:.65rem}
 .demo-source small{font-size:.72rem;font-weight:550;color:var(--muted);margin-top:.18rem}
 .demo-motion video{display:block;width:100%;height:auto;aspect-ratio:18 / 11;border-radius:.65rem;background:#ecf4f2}
 .demo-caption{font-size:.88rem;color:var(--muted);margin-top:.4rem}
-.warmup-steps{margin:.8rem 0;padding:0;list-style:none}
-.warmup-steps li{padding:.7rem .75rem;border:1px solid var(--line);border-radius:.7rem;margin:.45rem 0}
-.warmup-steps h3,.warmup-steps p{margin:0 0 .36rem}
-.warmup-steps p:last-child{margin-bottom:0}
-.step-dose{font-size:.83rem;font-weight:700;color:var(--teal)}
 dl{margin:0}
 dt{color:var(--ink);font-weight:750;margin-top:.65rem}
 dd{margin:0;color:var(--muted)}
@@ -249,7 +244,7 @@ main{padding-bottom:5.6rem}
     </div>
     <div class="start-links">
       <button type="button" id="start-free-workout">Začať voľný tréning</button>
-      <a href="#rozc">Rozcvička <small>6 min</small></a>
+      <a href="#rozc">Rozcvička <small>5–7 min</small></a>
     </div>
   </div>
   <div class="box workout-panel">
@@ -489,46 +484,31 @@ main{padding-bottom:5.6rem}
   @@CARDS@@
 </section>
 <section id="rozc">
-  <h2>6-minútová rozcvička bez kardia</h2>
-  <div class="box">
-    <p>Rozlož si podložku a sprav všetkých šesť krokov v poradí. Začni v stoji vedľa nej, potom prejdi na štyri a na chrbát. Pri pomalom tempe a krátkych pauzách to vyjde približne na 5–6 minút.</p>
-    <ol id="warmup-steps" class="warmup-steps">
-      <li><span class="step-dose">1. V stoji · 8 na každú nohu</span>
-        <h3>Prenášanie váhy v rozkroku <small class="english-name" lang="en">(Split-Stance Ankle Rocks)</small></h3>
-        <p>Urob malý krok vpred. Chodidlá nechaj od seba aj do strán, aby si mal rovnováhu. Plynulo prenes váhu dopredu a nechaj predné koleno ísť v smere špičky. Vráť sa a po ôsmich opakovaniach vymeň nohy.</p>
-        <p><strong>Sleduj pätu.</strong> Ak sa predná päta dvíha, prenes váhu o trochu menej dopredu.</p>
-        @@ANKLE_DEMO@@
-      </li>
-      <li><span class="step-dose">2. V stoji · 8 opakovaní</span>
-        <h3>Drep s vlastnou váhou <small class="english-name" lang="en">(Bodyweight Squat)</small></h3>
-        <p>Nohy daj približne na šírku ramien. Za dve sekundy pokrč kolená a bedrá, na chvíľu zastav v pohodlnej hĺbke a pomaly sa postav. Nechaj celé chodidlá na podlahe a kolená v smere špičiek.</p>
-        <p>Ak je pohyb plynulý, môžeš skúsiť pár opakovaní ako <a href="#goblet">drep s ľahkou jednoručkou pri hrudníku (Goblet Squat)</a>.</p>
-        @@SQUAT_DEMO@@
-      </li>
-      <li><span class="step-dose">3. V stoji · 8 kruhov v každom smere</span>
-        <h3>Krúženie ramenami <small class="english-name" lang="en">(Shoulder Rolls)</small></h3>
-        <p>Ruky nechaj voľne pri bokoch. Veď obe ramená nahor, dozadu, dole a dopredu v pomalom kruhu. Po ôsmich opakovaniach otoč smer. Hlava a rebrá zostávajú približne na mieste. Ak pohyb ťahá krk, sprav menšie kruhy.</p>
-        @@SHOULDER_DEMO@@
-      </li>
-      <li><span class="step-dose">4. Na štyroch · 8 opakovaní</span>
-        <h3>Klik lopatkami na štyroch <small class="english-name" lang="en">(Quadruped Scapular Push-up)</small></h3>
-        <p>Dlane daj pod ramená, kolená pod boky. S vystretými lakťami nechaj hrudník klesnúť o pár centimetrov medzi ramená. Potom sa dlaňami odtlač a nechaj lopatky vzdialiť sa od seba. Každý smer kontroluj asi dve sekundy.</p>
-        <p><strong>Sleduj lakte.</strong> Ich uhol sa takmer nemení. Pri návrate drž boky nad kolenami.</p>
-        @@SCAP_DEMO@@
-      </li>
-      <li><span class="step-dose">5. Na chrbte · 8 opakovaní</span>
-        <h3><a href="#bridge">@@NAME:bridge@@</a></h3>
-        <p>Opri celé chodidlá o podlahu a pokrč kolená. S výdychom zdvihni boky, na sekundu zastav a pomaly ich polož späť. Zdvih ukonči pri pocite práce v zadku, kým sa rebrá ešte nedvíhajú a kríže neprehýbajú.</p>
-        @@BRIDGE_DEMO@@
-      </li>
-      <li><span class="step-dose">6. Na chrbte · 6 na každú stranu</span>
-        <h3><a href="#deadbug">@@NAME:deadbug@@</a></h3>
-        <p>Ruky zdvihni nad ramená a kolená nad boky. S výdychom pomaly spúšťaj jednu nohu a opačnú ruku. Zastav predtým, ako sa kríže výrazne prehnú. Vráť sa a vymeň strany. Ak je pohyb náročný, skráť dosah alebo pohybuj len nohami.</p>
-        @@DEADBUG_DEMO@@
-      </li>
-    </ol>
-    <p class="subtle">Pred prvým zaťaženým cvikom si podľa potreby pridaj 4–6 ľahkých skúšobných opakovaní s jeho technikou. Ak kvôli svalovici niektorý pohyb meníš alebo ťa pri ňom ostro zabolí, preskoč ho.</p>
+  <a class="warmup-back" href="#teraz"><span aria-hidden="true">←</span> Dnes</a>
+  <h1>Rozcvička</h1>
+  <p class="warmup-intro"><strong>Približne 5–7 minút v pokojnom tempe</strong> <span>Pri každej partii si vyber jeden cvik.</span></p>
+  <ul id="warmup-steps" class="warmup-steps" aria-label="Partie na rozcvičenie">@@WARMUP_ROWS@@</ul>
+  <div id="warmup-options" class="warmup-options" hidden>
+    <fieldset>
+      <legend id="warmup-options-title" class="sr-only">Vyber cvik</legend>
+      <div id="warmup-choices"></div>
+    </fieldset>
+    <div id="warmup-guide">
+      <p id="warmup-cue"></p>
+      <div class="exercise-demo warmup-demo">
+        <div class="demo-actions">
+          <button class="demo-toggle" type="button" aria-expanded="false" aria-controls="warmup-video">Prehrať ukážku</button>
+          <a class="demo-source" id="warmup-source" target="_blank" rel="noopener noreferrer"><span>Online ukážka</span><small></small></a>
+        </div>
+        <figure class="demo-motion" id="warmup-video" hidden>
+          <video width="432" height="264" controls playsinline muted preload="none"></video>
+          <figcaption class="demo-caption">Schematická ukážka pohybu</figcaption>
+        </figure>
+      </div>
+    </div>
   </div>
+  <p class="warmup-note">Pred prvým cvikom so záťažou si môžeš pridať 4–6 ľahkých skúšobných opakovaní.</p>
+  <a class="action-link save" id="warmup-done" href="#teraz">Hotovo</a>
 </section>
 <section id="progres">
   <h2>Záťaž a progres</h2>
@@ -596,7 +576,9 @@ main{padding-bottom:5.6rem}
 <script>@@HISTORY@@</script>
 <script>@@PLANNER@@</script>
 <script>@@TRAINING@@</script>
+<script id="warmup-data" type="application/json">@@WARMUP_DATA@@</script>
 <script>@@DEMOS@@</script>
+<script>@@WARMUP@@</script>
 <script>@@INSIGHTS@@</script>
 <script>@@APP@@</script>
 <script>@@MUSCLE_PICKER@@</script>
